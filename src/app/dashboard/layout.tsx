@@ -15,6 +15,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
+import createApi from "@/lib/api";
 
 const data = {
   user: {
@@ -32,6 +34,18 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   const sidebarCookie = cookieStore.get("sidebar_state")?.value;
   const sidebarOpen = sidebarCookie === "true";
+
+  const supabase = await createClient();
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const api = createApi(session!.access_token);
+
+  const { data: response } = await api.GET("/users/me");
+
+  console.log(response);
 
   return (
     <SidebarProvider defaultOpen={sidebarOpen}>
