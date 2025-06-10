@@ -35,7 +35,9 @@ export default async function DashboardLayout({
 
   const api = createApi(session!.access_token);
 
-  const userResult = await api.GET("/users/me");
+  const userResult = await api.GET("/users/me", {
+    next: { tags: ["user"] },
+  });
   const userResponse = userResult.data ?? {
     name: "",
     email: "",
@@ -49,15 +51,17 @@ export default async function DashboardLayout({
 
   const recentsResult = await api.GET("/users/me/recents", {
     query: { limit: 10, offset: 0 },
+    next: { tags: ["recents"] },
   });
   const recentsData = recentsResult.data ?? [];
-  console.log(recentsData);
   const navRecents = recentsData.map((r) => ({
     name: r.title ?? "",
     url: `/dashboard/lecture/${r.lecture_id}`,
   }));
 
-  const coursesResult = await api.GET("/users/me/courses");
+  const coursesResult = await api.GET("/users/me/courses", {
+    next: { tags: ["courses"] },
+  });
   const coursesData = coursesResult.data ?? [];
   const navCourses = coursesData.map((c: any) => ({
     title: c.title ?? "",
@@ -80,7 +84,7 @@ export default async function DashboardLayout({
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Drafts</BreadcrumbLink>
+                  <BreadcrumbLink href="/dashboard">Drafts</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

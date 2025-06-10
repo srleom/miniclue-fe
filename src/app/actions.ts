@@ -1,7 +1,9 @@
 "use server";
 
+import createApi from "@/lib/api";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidateTag } from "next/cache";
 
 export async function handleLogin() {
   const supabase = await createClient();
@@ -36,4 +38,38 @@ export async function handleLogout() {
   }
 
   redirect("/");
+}
+
+export async function createUntitledCourse() {
+  const supabase = await createClient();
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    return { error: "Auth error" };
+  }
+
+  if (!session) {
+    return { error: "No session found" };
+  }
+
+  const api = createApi(session.access_token);
+  const { data, error: courseError } = await api.POST("/courses", {
+    body: {
+      title: "Untitled Course",
+      description: "",
+    },
+  });
+
+  if (courseError) {
+    console.error("Create course error:", courseError);
+    return { error: courseError };
+  }
+
+  // Revalidate
+  revalidateTag("courses");
+
+  return { error: undefined };
 }
