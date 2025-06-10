@@ -6,12 +6,10 @@ import {
   Forward,
   MoreHorizontal,
   Plus,
-  Presentation,
-  Share,
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { cn, truncateString } from "@/lib/utils";
+import { truncateString } from "@/lib/utils";
 
 import {
   Collapsible,
@@ -46,12 +44,17 @@ export function NavCourses({
   items: {
     title: string;
     url: string;
+    isDefault: boolean;
     isActive?: boolean;
     items?: { title: string; url: string }[];
   }[];
 }) {
   const { isMobile } = useSidebar();
 
+  const defaultCourse = items.find((item) => item.isDefault);
+  const otherCourses = items.filter((item) => !item.isDefault);
+
+  const sortedItems = defaultCourse ? [defaultCourse, ...otherCourses] : items;
 
   return (
     <SidebarGroup>
@@ -73,7 +76,7 @@ export function NavCourses({
         </SidebarGroupAction>
       </SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <SidebarMenuItem key={item.url}>
             <Collapsible
               className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
