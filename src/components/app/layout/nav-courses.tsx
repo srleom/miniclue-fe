@@ -1,6 +1,17 @@
 "use client";
 
-import { ChevronRight, Plus, Folder } from "lucide-react";
+import {
+  ChevronRight,
+  Folder,
+  Forward,
+  MoreHorizontal,
+  Plus,
+  Presentation,
+  Share,
+  Trash2,
+} from "lucide-react";
+import { toast } from "sonner";
+import { cn, truncateString } from "@/lib/utils";
 
 import {
   Collapsible,
@@ -9,6 +20,7 @@ import {
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
@@ -17,7 +29,16 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import { createUntitledCourse } from "@/app/actions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function NavCourses({
   items,
@@ -29,49 +50,90 @@ export function NavCourses({
     items?: { title: string; url: string }[];
   }[];
 }) {
-  const sortedItems = [
-    ...items.filter((item) => item.title === "Drafts"),
-    ...items.filter((item) => item.title !== "Drafts"),
-  ];
+  const { isMobile } = useSidebar();
+
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Courses</SidebarGroupLabel>
+      <SidebarGroupLabel className="peer group/courses hover:bg-sidebar-accent relative flex w-full items-center justify-between pr-1">
+        <span>Courses</span>
+        <SidebarGroupAction
+          className="hover:bg-sidebar-border absolute top-1.5 right-1 group-hover/courses:opacity-100 hover:cursor-pointer data-[state=open]:opacity-100 md:opacity-0"
+          onClick={async () => {
+            const { error } = await createUntitledCourse();
+            if (error) {
+              toast.error("Failed to create course");
+              return;
+            }
+            toast.success("Course created");
+          }}
+        >
+          <Plus />
+          <span className="sr-only">Add course</span>
+        </SidebarGroupAction>
+      </SidebarGroupLabel>
       <SidebarMenu>
-        {sortedItems.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url}>
-                  <Folder />
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-              {item.items?.length ? (
-                <>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
-                      <span className="sr-only">Toggle</span>
-                    </SidebarMenuAction>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
-                              <span>{subItem.title}</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </>
-              ) : null}
-            </SidebarMenuItem>
-          </Collapsible>
+        {items.map((item) => (
+          <SidebarMenuItem key={item.url}>
+            <Collapsible
+              className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
+              defaultOpen={item.isActive}
+            >
+              <CollapsibleTrigger asChild>
+                <div>
+                  <SidebarMenuButton>
+                    <ChevronRight className="hidden transition-transform group-hover/collapsible:block group-data-[state=open]/collapsible:rotate-90" />
+                    <Folder className="group-hover/collapsible:hidden" />
+                    {truncateString(item.title, 20)}
+                  </SidebarMenuButton>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction
+                        showOnHover
+                        className="hover:cursor-pointer"
+                      >
+                        <MoreHorizontal />
+                        <span className="sr-only">More</span>
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      className="w-48 rounded-lg"
+                      side={isMobile ? "bottom" : "right"}
+                      align={isMobile ? "end" : "start"}
+                    >
+                      <DropdownMenuItem>
+                        <Folder className="text-muted-foreground" />
+                        <span>View Project</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Forward className="text-muted-foreground" />
+                        <span>Share Project</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Trash2 className="text-muted-foreground" />
+                        <span>Delete Project</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {item.items &&
+                    item.items.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.url}>
+                        <SidebarMenuSubButton asChild>
+                          <a href={subItem.url}>
+                            <span>{subItem.title}</span>
+                          </a>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarMenuItem>
         ))}
       </SidebarMenu>
     </SidebarGroup>
