@@ -117,8 +117,8 @@ export async function getCourseLectures(courseId: string) {
     return { error: "No session found" };
   }
   const api = createApi(session.access_token);
-  const { data, error } = await api.GET("/courses/{courseId}/lectures", {
-    params: { path: { courseId }, query: {} },
+  const { data, error } = await api.GET("/lectures", {
+    params: { query: { course_id: courseId } },
     next: { tags: [`lectures:${courseId}`] },
   });
   if (error) {
