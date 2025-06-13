@@ -9,7 +9,7 @@ importers:
     dependencies:
       "@fileforge/pdfreader":
         specifier: ^0.1.46
-        version: 0.1.46(pdfjs-dist@4.10.38)(react@19.1.0)
+        version: 0.1.46(pdfjs-dist@3.4.120)(react@19.1.0)
       "@hookform/resolvers":
         specifier: ^5.1.1
         version: 5.1.1(react-hook-form@7.57.0(react@19.1.0))
@@ -49,6 +49,24 @@ importers:
       "@radix-ui/react-tooltip":
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/core":
+        specifier: 3.12.0
+        version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/default-layout":
+        specifier: ^3.12.0
+        version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/get-file":
+        specifier: ^3.12.0
+        version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/search":
+        specifier: ^3.12.0
+        version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/toolbar":
+        specifier: ^3.12.0
+        version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/zoom":
+        specifier: ^3.12.0
+        version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       "@supabase/ssr":
         specifier: ^0.6.1
         version: 0.6.1(@supabase/supabase-js@2.49.8)
@@ -79,6 +97,9 @@ importers:
       openapi-fetch:
         specifier: ^0.14.0
         version: 0.14.0
+      pdfjs-dist:
+        specifier: 3.4.120
+        version: 3.4.120
       pretty-bytes:
         specifier: ^7.0.0
         version: 7.0.0
@@ -566,102 +587,12 @@ packages:
         integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==,
       }
 
-  "@napi-rs/canvas-android-arm64@0.1.71":
+  "@mapbox/node-pre-gyp@1.0.11":
     resolution:
       {
-        integrity: sha512-cxi3VCotIOS9kNFQI7dcysbVJi106pxryVY1Hi85pX+ZeqahRyeqc/NsLaZ998Ae99+F3HI5X/39G1Y/Byrf0A==,
+        integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==,
       }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [android]
-
-  "@napi-rs/canvas-darwin-arm64@0.1.71":
-    resolution:
-      {
-        integrity: sha512-7Y4D/6vIuMLYsVNtRM/w2j0+fB1GyqeOxc7I0BTx8eLP1S6BZE2Rj6zJfdG+zmLEOW0IlHa+VQq1q2MUAjW84w==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [darwin]
-
-  "@napi-rs/canvas-darwin-x64@0.1.71":
-    resolution:
-      {
-        integrity: sha512-Z0IUqxclrYdfVt/SK9nKCzUHTOXKTWiygtO71YCzs0OtxKdNI7GJRJdYG48wXZEDQ/pqTF4F7Ifgtidfc2tYpg==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [darwin]
-
-  "@napi-rs/canvas-linux-arm-gnueabihf@0.1.71":
-    resolution:
-      {
-        integrity: sha512-KlpqqCASak5ruY+UIolJgmhMZ9Pa2o1QyaNu648L8sz4WNBbNa+aOT60XCLCL1VIKLv11B3MlNgiOHoYNmDhXQ==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm]
-    os: [linux]
-
-  "@napi-rs/canvas-linux-arm64-gnu@0.1.71":
-    resolution:
-      {
-        integrity: sha512-bdGZCGu8YQNAiu3nkIVVUp6nIn6fPd36IuZsLXTG027E52KyIuZ3obCxehSwjDIUNkFWvmff5D6JYfWwAoioEw==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [linux]
-
-  "@napi-rs/canvas-linux-arm64-musl@0.1.71":
-    resolution:
-      {
-        integrity: sha512-1R5sMWe9ur8uM+hAeylBwG0b6UHDR+iWQNgzXmF9vbBYRooQvmDWqpcgytKLJAC0vnWhIkKwqd7yExn7cwczmg==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [arm64]
-    os: [linux]
-
-  "@napi-rs/canvas-linux-riscv64-gnu@0.1.71":
-    resolution:
-      {
-        integrity: sha512-xjjKsipueuG+LdKIk6/uAlqdo+rzGcmNpTZPXdakIT1sHX4NNSnQTzjRaj9Gh96Czjd9G89UWR0KIlE7fwOgFA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [riscv64]
-    os: [linux]
-
-  "@napi-rs/canvas-linux-x64-gnu@0.1.71":
-    resolution:
-      {
-        integrity: sha512-3s6YpklXDB4OeeULG1XTRyKrKAOo7c3HHEqM9A6N4STSjMaJtzmpp7tB/JTvAFeOeFte6gWN8IwC+7AjGJ6MpQ==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [linux]
-
-  "@napi-rs/canvas-linux-x64-musl@0.1.71":
-    resolution:
-      {
-        integrity: sha512-5v9aCLzCXw7u10ray5juQMdl7TykZSn1X5AIGYwBvTAcKSgrqaR9QkRxp1Lqk3njQmFekOW1SFN9bZ/i/6y6kA==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [linux]
-
-  "@napi-rs/canvas-win32-x64-msvc@0.1.71":
-    resolution:
-      {
-        integrity: sha512-oJughk6xjsRIr0Rd9EqjmZmhIMkvcPuXgr3MNn2QexTqn+YFOizrwHS5ha0BDfFl7TEGRvwaDUXBQtu8JKXb8A==,
-      }
-    engines: { node: ">= 10" }
-    cpu: [x64]
-    os: [win32]
-
-  "@napi-rs/canvas@0.1.71":
-    resolution:
-      {
-        integrity: sha512-92ybDocKl6JM48ZpYbj+A7Qt45IaTABDk0y3sDecEQfgdhfNzJtEityqNHoCZ4Vty2dldPkJhxgvOnbrQMXTTA==,
-      }
-    engines: { node: ">= 10" }
+    hasBin: true
 
   "@napi-rs/wasm-runtime@0.2.10":
     resolution:
@@ -1309,6 +1240,169 @@ packages:
         integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==,
       }
 
+  "@react-pdf-viewer/attachment@3.12.0":
+    resolution:
+      {
+        integrity: sha512-mhwrYJSIpCvHdERpLUotqhMgSjhtF+BTY1Yb9Fnzpcq3gLZP+Twp5Rynq21tCrVdDizPaVY7SKu400GkgdMfZw==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/bookmark@3.12.0":
+    resolution:
+      {
+        integrity: sha512-i7nEit8vIFMAES8RFGwprZ9cXOOZb9ZStPW6E6yuObJEXcvBj/ctsbBJGZxqUZOGklM0JoB7sjHyxAriHfe92A==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/core@3.12.0":
+    resolution:
+      {
+        integrity: sha512-8MsdlQJ4jaw3GT+zpCHS33nwnvzpY0ED6DEahZg9WngG++A5RMhk8LSlxdHelwaFFHFiXBjmOaj2Kpxh50VQRg==,
+      }
+    peerDependencies:
+      pdfjs-dist: ^2.16.105 || ^3.0.279
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/default-layout@3.12.0":
+    resolution:
+      {
+        integrity: sha512-K2fS4+TJynHxxCBFuIDiFuAw3nqOh4bkBgtVZ/2pGvnFn9lLg46YGLMnTXCQqtyZzzXYh696jmlFViun3is4pA==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/full-screen@3.12.0":
+    resolution:
+      {
+        integrity: sha512-hQouJ26QUaRBCXNMU1aI1zpJn4l4PJRvlHhuE2dZYtLl37ycjl7vBCQYZW1FwnuxMWztZsY47R43DKaZORg0pg==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/get-file@3.12.0":
+    resolution:
+      {
+        integrity: sha512-Uhq45n2RWlZ7Ec/BtBJ0WQESRciaYIltveDXHNdWvXgFdOS8XsvB+mnTh/wzm7Cfl9hpPyzfeezifdU9AkQgQg==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/open@3.12.0":
+    resolution:
+      {
+        integrity: sha512-vhiDEYsiQLxvZkIKT9VPYHZ1BOnv46x9eCEmRWxO1DJ8fa/GRDTA9ivXmq/ap0dGEJs6t+epleCkCEfllLR/Yw==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/page-navigation@3.12.0":
+    resolution:
+      {
+        integrity: sha512-tVEJ48Dd5kajV1nKkrPWijglJRNBiKBTyYDKVexhiRdTHUP1f6QQXiSyDgCUb0IGSZeJzOJb1h7ApKHe8OTtuw==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/print@3.12.0":
+    resolution:
+      {
+        integrity: sha512-xJn76CgbU/M2iNaN7wLHTg+sdOekkRMfCakFLwPrE+SR7qD6NUF4vQQKJBSVCCK5bUijzb6cWfKGfo8VA72o4Q==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/properties@3.12.0":
+    resolution:
+      {
+        integrity: sha512-dYTCHtVwFNkpDo7QxL2qk/8zAKndLwdD1FFxBftl6jIlQbtvNdxkFfkv1HcQING9Ic+7DBryOiD7W0ze4IERYg==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/rotate@3.12.0":
+    resolution:
+      {
+        integrity: sha512-yaxaMYPChvNOjR8+AxRmj0kvojyJKPq4XHEcIB2lJJgBY1Zra3mliDUP3Nlb4yV8BS9+yBqWn9U9mtnopQD+tw==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/scroll-mode@3.12.0":
+    resolution:
+      {
+        integrity: sha512-okII7Xqhl6cMvl1izdEvlXNJ+vJVq/qdg53hJIDYVgBCWskLk/cpjUg/ZonBxseG9lIDP3w2VO1McT8Gn11OAg==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/search@3.12.0":
+    resolution:
+      {
+        integrity: sha512-jAkLpis49fsDDY/HrbUZIOIhzF5vynONQNA4INQKI38r/MjveblrkNv7qbr9j5lQ/WFic5+gD1e+Mtpf1/7DiA==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/selection-mode@3.12.0":
+    resolution:
+      {
+        integrity: sha512-yysWEu2aCtBvzSgbhgI9kT5cq2hf0FU6Z+3B7MMXz14Kxyc3y18wUqxtgbvpFEfWF0bNUUq16JtWRljtxvZ83w==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/theme@3.12.0":
+    resolution:
+      {
+        integrity: sha512-cdBi+wR1VOZ6URCcO9plmAZQu4ZGFcd7HJdBe7VIFiGyrvl9I/Of74ONLycnDImSuONt8D3uNjPBLieeaShVeg==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/thumbnail@3.12.0":
+    resolution:
+      {
+        integrity: sha512-Vc8j3bO6wumWZV4o6pAbktPWKDSC9tQAzOCJ3cof541u4i44C11ccYC4W9aNcsMMUSO3bNwAGWtP8OFthV5akQ==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/toolbar@3.12.0":
+    resolution:
+      {
+        integrity: sha512-qACTU3qXHgtNK8J+T13EWio+0liilj86SJ87BdapqXynhl720OKPlSKOQqskUGqg3oTUJAhrse9XG6SFdHJx+g==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@react-pdf-viewer/zoom@3.12.0":
+    resolution:
+      {
+        integrity: sha512-V0GUTyPM77+LzhoKX+T3XI10/HfGdqRTbgeP7ID60FCzcwu6kXWqJn5tzabjDKLTlFv8mJmn0aa/ppkIU97nfA==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
   "@redocly/ajv@8.11.2":
     resolution:
       {
@@ -1838,6 +1932,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  abbrev@1.1.1:
+    resolution:
+      {
+        integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==,
+      }
+
   acorn-jsx@5.3.2:
     resolution:
       {
@@ -1853,6 +1953,13 @@ packages:
       }
     engines: { node: ">=0.4.0" }
     hasBin: true
+
+  agent-base@6.0.2:
+    resolution:
+      {
+        integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==,
+      }
+    engines: { node: ">= 6.0.0" }
 
   agent-base@7.1.3:
     resolution:
@@ -1887,6 +1994,20 @@ packages:
         integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==,
       }
     engines: { node: ">=8" }
+
+  aproba@2.0.0:
+    resolution:
+      {
+        integrity: sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==,
+      }
+
+  are-we-there-yet@2.0.0:
+    resolution:
+      {
+        integrity: sha512-Ci/qENmwHnsYo9xKIcUJN5LeDKdJ6R1Z1j9V/J5wyq8nh/mYPEpIKJbBZXtZjG04HiK7zV/p6Vs9952MrMeUIw==,
+      }
+    engines: { node: ">=10" }
+    deprecated: This package is no longer supported.
 
   argparse@2.0.1:
     resolution:
@@ -2077,6 +2198,13 @@ packages:
         integrity: sha512-AflseV1ahcSunK53NfEs9gFWgOEmzr0f+kaMFA4xiLZlr9Hzt7HxcSpIFcnNCUkz6R6dWKa54rUz3HUmI3nVcw==,
       }
 
+  canvas@2.11.2:
+    resolution:
+      {
+        integrity: sha512-ItanGBMrmRV7Py2Z+Xhs7cT+FNt5K0vPL4p9EZ/UX/Mu7hFbkxSjKF2KVtPwX7UYWp7dRKnrTvReflgrItJbdw==,
+      }
+    engines: { node: ">=6" }
+
   chalk@4.1.2:
     resolution:
       {
@@ -2089,6 +2217,13 @@ packages:
       {
         integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==,
       }
+
+  chownr@2.0.0:
+    resolution:
+      {
+        integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==,
+      }
+    engines: { node: ">=10" }
 
   chownr@3.0.0:
     resolution:
@@ -2142,6 +2277,13 @@ packages:
         integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==,
       }
 
+  color-support@1.1.3:
+    resolution:
+      {
+        integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==,
+      }
+    hasBin: true
+
   color@4.2.3:
     resolution:
       {
@@ -2159,6 +2301,12 @@ packages:
     resolution:
       {
         integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==,
+      }
+
+  console-control-strings@1.1.0:
+    resolution:
+      {
+        integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==,
       }
 
   cookie@1.0.2:
@@ -2231,6 +2379,13 @@ packages:
       supports-color:
         optional: true
 
+  decompress-response@4.2.1:
+    resolution:
+      {
+        integrity: sha512-jOSne2qbyE+/r8G1VU+G/82LBs2Fs4LAsTiLSHOCOMZQl2OKZ6i8i4IyHemTe+/yIXOtTcRQMzPcgyhoFlqPkw==,
+      }
+    engines: { node: ">=8" }
+
   deep-is@0.1.4:
     resolution:
       {
@@ -2250,6 +2405,12 @@ packages:
         integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==,
       }
     engines: { node: ">= 0.4" }
+
+  delegates@1.0.0:
+    resolution:
+      {
+        integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==,
+      }
 
   detect-libc@2.0.4:
     resolution:
@@ -2660,6 +2821,19 @@ packages:
       react-dom:
         optional: true
 
+  fs-minipass@2.1.0:
+    resolution:
+      {
+        integrity: sha512-V/JgOLFCS+R6Vcq0slCuaeWEdNC3ouDlJMNIsacH2VtALiu9mV4LPrHc5cDl8k5aw6J8jwgWWpiTo5RYhmIzvg==,
+      }
+    engines: { node: ">= 8" }
+
+  fs.realpath@1.0.0:
+    resolution:
+      {
+        integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==,
+      }
+
   function-bind@1.1.2:
     resolution:
       {
@@ -2678,6 +2852,14 @@ packages:
       {
         integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==,
       }
+
+  gauge@3.0.2:
+    resolution:
+      {
+        integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==,
+      }
+    engines: { node: ">=10" }
+    deprecated: This package is no longer supported.
 
   get-caller-file@2.0.5:
     resolution:
@@ -2733,6 +2915,13 @@ packages:
         integrity: sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==,
       }
     engines: { node: ">=10.13.0" }
+
+  glob@7.2.3:
+    resolution:
+      {
+        integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==,
+      }
+    deprecated: Glob versions prior to v9 are no longer supported
 
   globals@14.0.0:
     resolution:
@@ -2808,6 +2997,12 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  has-unicode@2.0.1:
+    resolution:
+      {
+        integrity: sha512-8Rf9Y83NBReMnx0gFzA8JImQACstCYWUplepDa9xprwwtmgEZUF0h/i5xSA625zB/I37EtrswSST6OXxwaaIJQ==,
+      }
+
   hasown@2.0.2:
     resolution:
       {
@@ -2820,6 +3015,13 @@ packages:
       {
         integrity: sha512-EC2utToWl4RKfs5zd36Mxq7nzHHBuomZboI0yYL6Y0RmBgT7Sgkq4rQ0ezFTYoIsSs7Tm9SJe+o2FcAg6GBhGA==,
       }
+
+  https-proxy-agent@5.0.1:
+    resolution:
+      {
+        integrity: sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==,
+      }
+    engines: { node: ">= 6" }
 
   https-proxy-agent@7.0.6:
     resolution:
@@ -2862,6 +3064,19 @@ packages:
         integrity: sha512-XPdx9Dq4t9Qk1mTMbWONJqU7boCoumEH7fRET37HX5+khDUl3J2W6PdALxhILYlIYx2amlwYcRPp28p0tSiojg==,
       }
     engines: { node: ">=18" }
+
+  inflight@1.0.6:
+    resolution:
+      {
+        integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==,
+      }
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+
+  inherits@2.0.4:
+    resolution:
+      {
+        integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==,
+      }
 
   internal-slot@1.1.0:
     resolution:
@@ -3298,6 +3513,13 @@ packages:
         integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==,
       }
 
+  make-dir@3.1.0:
+    resolution:
+      {
+        integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==,
+      }
+    engines: { node: ">=8" }
+
   math-intrinsics@1.1.0:
     resolution:
       {
@@ -3318,6 +3540,13 @@ packages:
         integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==,
       }
     engines: { node: ">=8.6" }
+
+  mimic-response@2.1.0:
+    resolution:
+      {
+        integrity: sha512-wXqjST+SLt7R009ySCglWBCFpjUygmCIfD790/kVbiGmUgfYGuB14PiTd5DwVxSV4NcYHjzMkoj5LjQZwTQLEA==,
+      }
+    engines: { node: ">=8" }
 
   minimatch@3.1.2:
     resolution:
@@ -3345,6 +3574,20 @@ packages:
         integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==,
       }
 
+  minipass@3.3.6:
+    resolution:
+      {
+        integrity: sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw==,
+      }
+    engines: { node: ">=8" }
+
+  minipass@5.0.0:
+    resolution:
+      {
+        integrity: sha512-3FnjYuehv9k6ovOEbyOswadCDPX1piCfhV8ncmYtHOjuPwylVWsghTLo7rabjC3Rx5xD4HDx8Wm1xnMF7S5qFQ==,
+      }
+    engines: { node: ">=8" }
+
   minipass@7.1.2:
     resolution:
       {
@@ -3352,12 +3595,27 @@ packages:
       }
     engines: { node: ">=16 || 14 >=14.17" }
 
+  minizlib@2.1.2:
+    resolution:
+      {
+        integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==,
+      }
+    engines: { node: ">= 8" }
+
   minizlib@3.0.2:
     resolution:
       {
         integrity: sha512-oG62iEk+CYt5Xj2YqI5Xi9xWUeZhDI8jjQmC5oThVH5JGCTgIjr7ciJDzC7MBzYd//WvR1OTmP5Q38Q8ShQtVA==,
       }
     engines: { node: ">= 18" }
+
+  mkdirp@1.0.4:
+    resolution:
+      {
+        integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==,
+      }
+    engines: { node: ">=10" }
+    hasBin: true
 
   mkdirp@3.0.1:
     resolution:
@@ -3400,6 +3658,12 @@ packages:
     resolution:
       {
         integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==,
+      }
+
+  nan@2.22.2:
+    resolution:
+      {
+        integrity: sha512-DANghxFkS1plDdRsX0X9pm0Z6SJNN6gBdtXfanwoZ8hooC5gosGFSBGRYHUVPz1asKA/kMRqDRdHrluZ61SpBQ==,
       }
 
   nanoid@3.3.11:
@@ -3481,6 +3745,21 @@ packages:
       {
         integrity: sha512-SU00ZarexNlE4Rjdm83vglt5Y9yiQ+XI1XpflWlb7q7UTN1JUItm69xMeiQCTxtTfnzt+83T8Cx+vI2ED++VDA==,
       }
+
+  nopt@5.0.0:
+    resolution:
+      {
+        integrity: sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ==,
+      }
+    engines: { node: ">=6" }
+    hasBin: true
+
+  npmlog@5.0.1:
+    resolution:
+      {
+        integrity: sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw==,
+      }
+    deprecated: This package is no longer supported.
 
   oas-kit-common@1.0.8:
     resolution:
@@ -3569,6 +3848,12 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  once@1.4.0:
+    resolution:
+      {
+        integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==,
+      }
+
   openapi-fetch@0.14.0:
     resolution:
       {
@@ -3639,6 +3924,13 @@ packages:
       }
     engines: { node: ">=8" }
 
+  path-is-absolute@1.0.1:
+    resolution:
+      {
+        integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==,
+      }
+    engines: { node: ">=0.10.0" }
+
   path-key@3.1.1:
     resolution:
       {
@@ -3652,12 +3944,18 @@ packages:
         integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==,
       }
 
-  pdfjs-dist@4.10.38:
+  path2d-polyfill@2.0.1:
     resolution:
       {
-        integrity: sha512-/Y3fcFrXEAsMjJXeL9J8+ZG9U01LbuWaYypvDW2ycW1jL269L3js3DVBjDJ0Up9Np1uqDXsDrRihHANhZOlwdQ==,
+        integrity: sha512-ad/3bsalbbWhmBo0D6FZ4RNMwsLsPpL6gnvhuSaU5Vm7b06Kr5ubSltQQ0T7YKsiJQO+g22zJ4dJKNTXIyOXtA==,
       }
-    engines: { node: ">=20" }
+    engines: { node: ">=8" }
+
+  pdfjs-dist@3.4.120:
+    resolution:
+      {
+        integrity: sha512-B1hw9ilLG4m/jNeFA0C2A0PZydjxslP8ylU+I4XM7Bzh/xWETo9EiBV848lh0O0hLut7T6lK1V7cpAXv5BhxWw==,
+      }
 
   picocolors@1.1.1:
     resolution:
@@ -3893,6 +4191,13 @@ packages:
       }
     engines: { node: ">=0.10.0" }
 
+  readable-stream@3.6.2:
+    resolution:
+      {
+        integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==,
+      }
+    engines: { node: ">= 6" }
+
   reflect.getprototypeof@1.0.10:
     resolution:
       {
@@ -3962,6 +4267,14 @@ packages:
       }
     engines: { iojs: ">=1.0.0", node: ">=0.10.0" }
 
+  rimraf@3.0.2:
+    resolution:
+      {
+        integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==,
+      }
+    deprecated: Rimraf versions prior to v4 are no longer supported
+    hasBin: true
+
   run-parallel@1.2.0:
     resolution:
       {
@@ -3974,6 +4287,12 @@ packages:
         integrity: sha512-AURm5f0jYEOydBj7VQlVvDrjeFgthDdEF5H1dP+6mNpoXOMo1quQqJ4wvJDyRZ9+pO3kGWoOdmV08cSv2aJV6Q==,
       }
     engines: { node: ">=0.4" }
+
+  safe-buffer@5.2.1:
+    resolution:
+      {
+        integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==,
+      }
 
   safe-push-apply@1.0.0:
     resolution:
@@ -4009,6 +4328,12 @@ packages:
       }
     engines: { node: ">=10" }
     hasBin: true
+
+  set-blocking@2.0.0:
+    resolution:
+      {
+        integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==,
+      }
 
   set-function-length@1.2.2:
     resolution:
@@ -4116,6 +4441,24 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  signal-exit@3.0.7:
+    resolution:
+      {
+        integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==,
+      }
+
+  simple-concat@1.0.1:
+    resolution:
+      {
+        integrity: sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q==,
+      }
+
+  simple-get@3.1.1:
+    resolution:
+      {
+        integrity: sha512-CQ5LTKGfCpvE1K0n2us+kuMPbk/q0EKl82s4aheV9oXjFEz6W/Y7oQFVJuU6QG77hRT4Ghb5RURteF5vnWjupA==,
+      }
+
   simple-swizzle@0.2.2:
     resolution:
       {
@@ -4198,6 +4541,12 @@ packages:
         integrity: sha512-UXSH262CSZY1tfu3G3Secr6uGLCFVPMhIqHjlgCUtCCcgihYc/xKs9djMTMUOb2j1mVSeU8EU6NWc/iQKU6Gfg==,
       }
     engines: { node: ">= 0.4" }
+
+  string_decoder@1.3.0:
+    resolution:
+      {
+        integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==,
+      }
 
   strip-ansi@6.0.1:
     resolution:
@@ -4282,6 +4631,13 @@ packages:
         integrity: sha512-Re10+NauLTMCudc7T5WLFLAwDhQ0JWdrMK+9B2M8zR5hRExKmsRDCBA7/aV/pNJFltmBFO5BAMlQFi/vq3nKOg==,
       }
     engines: { node: ">=6" }
+
+  tar@6.2.1:
+    resolution:
+      {
+        integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==,
+      }
+    engines: { node: ">=10" }
 
   tar@7.4.3:
     resolution:
@@ -4452,6 +4808,19 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  util-deprecate@1.0.2:
+    resolution:
+      {
+        integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==,
+      }
+
+  web-streams-polyfill@3.3.3:
+    resolution:
+      {
+        integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==,
+      }
+    engines: { node: ">= 8" }
+
   webidl-conversions@3.0.1:
     resolution:
       {
@@ -4500,6 +4869,12 @@ packages:
     engines: { node: ">= 8" }
     hasBin: true
 
+  wide-align@1.1.5:
+    resolution:
+      {
+        integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==,
+      }
+
   word-wrap@1.2.5:
     resolution:
       {
@@ -4513,6 +4888,12 @@ packages:
         integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==,
       }
     engines: { node: ">=10" }
+
+  wrappy@1.0.2:
+    resolution:
+      {
+        integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==,
+      }
 
   ws@8.18.2:
     resolution:
@@ -4535,6 +4916,12 @@ packages:
         integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==,
       }
     engines: { node: ">=10" }
+
+  yallist@4.0.0:
+    resolution:
+      {
+        integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==,
+      }
 
   yallist@5.0.0:
     resolution:
@@ -4661,9 +5048,9 @@ snapshots:
 
   "@exodus/schemasafe@1.3.0": {}
 
-  "@fileforge/pdfreader@0.1.46(pdfjs-dist@4.10.38)(react@19.1.0)":
+  "@fileforge/pdfreader@0.1.46(pdfjs-dist@3.4.120)(react@19.1.0)":
     dependencies:
-      pdfjs-dist: 4.10.38
+      pdfjs-dist: 3.4.120
       react: 19.1.0
 
   "@floating-ui/core@1.7.1":
@@ -4803,48 +5190,20 @@ snapshots:
       "@jridgewell/resolve-uri": 3.1.2
       "@jridgewell/sourcemap-codec": 1.5.0
 
-  "@napi-rs/canvas-android-arm64@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-darwin-arm64@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-darwin-x64@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-linux-arm-gnueabihf@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-linux-arm64-gnu@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-linux-arm64-musl@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-linux-riscv64-gnu@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-linux-x64-gnu@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-linux-x64-musl@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas-win32-x64-msvc@0.1.71":
-    optional: true
-
-  "@napi-rs/canvas@0.1.71":
-    optionalDependencies:
-      "@napi-rs/canvas-android-arm64": 0.1.71
-      "@napi-rs/canvas-darwin-arm64": 0.1.71
-      "@napi-rs/canvas-darwin-x64": 0.1.71
-      "@napi-rs/canvas-linux-arm-gnueabihf": 0.1.71
-      "@napi-rs/canvas-linux-arm64-gnu": 0.1.71
-      "@napi-rs/canvas-linux-arm64-musl": 0.1.71
-      "@napi-rs/canvas-linux-riscv64-gnu": 0.1.71
-      "@napi-rs/canvas-linux-x64-gnu": 0.1.71
-      "@napi-rs/canvas-linux-x64-musl": 0.1.71
-      "@napi-rs/canvas-win32-x64-msvc": 0.1.71
+  "@mapbox/node-pre-gyp@1.0.11":
+    dependencies:
+      detect-libc: 2.0.4
+      https-proxy-agent: 5.0.1
+      make-dir: 3.1.0
+      node-fetch: 2.7.0
+      nopt: 5.0.0
+      npmlog: 5.0.1
+      rimraf: 3.0.2
+      semver: 7.7.2
+      tar: 6.2.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
     optional: true
 
   "@napi-rs/wasm-runtime@0.2.10":
@@ -5285,6 +5644,164 @@ snapshots:
 
   "@radix-ui/rect@1.1.1": {}
 
+  "@react-pdf-viewer/attachment@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/bookmark@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/core@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      pdfjs-dist: 3.4.120
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  "@react-pdf-viewer/default-layout@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/attachment": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/bookmark": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/thumbnail": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/toolbar": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/full-screen@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/get-file@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/open@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/page-navigation@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/print@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/properties@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/rotate@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/scroll-mode@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/search@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/selection-mode@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/theme@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/thumbnail@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/toolbar@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/full-screen": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/get-file": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/open": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/page-navigation": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/print": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/properties": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/rotate": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/scroll-mode": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/search": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/selection-mode": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/theme": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@react-pdf-viewer/zoom": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
+  "@react-pdf-viewer/zoom@3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@react-pdf-viewer/core": 3.12.0(pdfjs-dist@3.4.120)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    transitivePeerDependencies:
+      - pdfjs-dist
+
   "@redocly/ajv@8.11.2":
     dependencies:
       fast-deep-equal: 3.1.3
@@ -5621,11 +6138,21 @@ snapshots:
   "@unrs/resolver-binding-win32-x64-msvc@1.7.3":
     optional: true
 
+  abbrev@1.1.1:
+    optional: true
+
   acorn-jsx@5.3.2(acorn@8.14.1):
     dependencies:
       acorn: 8.14.1
 
   acorn@8.14.1: {}
+
+  agent-base@6.0.2:
+    dependencies:
+      debug: 4.4.1(supports-color@10.0.0)
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
 
   agent-base@7.1.3: {}
 
@@ -5643,6 +6170,15 @@ snapshots:
   ansi-styles@4.3.0:
     dependencies:
       color-convert: 2.0.1
+
+  aproba@2.0.0:
+    optional: true
+
+  are-we-there-yet@2.0.0:
+    dependencies:
+      delegates: 1.0.0
+      readable-stream: 3.6.2
+    optional: true
 
   argparse@2.0.1: {}
 
@@ -5773,12 +6309,25 @@ snapshots:
 
   caniuse-lite@1.0.30001718: {}
 
+  canvas@2.11.2:
+    dependencies:
+      "@mapbox/node-pre-gyp": 1.0.11
+      nan: 2.22.2
+      simple-get: 3.1.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    optional: true
+
   chalk@4.1.2:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
   change-case@5.4.4: {}
+
+  chownr@2.0.0:
+    optional: true
 
   chownr@3.0.0: {}
 
@@ -5808,6 +6357,9 @@ snapshots:
       simple-swizzle: 0.2.2
     optional: true
 
+  color-support@1.1.3:
+    optional: true
+
   color@4.2.3:
     dependencies:
       color-convert: 2.0.1
@@ -5817,6 +6369,9 @@ snapshots:
   colorette@1.4.0: {}
 
   concat-map@0.0.1: {}
+
+  console-control-strings@1.1.0:
+    optional: true
 
   cookie@1.0.2: {}
 
@@ -5858,6 +6413,11 @@ snapshots:
     optionalDependencies:
       supports-color: 10.0.0
 
+  decompress-response@4.2.1:
+    dependencies:
+      mimic-response: 2.1.0
+    optional: true
+
   deep-is@0.1.4: {}
 
   define-data-property@1.1.4:
@@ -5871,6 +6431,9 @@ snapshots:
       define-data-property: 1.1.4
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
+
+  delegates@1.0.0:
+    optional: true
 
   detect-libc@2.0.4: {}
 
@@ -6265,6 +6828,14 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
+  fs-minipass@2.1.0:
+    dependencies:
+      minipass: 3.3.6
+    optional: true
+
+  fs.realpath@1.0.0:
+    optional: true
+
   function-bind@1.1.2: {}
 
   function.prototype.name@1.1.8:
@@ -6277,6 +6848,19 @@ snapshots:
       is-callable: 1.2.7
 
   functions-have-names@1.2.3: {}
+
+  gauge@3.0.2:
+    dependencies:
+      aproba: 2.0.0
+      color-support: 1.1.3
+      console-control-strings: 1.1.0
+      has-unicode: 2.0.1
+      object-assign: 4.1.1
+      signal-exit: 3.0.7
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wide-align: 1.1.5
+    optional: true
 
   get-caller-file@2.0.5: {}
 
@@ -6318,6 +6902,16 @@ snapshots:
     dependencies:
       is-glob: 4.0.3
 
+  glob@7.2.3:
+    dependencies:
+      fs.realpath: 1.0.0
+      inflight: 1.0.6
+      inherits: 2.0.4
+      minimatch: 3.1.2
+      once: 1.4.0
+      path-is-absolute: 1.0.1
+    optional: true
+
   globals@14.0.0: {}
 
   globalthis@1.0.4:
@@ -6349,11 +6943,22 @@ snapshots:
     dependencies:
       has-symbols: 1.1.0
 
+  has-unicode@2.0.1:
+    optional: true
+
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
 
   http2-client@1.3.5: {}
+
+  https-proxy-agent@5.0.1:
+    dependencies:
+      agent-base: 6.0.2
+      debug: 4.4.1(supports-color@10.0.0)
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
 
   https-proxy-agent@7.0.6(supports-color@10.0.0):
     dependencies:
@@ -6374,6 +6979,15 @@ snapshots:
   imurmurhash@0.1.4: {}
 
   index-to-position@1.1.0: {}
+
+  inflight@1.0.6:
+    dependencies:
+      once: 1.4.0
+      wrappy: 1.0.2
+    optional: true
+
+  inherits@2.0.4:
+    optional: true
 
   internal-slot@1.1.0:
     dependencies:
@@ -6615,6 +7229,11 @@ snapshots:
     dependencies:
       "@jridgewell/sourcemap-codec": 1.5.0
 
+  make-dir@3.1.0:
+    dependencies:
+      semver: 6.3.1
+    optional: true
+
   math-intrinsics@1.1.0: {}
 
   merge2@1.4.1: {}
@@ -6623,6 +7242,9 @@ snapshots:
     dependencies:
       braces: 3.0.3
       picomatch: 2.3.1
+
+  mimic-response@2.1.0:
+    optional: true
 
   minimatch@3.1.2:
     dependencies:
@@ -6638,11 +7260,28 @@ snapshots:
 
   minimist@1.2.8: {}
 
+  minipass@3.3.6:
+    dependencies:
+      yallist: 4.0.0
+    optional: true
+
+  minipass@5.0.0:
+    optional: true
+
   minipass@7.1.2: {}
+
+  minizlib@2.1.2:
+    dependencies:
+      minipass: 3.3.6
+      yallist: 4.0.0
+    optional: true
 
   minizlib@3.0.2:
     dependencies:
       minipass: 7.1.2
+
+  mkdirp@1.0.4:
+    optional: true
 
   mkdirp@3.0.1: {}
 
@@ -6661,6 +7300,9 @@ snapshots:
       react-dom: 19.1.0(react@19.1.0)
 
   ms@2.1.3: {}
+
+  nan@2.22.2:
+    optional: true
 
   nanoid@3.3.11: {}
 
@@ -6709,6 +7351,19 @@ snapshots:
   node-readfiles@0.2.0:
     dependencies:
       es6-promise: 3.3.1
+
+  nopt@5.0.0:
+    dependencies:
+      abbrev: 1.1.1
+    optional: true
+
+  npmlog@5.0.1:
+    dependencies:
+      are-we-there-yet: 2.0.0
+      console-control-strings: 1.1.0
+      gauge: 3.0.2
+      set-blocking: 2.0.0
+    optional: true
 
   oas-kit-common@1.0.8:
     dependencies:
@@ -6783,6 +7438,11 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
+  once@1.4.0:
+    dependencies:
+      wrappy: 1.0.2
+    optional: true
+
   openapi-fetch@0.14.0:
     dependencies:
       openapi-typescript-helpers: 0.0.15
@@ -6834,13 +7494,24 @@ snapshots:
 
   path-exists@4.0.0: {}
 
+  path-is-absolute@1.0.1:
+    optional: true
+
   path-key@3.1.1: {}
 
   path-parse@1.0.7: {}
 
-  pdfjs-dist@4.10.38:
+  path2d-polyfill@2.0.1: {}
+
+  pdfjs-dist@3.4.120:
+    dependencies:
+      path2d-polyfill: 2.0.1
+      web-streams-polyfill: 3.3.3
     optionalDependencies:
-      "@napi-rs/canvas": 0.1.71
+      canvas: 2.11.2
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
 
   picocolors@1.1.1: {}
 
@@ -6936,6 +7607,13 @@ snapshots:
 
   react@19.1.0: {}
 
+  readable-stream@3.6.2:
+    dependencies:
+      inherits: 2.0.4
+      string_decoder: 1.3.0
+      util-deprecate: 1.0.2
+    optional: true
+
   reflect.getprototypeof@1.0.10:
     dependencies:
       call-bind: 1.0.8
@@ -6980,6 +7658,11 @@ snapshots:
 
   reusify@1.1.0: {}
 
+  rimraf@3.0.2:
+    dependencies:
+      glob: 7.2.3
+    optional: true
+
   run-parallel@1.2.0:
     dependencies:
       queue-microtask: 1.2.3
@@ -6991,6 +7674,9 @@ snapshots:
       get-intrinsic: 1.3.0
       has-symbols: 1.1.0
       isarray: 2.0.5
+
+  safe-buffer@5.2.1:
+    optional: true
 
   safe-push-apply@1.0.0:
     dependencies:
@@ -7008,6 +7694,9 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.2: {}
+
+  set-blocking@2.0.0:
+    optional: true
 
   set-function-length@1.2.2:
     dependencies:
@@ -7120,6 +7809,19 @@ snapshots:
       side-channel-map: 1.0.1
       side-channel-weakmap: 1.0.2
 
+  signal-exit@3.0.7:
+    optional: true
+
+  simple-concat@1.0.1:
+    optional: true
+
+  simple-get@3.1.1:
+    dependencies:
+      decompress-response: 4.2.1
+      once: 1.4.0
+      simple-concat: 1.0.1
+    optional: true
+
   simple-swizzle@0.2.2:
     dependencies:
       is-arrayish: 0.3.2
@@ -7192,6 +7894,11 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
+  string_decoder@1.3.0:
+    dependencies:
+      safe-buffer: 5.2.1
+    optional: true
+
   strip-ansi@6.0.1:
     dependencies:
       ansi-regex: 5.0.1
@@ -7234,6 +7941,16 @@ snapshots:
   tailwindcss@4.1.7: {}
 
   tapable@2.2.2: {}
+
+  tar@6.2.1:
+    dependencies:
+      chownr: 2.0.0
+      fs-minipass: 2.1.0
+      minipass: 5.0.0
+      minizlib: 2.1.2
+      mkdirp: 1.0.4
+      yallist: 4.0.0
+    optional: true
 
   tar@7.4.3:
     dependencies:
@@ -7367,6 +8084,11 @@ snapshots:
     dependencies:
       react: 19.1.0
 
+  util-deprecate@1.0.2:
+    optional: true
+
+  web-streams-polyfill@3.3.3: {}
+
   webidl-conversions@3.0.1: {}
 
   whatwg-url@5.0.0:
@@ -7419,6 +8141,11 @@ snapshots:
     dependencies:
       isexe: 2.0.0
 
+  wide-align@1.1.5:
+    dependencies:
+      string-width: 4.2.3
+    optional: true
+
   word-wrap@1.2.5: {}
 
   wrap-ansi@7.0.0:
@@ -7427,9 +8154,15 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
 
+  wrappy@1.0.2:
+    optional: true
+
   ws@8.18.2: {}
 
   y18n@5.0.8: {}
+
+  yallist@4.0.0:
+    optional: true
 
   yallist@5.0.0: {}
 
