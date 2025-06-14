@@ -10,7 +10,7 @@ export async function handleLogin() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:3000/auth/callback?next=/dashboard",
+      redirectTo: "http://localhost:3000/auth/callback?next=/",
       queryParams: {
         access_type: "offline",
         prompt: "consent",
@@ -37,7 +37,7 @@ export async function handleLogout() {
     return;
   }
 
-  redirect("/");
+  redirect("/auth");
 }
 
 export async function createUntitledCourse() {

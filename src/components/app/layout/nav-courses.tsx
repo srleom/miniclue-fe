@@ -114,10 +114,7 @@ export function NavCourses({
                   <SidebarMenuButton>
                     <ChevronRight className="hidden transition-transform group-hover/collapsible:block group-data-[state=open]/collapsible:rotate-90" />
                     <Folder className="group-hover/collapsible:hidden" />
-                    <Link
-                      href={`/dashboard/course/${item.courseId}`}
-                      className="w-full"
-                    >
+                    <Link href={`/course/${item.courseId}`} className="w-full">
                       {truncateString(item.title, 20)}
                     </Link>
                   </SidebarMenuButton>
@@ -188,7 +185,7 @@ export function NavCourses({
                           )
                         }
                       >
-                        <Link href={`/dashboard/lecture/${lecture.lecture_id}`}>
+                        <Link href={`/lecture/${lecture.lecture_id}`}>
                           <Presentation />
                           <span>{lecture.title}</span>
                         </Link>

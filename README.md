@@ -2,16 +2,16 @@
 
 - **Dashboard Home**
 
-  - `/dashboard` → Main dashboard view (overview cards, recent activity)
+  - `/` → Main dashboard view (overview cards, recent activity)
 
 - **Profile**
 
-  - `/dashboard/profile` → View & edit your user profile (name, avatar, preferences)
+  - `/profile` → View & edit your user profile (name, avatar, preferences)
 
 - **Courses & Lectures**
 
   - **(Sidebar)** Your courses live in a persistent sidebar under the dashboard layout.
-  - `/dashboard/course/[courseId]`
+  - `/course/[courseId]`
 
     - Course home:
 
@@ -19,7 +19,7 @@
       - “Upload PDF” form (creates new lecture in this course)
       - Course settings (edit title/description, delete course)
 
-  - `/dashboard/lecture/[lectureId]`
+  - `/lecture/[lectureId]`
 
     - Lecture detail page:
 
@@ -27,4 +27,4 @@
 
 - **Fallback**
 
-  - `/dashboard/error` → Custom 404 page (with link back to `/dashboard`)
+  - `/error` → Custom 404 page (with link back to `/`)

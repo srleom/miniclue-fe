@@ -16,7 +16,7 @@ export function NavPrimary() {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton asChild>
-            <Link href="/dashboard">
+            <Link href="/">
               <Edit />
               <span>New content</span>
             </Link>
