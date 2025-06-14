@@ -54,8 +54,9 @@ export default async function DashboardLayout({
     next: { tags: ["recents"] },
   });
   const recentsData = recentsResult.data ?? [];
-  const navRecents = recentsData.map((r) => ({
+  const navRecents = recentsData.map((r: any) => ({
     name: r.title ?? "",
+    lectureId: r.lecture_id,
     url: `/dashboard/lecture/${r.lecture_id}`,
   }));
 

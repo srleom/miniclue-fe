@@ -12,7 +12,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { truncateString } from "@/lib/utils";
-import { getCourseLectures } from "@/app/actions";
+import {
+  getCourseLectures,
+  handleUpdateLectureAccessedAt,
+} from "@/app/actions";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -30,8 +33,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { createUntitledCourse, deleteCourse } from "@/app/actions";
@@ -179,7 +180,14 @@ export function NavCourses({
                       key={lecture.lecture_id}
                       className="group/lecture"
                     >
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton
+                        asChild
+                        onClick={async () =>
+                          await handleUpdateLectureAccessedAt(
+                            lecture.lecture_id,
+                          )
+                        }
+                      >
                         <Link href={`/dashboard/lecture/${lecture.lecture_id}`}>
                           <Presentation />
                           <span>{lecture.title}</span>

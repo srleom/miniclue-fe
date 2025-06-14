@@ -26,11 +26,12 @@ import {
   SidebarGroupAction,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { handleUpdateLectureAccessedAt } from "@/app/actions";
 
 export function NavRecents({
   items,
 }: {
-  items: { name: string; url: string }[];
+  items: { name: string; url: string; lectureId: string }[];
 }) {
   const { isMobile } = useSidebar();
 
@@ -51,11 +52,16 @@ export function NavRecents({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
+            <SidebarMenuButton
+              asChild
+              onClick={async () =>
+                await handleUpdateLectureAccessedAt(item.lectureId)
+              }
+            >
+              <Link href={item.url}>
                 <Presentation />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

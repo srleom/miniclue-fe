@@ -12,7 +12,8 @@ interface LecturePageProps {
   };
 }
 
-export default function LecturePage({ params }: LecturePageProps) {
+export default async function LecturePage({ params }: LecturePageProps) {
+  const { lectureId } = await params;
   return (
     <div className="mx-auto mt-2 flex w-full flex-col">
       <div className="h-[calc(100vh-7rem)] rounded-lg">

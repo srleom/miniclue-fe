@@ -34,6 +34,7 @@ export function AppSidebar({
   }[];
   navRecents: {
     name: string;
+    lectureId: string;
     url: string;
   }[];
 } & React.ComponentProps<typeof Sidebar>) {
