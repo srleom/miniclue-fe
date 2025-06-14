@@ -3,7 +3,6 @@ import { getCourseDetails, getCourseLectures } from "./utils";
 import { DropzoneComponent } from "@/components/app/dashboard/dropzone";
 import { Folder } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import { DataTable } from "@/components/app/dashboard/data-table";
 import { columns, Lecture } from "./columns";
 

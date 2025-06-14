@@ -56,7 +56,7 @@ export async function createUntitledCourse() {
   }
 
   const api = createApi(session.access_token);
-  const { data, error: courseError } = await api.POST("/courses", {
+  const { error: courseError } = await api.POST("/courses", {
     body: {
       title: "Untitled Course",
       description: "",
@@ -126,4 +126,38 @@ export async function getCourseLectures(courseId: string) {
     return { data: [], error };
   }
   return { data, error: undefined };
+}
+
+export async function handleUpdateLectureAccessedAt(lectureId: string) {
+  const supabase = await createClient();
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    return { error: "Auth error" };
+  }
+
+  if (!session) {
+    return { error: "No session found" };
+  }
+
+  const api = createApi(session.access_token);
+  const { error: lectureError } = await api.PUT("/lectures/{lectureId}", {
+    params: { path: { lectureId } },
+    body: {
+      accessed_at: new Date().toISOString(),
+    },
+  });
+
+  if (lectureError) {
+    console.error("Update lecture error:", lectureError);
+    return { error: lectureError };
+  }
+
+  // Revalidate tag
+  revalidateTag("recents");
+
+  return { error: undefined };
 }
