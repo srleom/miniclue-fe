@@ -43,7 +43,7 @@ export function NavRecents({
           asChild
           className="hover:bg-sidebar-border absolute top-1.5 right-1 group-hover/recents:opacity-100 hover:cursor-pointer md:opacity-0"
         >
-          <Link href="/dashboard">
+          <Link href="/">
             <Plus />
             <span className="sr-only">Add content</span>
           </Link>

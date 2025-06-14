@@ -49,7 +49,7 @@ export function AppSidebar({
             >
               <div className="flex items-center gap-2">
                 <Link
-                  href="/dashboard"
+                  href="/"
                   className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
                 >
                   <GalleryVerticalEnd className="size-4" />
