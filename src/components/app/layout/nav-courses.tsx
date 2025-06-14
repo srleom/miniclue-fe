@@ -7,8 +7,6 @@ import {
   MoreHorizontal,
   Plus,
   Trash2,
-  Presentation,
-  Share,
 } from "lucide-react";
 import { toast } from "sonner";
 import { truncateString } from "@/lib/utils";

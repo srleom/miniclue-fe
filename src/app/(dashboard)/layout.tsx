@@ -17,6 +17,7 @@ import {
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import createApi from "@/lib/api";
+import { components } from "@/types/api";
 
 export default async function DashboardLayout({
   children,
@@ -54,24 +55,32 @@ export default async function DashboardLayout({
     next: { tags: ["recents"] },
   });
   const recentsData = recentsResult.data ?? [];
-  const navRecents = recentsData.map((r: any) => ({
-    name: r.title ?? "",
-    lectureId: r.lecture_id,
-    url: `/lecture/${r.lecture_id}`,
-  }));
+  const navRecents = recentsData.map(
+    (
+      r: components["schemas"]["app_internal_api_v1_dto.UserRecentLectureResponseDTO"],
+    ) => ({
+      name: r.title ?? "",
+      lectureId: r.lecture_id!,
+      url: `/lecture/${r.lecture_id!}`,
+    }),
+  );
 
   const coursesResult = await api.GET("/users/me/courses", {
     next: { tags: ["courses"] },
   });
   const coursesData = coursesResult.data ?? [];
-  const navCourses = coursesData.map((c: any) => ({
-    title: c.title ?? "",
-    url: `/course/${c.course_id}`,
-    courseId: c.course_id,
-    isDefault: c.is_default,
-    isActive: false,
-    items: [],
-  }));
+  const navCourses = coursesData.map(
+    (
+      c: components["schemas"]["app_internal_api_v1_dto.UserCourseResponseDTO"],
+    ) => ({
+      title: c.title ?? "",
+      url: `/course/${c.course_id!}`,
+      courseId: c.course_id!,
+      isDefault: c.is_default!,
+      isActive: false,
+      items: [],
+    }),
+  );
 
   return (
     <SidebarProvider defaultOpen={sidebarOpen}>

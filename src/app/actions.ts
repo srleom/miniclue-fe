@@ -5,9 +5,11 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidateTag } from "next/cache";
 
+import type { components } from "@/types/api";
+
 export type ActionResponse<T> = {
   data?: T;
-  error?: any;
+  error?: string;
 };
 
 async function createAuthenticatedApi() {
@@ -63,7 +65,11 @@ export async function handleLogout() {
   redirect("/auth");
 }
 
-export async function createUntitledCourse(): Promise<ActionResponse<void>> {
+export async function createUntitledCourse(): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.CourseResponseDTO"]
+  >
+> {
   const { api, error } = await createAuthenticatedApi();
   if (error || !api) {
     return { error };
@@ -108,7 +114,11 @@ export async function deleteCourse(
 
 export async function getCourseLectures(
   courseId: string,
-): Promise<ActionResponse<any[]>> {
+): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.LectureResponseDTO"][]
+  >
+> {
   const { api, error } = await createAuthenticatedApi();
   if (error || !api) {
     return { error };

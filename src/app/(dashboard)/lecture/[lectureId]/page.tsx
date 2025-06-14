@@ -6,14 +6,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PdfViewer from "@/components/app/dashboard/pdf-viewer";
 
-interface LecturePageProps {
-  params: {
-    lectureId: string;
-  };
-}
-
-export default async function LecturePage({ params }: LecturePageProps) {
-  const { lectureId } = await params;
+export default async function LecturePage() {
   return (
     <div className="mx-auto mt-2 flex w-full flex-col">
       <div className="h-[calc(100vh-7rem)] rounded-lg">

@@ -56,9 +56,7 @@ export const columns: ColumnDef<Lecture>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const lecture = row.original;
-
+    cell: () => {
       return (
         <div className="flex justify-end">
           <DropdownMenu>
