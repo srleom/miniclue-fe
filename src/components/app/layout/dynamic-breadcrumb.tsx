@@ -27,12 +27,6 @@ interface DynamicBreadcrumbProps {
 
 export function DynamicBreadcrumb({ navCourses }: DynamicBreadcrumbProps) {
   const pathname = usePathname();
-
-  // Don't render breadcrumb on root path
-  if (pathname === "/") {
-    return null;
-  }
-
   const { courseId, lectureId } = useParams() as {
     courseId?: string;
     lectureId?: string;
@@ -72,15 +66,15 @@ export function DynamicBreadcrumb({ navCourses }: DynamicBreadcrumbProps) {
     });
   }, [lectureId]);
 
-  // pick the “active” courseId: fetched lecture.course_id overrides URL
+  // pick the "active" courseId: fetched lecture.course_id overrides URL
   const activeCourseId = lecture?.course_id || courseId;
   const course = navCourses.find((c) => c.courseId === activeCourseId); // Using courseId since we kept it in NavCourse
 
   // label logic:
-  //  • if loading → “Loading…”
+  //  • if loading → "Loading…"
   //  • else if error → show error
   //  • else if lectureId but no lecture (rare) → title fallback
-  //  • else if no lectureId → “New”
+  //  • else if no lectureId → "New"
   let crumbContent: React.ReactNode;
   if (loading) {
     crumbContent = "Loading…";
@@ -90,6 +84,11 @@ export function DynamicBreadcrumb({ navCourses }: DynamicBreadcrumbProps) {
     crumbContent = lecture.title;
   } else {
     crumbContent = lectureId ? "Untitled Lecture" : "New";
+  }
+
+  // Don't render breadcrumb on root path
+  if (pathname === "/") {
+    return null;
   }
 
   return (

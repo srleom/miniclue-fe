@@ -4,7 +4,7 @@ import { DropzoneComponent } from "@/components/app/dashboard/dropzone";
 import { Folder } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/app/dashboard/data-table";
-import { columns, Lecture } from "./columns";
+import { columns, LectureResponseDTO } from "./columns";
 
 interface CoursePageProps {
   params: { courseId: string };
@@ -26,7 +26,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   const course = await getCourseDetails(courseId);
   const lecturesDTO = await getCourseLectures(courseId);
-  const tableLectures: Lecture[] = lecturesDTO.map((lec) => ({
+  const tableLectures: LectureResponseDTO[] = lecturesDTO.map((lec) => ({
     lectureId: lec.lecture_id ?? "",
     title: lec.title ?? "",
     createdAt: lec.created_at ?? "",

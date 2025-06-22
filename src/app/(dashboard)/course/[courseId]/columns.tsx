@@ -13,7 +13,7 @@ import { MoreHorizontal, Trash2, Presentation, Share } from "lucide-react";
 import Link from "next/link";
 
 import { components } from "@/types/api";
-type LectureResponseDTO =
+export type LectureResponseDTO =
   components["schemas"]["app_internal_api_v1_dto.LectureResponseDTO"];
 
 export const columns: ColumnDef<LectureResponseDTO>[] = [

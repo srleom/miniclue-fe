@@ -1,29 +1,18 @@
 import { AppSidebar } from "@/components/app/layout/app-sidebar";
 import { NavUser } from "@/components/app/layout/nav-user";
 import { DynamicBreadcrumb } from "@/components/app/layout/dynamic-breadcrumb";
-import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import {
-  getUserData,
-  getUserRecents,
-  getUserCourses,
-  getLecture,
-} from "@/app/actions";
+import { getUserData, getUserRecents, getUserCourses } from "@/app/actions";
 
 export default async function DashboardLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: {
-    courseId?: string;
-    lectureId?: string;
-  };
 }) {
   const cookieStore = await cookies();
   const sidebarCookie = cookieStore.get("sidebar_state")?.value;
