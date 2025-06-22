@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getLecture } from "@/app/actions";
 import {
@@ -11,9 +11,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-export interface NavCourse {
-  title: string;
-  courseId: string;
+import { components } from "@/types/api";
+import { Separator } from "@/components/ui/separator";
+type UserCourseResponseDTO =
+  components["schemas"]["app_internal_api_v1_dto.UserCourseResponseDTO"];
+
+export interface NavCourse extends Omit<UserCourseResponseDTO, "course_id"> {
+  courseId: string; // Keep courseId for existing code compatibility
   url: string;
 }
 
@@ -22,6 +26,13 @@ interface DynamicBreadcrumbProps {
 }
 
 export function DynamicBreadcrumb({ navCourses }: DynamicBreadcrumbProps) {
+  const pathname = usePathname();
+
+  // Don't render breadcrumb on root path
+  if (pathname === "/") {
+    return null;
+  }
+
   const { courseId, lectureId } = useParams() as {
     courseId?: string;
     lectureId?: string;
@@ -63,7 +74,7 @@ export function DynamicBreadcrumb({ navCourses }: DynamicBreadcrumbProps) {
 
   // pick the “active” courseId: fetched lecture.course_id overrides URL
   const activeCourseId = lecture?.course_id || courseId;
-  const course = navCourses.find((c) => c.courseId === activeCourseId);
+  const course = navCourses.find((c) => c.courseId === activeCourseId); // Using courseId since we kept it in NavCourse
 
   // label logic:
   //  • if loading → “Loading…”
@@ -82,16 +93,22 @@ export function DynamicBreadcrumb({ navCourses }: DynamicBreadcrumbProps) {
   }
 
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        {course && (
-          <BreadcrumbItem>
-            <BreadcrumbLink href={course.url}>{course.title}</BreadcrumbLink>
-          </BreadcrumbItem>
-        )}
-        <BreadcrumbSeparator className="hidden md:block" />
-        <BreadcrumbItem className="text-black">{crumbContent}</BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
+    <>
+      <Separator
+        orientation="vertical"
+        className="mr-2 data-[orientation=vertical]:h-4"
+      />
+      <Breadcrumb>
+        <BreadcrumbList>
+          {course && (
+            <BreadcrumbItem>
+              <BreadcrumbLink href={course.url}>{course.title}</BreadcrumbLink>
+            </BreadcrumbItem>
+          )}
+          <BreadcrumbSeparator className="hidden md:block" />
+          <BreadcrumbItem className="text-black">{crumbContent}</BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </>
   );
 }

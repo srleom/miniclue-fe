@@ -12,19 +12,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Trash2, Presentation, Share } from "lucide-react";
 import Link from "next/link";
 
-export type Lecture = {
-  lectureId: string;
-  title: string;
-  createdAt: string;
-};
+import { components } from "@/types/api";
+type LectureResponseDTO =
+  components["schemas"]["app_internal_api_v1_dto.LectureResponseDTO"];
 
-export const columns: ColumnDef<Lecture>[] = [
+export const columns: ColumnDef<LectureResponseDTO>[] = [
   {
     accessorKey: "title",
     header: "Title",
     cell: (info) => (
       <Link
-        href={`/lecture/${info.row.original.lectureId}`}
+        href={`/lecture/${info.row.original.lecture_id}`}
         className="block h-full w-full"
       >
         {info.getValue<string>()}
@@ -36,7 +34,9 @@ export const columns: ColumnDef<Lecture>[] = [
     accessorKey: "createdAt",
     header: "Created At",
     cell: (info) => {
-      const raw = info.row.original.createdAt;
+      const raw = info.row.original.created_at;
+      if (!raw) return "Unknown date";
+
       const date = new Date(raw);
       const formatted = new Intl.DateTimeFormat("en-GB", {
         day: "numeric",
@@ -45,7 +45,7 @@ export const columns: ColumnDef<Lecture>[] = [
       }).format(date);
       return (
         <Link
-          href={`/lecture/${info.row.original.lectureId}`}
+          href={`/lecture/${info.row.original.lecture_id}`}
           className="block h-full w-full"
         >
           {formatted}

@@ -53,15 +53,6 @@ export default async function DashboardLayout({
     navCourses = coursesRes.data;
   }
 
-  // Fetch lecture data if lectureId is present
-  let lecture;
-  if (params.lectureId) {
-    const { data, error } = await getLecture(params.lectureId);
-    if (!error && data) {
-      lecture = data;
-    }
-  }
-
   return (
     <SidebarProvider defaultOpen={sidebarOpen}>
       <AppSidebar navCourses={navCourses} navRecents={navRecents} />
@@ -69,10 +60,7 @@ export default async function DashboardLayout({
         <header className="flex h-16 shrink-0 items-center justify-between gap-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1 hover:cursor-pointer" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
+
             <DynamicBreadcrumb navCourses={navCourses} />
           </div>
           <div className="flex items-center gap-2 px-4">
