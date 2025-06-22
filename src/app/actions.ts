@@ -137,6 +137,31 @@ export async function getCourseLectures(
   return { data, error: undefined };
 }
 
+export async function getLecture(
+  lectureId: string,
+): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.LectureResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/lectures/{lectureId}", {
+    params: { path: { lectureId } },
+    next: { tags: [`lecture:${lectureId}`], revalidate: 300 },
+  });
+
+  if (fetchError) {
+    console.error("Get lecture error:", fetchError);
+    return { data: undefined, error: fetchError };
+  }
+
+  return { data: data ?? undefined, error: undefined };
+}
+
 export async function handleUpdateLectureAccessedAt(
   lectureId: string,
 ): Promise<ActionResponse<void>> {
@@ -244,8 +269,6 @@ export async function getUserCourses(): Promise<
       url: string;
       courseId: string;
       isDefault: boolean;
-      isActive: boolean;
-      items: any[];
     }[]
   >
 > {
@@ -272,8 +295,6 @@ export async function getUserCourses(): Promise<
       url: `/course/${c.course_id!}`,
       courseId: c.course_id!,
       isDefault: c.is_default!,
-      isActive: false,
-      items: [],
     }),
   );
 
