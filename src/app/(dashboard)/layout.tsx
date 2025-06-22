@@ -1,13 +1,6 @@
 import { AppSidebar } from "@/components/app/layout/app-sidebar";
 import { NavUser } from "@/components/app/layout/nav-user";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { DynamicBreadcrumb } from "@/components/app/layout/dynamic-breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -15,26 +8,26 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
-import createApi from "@/lib/api";
-import { getUserData, getUserRecents, getUserCourses } from "@/app/actions";
+import {
+  getUserData,
+  getUserRecents,
+  getUserCourses,
+  getLecture,
+} from "@/app/actions";
 
 export default async function DashboardLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: {
+    courseId?: string;
+    lectureId?: string;
+  };
 }) {
   const cookieStore = await cookies();
   const sidebarCookie = cookieStore.get("sidebar_state")?.value;
   const sidebarOpen = sidebarCookie === "true";
-
-  const supabase = await createClient();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const api = createApi(session!.access_token);
 
   let user = { name: "", email: "", avatar: "" };
   let navRecents: { name: string; lectureId: string; url: string }[] = [];
@@ -43,8 +36,6 @@ export default async function DashboardLayout({
     url: string;
     courseId: string;
     isDefault: boolean;
-    isActive: boolean;
-    items: any[];
   }[] = [];
 
   const userRes = await getUserData();
@@ -62,6 +53,15 @@ export default async function DashboardLayout({
     navCourses = coursesRes.data;
   }
 
+  // Fetch lecture data if lectureId is present
+  let lecture;
+  if (params.lectureId) {
+    const { data, error } = await getLecture(params.lectureId);
+    if (!error && data) {
+      lecture = data;
+    }
+  }
+
   return (
     <SidebarProvider defaultOpen={sidebarOpen}>
       <AppSidebar navCourses={navCourses} navRecents={navRecents} />
@@ -73,17 +73,7 @@ export default async function DashboardLayout({
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/">Drafts</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>New</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <DynamicBreadcrumb navCourses={navCourses} />
           </div>
           <div className="flex items-center gap-2 px-4">
             <NavUser user={user} />
