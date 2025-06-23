@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -118,5 +119,98 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Markdown Styles */
+.markdown-content {
+  @apply text-foreground;
+}
+
+.markdown-content h1 {
+  @apply mt-6 mb-4 text-2xl font-bold first:mt-0;
+}
+
+.markdown-content h2 {
+  @apply mt-5 mb-3 text-xl font-semibold;
+}
+
+.markdown-content h3 {
+  @apply mt-4 mb-2 text-lg font-medium;
+}
+
+.markdown-content h4 {
+  @apply mt-3 mb-2 text-base font-medium;
+}
+
+.markdown-content p {
+  @apply mb-4 leading-relaxed;
+}
+
+.markdown-content ul {
+  @apply mb-4 list-inside list-disc space-y-1;
+}
+
+.markdown-content ol {
+  @apply mb-4 list-inside list-decimal space-y-1;
+}
+
+.markdown-content li {
+  @apply mb-1;
+}
+
+.markdown-content blockquote {
+  @apply border-muted-foreground/30 my-4 border-l-4 pl-4 italic;
+}
+
+.markdown-content code {
+  @apply bg-muted rounded px-1.5 py-0.5 font-mono text-sm;
+}
+
+.markdown-content pre {
+  @apply bg-muted mb-4 overflow-x-auto rounded-lg p-4;
+}
+
+.markdown-content pre code {
+  @apply bg-transparent p-0;
+}
+
+.markdown-content strong {
+  @apply font-semibold;
+}
+
+.markdown-content em {
+  @apply italic;
+}
+
+.markdown-content a {
+  @apply text-primary hover:underline;
+}
+
+.markdown-content hr {
+  @apply border-border my-6;
+}
+
+/* KaTeX Styles */
+.markdown-content .katex {
+  @apply text-foreground;
+}
+
+.markdown-content .katex-display {
+  @apply my-4 overflow-x-auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .markdown-content h1 {
+    @apply text-xl;
+  }
+
+  .markdown-content h2 {
+    @apply text-lg;
+  }
+
+  .markdown-content h3 {
+    @apply text-base;
   }
 }
