@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PdfViewer from "@/components/app/dashboard/pdf-viewer";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
+import remarkGfm from "remark-gfm";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
@@ -324,47 +325,50 @@ This demonstrates all major markdown elements with comprehensive LaTeX support. 
 
 export default async function LecturePage() {
   return (
-    <div className="mx-auto mt-2 flex w-full flex-col">
-      <div className="h-[calc(100vh-7rem)] rounded-lg">
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel className="pr-6">
-            <PdfViewer fileUrl="/Week 9.pdf" />
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel className="pl-6">
-            <Tabs defaultValue="explanation">
-              <TabsList className="w-full">
-                <TabsTrigger
-                  value="explanation"
-                  className="hover:cursor-pointer"
+    <div className="mx-auto h-[calc(100vh-6rem)] w-full overflow-hidden">
+      <ResizablePanelGroup direction="horizontal" className="h-full">
+        <ResizablePanel className="h-full pr-6">
+          <PdfViewer fileUrl="/Week 9.pdf" />
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel className="flex flex-col pl-6">
+          <Tabs
+            defaultValue="explanation"
+            className="flex min-h-0 flex-1 flex-col"
+          >
+            <TabsList className="w-full flex-shrink-0">
+              <TabsTrigger value="explanation" className="hover:cursor-pointer">
+                Explanation
+              </TabsTrigger>
+              <TabsTrigger value="summary" className="hover:cursor-pointer">
+                Summary
+              </TabsTrigger>
+              <TabsTrigger value="notes" className="hover:cursor-pointer">
+                Notes
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="explanation" className="mt-3 flex-1">
+              Make changes to your explanation here.
+            </TabsContent>
+            <TabsContent
+              value="summary"
+              className="mt-3 flex min-h-0 flex-1 flex-col"
+            >
+              <div className="markdown-content border-border h-full w-full overflow-y-auto rounded-lg border p-4 lg:p-6">
+                <ReactMarkdown
+                  remarkPlugins={[remarkMath, remarkGfm]}
+                  rehypePlugins={[rehypeKatex]}
                 >
-                  Explanation
-                </TabsTrigger>
-                <TabsTrigger value="summary" className="hover:cursor-pointer">
-                  Summary
-                </TabsTrigger>
-                <TabsTrigger value="notes" className="hover:cursor-pointer">
-                  Notes
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="explanation">
-                Make changes to your explanation here.
-              </TabsContent>
-              <TabsContent value="summary" className="markdown-content">
-                <div className="border-border mt-3 max-h-[calc(100vh-10.5rem)] w-full overflow-y-auto rounded-lg border p-4 lg:p-8">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                  >
-                    {placeholderMarkdown}
-                  </ReactMarkdown>
-                </div>
-              </TabsContent>
-              <TabsContent value="notes">Change your notes here.</TabsContent>
-            </Tabs>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </div>
+                  {placeholderMarkdown}
+                </ReactMarkdown>
+              </div>
+            </TabsContent>
+            <TabsContent value="notes" className="mt-3 flex-1">
+              Change your notes here.
+            </TabsContent>
+          </Tabs>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 }

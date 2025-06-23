@@ -37,16 +37,20 @@ export default async function DashboardLayout({
   }
 
   return (
-    <SidebarProvider defaultOpen={sidebarOpen}>
-      <AppSidebar
-        navCourses={navCourses}
-        navRecents={navRecents}
-        createUntitledCourse={createUntitledCourse}
-        deleteCourse={deleteCourse}
-        getCourseLectures={getCourseLectures}
-        handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
-      />
-      <SidebarInset>{children}</SidebarInset>
-    </SidebarProvider>
+    <div className="flex h-screen w-screen overflow-hidden">
+      <SidebarProvider defaultOpen={sidebarOpen}>
+        <AppSidebar
+          navCourses={navCourses}
+          navRecents={navRecents}
+          createUntitledCourse={createUntitledCourse}
+          deleteCourse={deleteCourse}
+          getCourseLectures={getCourseLectures}
+          handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+        />
+        <SidebarInset className="flex min-h-0 flex-1 flex-col">
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
   );
 }

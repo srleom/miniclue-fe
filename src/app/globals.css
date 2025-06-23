@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -191,6 +190,47 @@
   @apply border-border my-6;
 }
 
+/* Table Styles */
+.markdown-content table {
+  @apply my-4 mb-6 w-full border-collapse overflow-hidden rounded-lg;
+}
+
+.markdown-content thead {
+  @apply bg-transparent;
+}
+
+.markdown-content th {
+  @apply border-border text-foreground border-b px-4 py-3 text-left text-sm font-semibold;
+}
+
+.markdown-content th:first-child {
+  @apply rounded-tl-lg pl-0;
+}
+
+.markdown-content th:last-child {
+  @apply rounded-tr-lg;
+}
+
+.markdown-content td {
+  @apply border-border text-foreground border-b px-4 py-3 text-sm;
+}
+
+.markdown-content td:first-child {
+  @apply pl-0;
+}
+
+.markdown-content tbody tr:last-child td:first-child {
+  @apply rounded-bl-lg;
+}
+
+.markdown-content tbody tr:last-child td:last-child {
+  @apply rounded-br-lg;
+}
+
+.markdown-content tbody tr:last-child {
+  @apply border-b-0;
+}
+
 /* KaTeX Styles */
 .markdown-content .katex {
   @apply text-foreground;
@@ -198,6 +238,31 @@
 
 .markdown-content .katex-display {
   @apply my-4 overflow-x-auto;
+}
+
+/* Footnote Styles */
+.markdown-content .footnotes {
+  @apply border-border mt-8 border-t pt-4;
+}
+
+.markdown-content .footnotes ol {
+  @apply list-inside list-decimal space-y-2;
+}
+
+.markdown-content .footnotes li {
+  @apply text-muted-foreground text-sm;
+}
+
+.markdown-content .footnotes p {
+  @apply mb-2;
+}
+
+.markdown-content .footnote-ref {
+  @apply text-primary hover:underline;
+}
+
+.markdown-content .footnote-backref {
+  @apply text-primary ml-2 hover:underline;
 }
 
 /* Responsive adjustments */
@@ -212,5 +277,14 @@
 
   .markdown-content h3 {
     @apply text-base;
+  }
+
+  .markdown-content table {
+    @apply text-xs;
+  }
+
+  .markdown-content th,
+  .markdown-content td {
+    @apply px-2 py-1;
   }
 }
