@@ -12,7 +12,7 @@ import {
   SidebarGroupAction,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { handleUpdateLectureAccessedAt } from "@/app/actions";
+import { handleUpdateLectureAccessedAt } from "@/app/(dashboard)/actions";
 import NavLecture from "./nav-lecture";
 
 export function NavRecents({

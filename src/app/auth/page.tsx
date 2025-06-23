@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { GalleryVerticalEnd } from "lucide-react";
 import Link from "next/link";
-import { handleLogin } from "@/app/actions";
+import { handleLogin } from "./actions";
 
 export default function LoginPage() {
   return (

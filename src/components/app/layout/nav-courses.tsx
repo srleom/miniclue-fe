@@ -13,7 +13,7 @@ import { truncateString } from "@/lib/utils";
 import {
   getCourseLectures,
   handleUpdateLectureAccessedAt,
-} from "@/app/actions";
+} from "@/app/(dashboard)/actions";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -34,7 +34,7 @@ import {
   SidebarMenuSub,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { createUntitledCourse, deleteCourse } from "@/app/actions";
+import { createUntitledCourse, deleteCourse } from "@/app/(dashboard)/actions";
 import {
   DropdownMenu,
   DropdownMenuContent,
