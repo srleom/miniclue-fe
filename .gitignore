@@ -45,3 +45,6 @@ supabase/
 
 # swagger
 docs/
+
+# cursor
+.cursor/
