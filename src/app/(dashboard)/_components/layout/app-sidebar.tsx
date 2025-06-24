@@ -4,10 +4,10 @@ import * as React from "react";
 import { GalleryVerticalEnd, LifeBuoy, Send } from "lucide-react";
 import { ActionResponse } from "@/lib/api/authenticated-api";
 
-import { NavPrimary } from "@/components/app/layout/nav-primary";
-import { NavCourses } from "@/components/app/layout/nav-courses";
-import { NavRecents } from "@/components/app/layout/nav-recents";
-import { NavSecondary } from "@/components/app/layout/nav-secondary";
+import { NavPrimary } from "./nav-primary";
+import { NavCourses } from "./nav-courses";
+import { NavRecents } from "./nav-recents";
+import { NavSecondary } from "./nav-secondary";
 import {
   Sidebar,
   SidebarContent,

@@ -4,14 +4,14 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PdfViewer from "@/components/app/dashboard/pdf-viewer";
+import PdfViewer from "@/app/(dashboard)/lecture/[lectureId]/_components/pdf-viewer";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import remarkGfm from "remark-gfm";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
-import { ExplainerCarousel } from "./carousel";
+import { ExplainerCarousel } from "./_components/carousel";
 
 import { placeholderMarkdown } from "./constants";
 import { Card, CardContent } from "@/components/ui/card";

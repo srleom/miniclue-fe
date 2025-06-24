@@ -1,10 +1,13 @@
 import { Metadata } from "next";
 import { getCourseLectures, getCourseDetails } from "@/app/(dashboard)/actions";
-import { DropzoneComponent } from "@/components/app/dashboard/dropzone";
+import { DropzoneComponent } from "@/app/(dashboard)/_components/dropzone";
 import { Folder } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { DataTable } from "@/components/app/dashboard/data-table";
-import { columns, LectureResponseDTO } from "./columns";
+import { DataTable } from "@/app/(dashboard)/course/[courseId]/_components/data-table";
+import {
+  columns,
+  LectureResponseDTO,
+} from "@/app/(dashboard)/course/[courseId]/_components/columns";
 
 interface CoursePageProps {
   params: { courseId: string };

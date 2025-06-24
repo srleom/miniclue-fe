@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app/layout/app-sidebar";
+import { AppSidebar } from "@/app/(dashboard)/_components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { getUserRecents, getUserCourses } from "./sidebar-actions";

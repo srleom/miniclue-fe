@@ -1,4 +1,4 @@
-import { DropzoneComponent } from "@/components/app/dashboard/dropzone";
+import { DropzoneComponent } from "@/app/(dashboard)/_components/dropzone";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
