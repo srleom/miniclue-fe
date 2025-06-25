@@ -63,7 +63,6 @@ export function ExplainerCarousel({
 
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
-      // Don't interfere with form inputs, textareas, or content-editable elements
       if (
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
@@ -72,10 +71,10 @@ export function ExplainerCarousel({
         return;
       }
 
-      if (event.key === "ArrowUp") {
+      if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
         event.preventDefault();
         api.scrollPrev();
-      } else if (event.key === "ArrowDown") {
+      } else if (event.key === "ArrowDown" || event.key === "ArrowRight") {
         event.preventDefault();
         api.scrollNext();
       }

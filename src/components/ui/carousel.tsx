@@ -75,25 +75,6 @@ function Carousel({
     api?.scrollNext();
   }, [api]);
 
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        scrollPrev();
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        scrollNext();
-      } else if (event.key === "ArrowUp") {
-        event.preventDefault();
-        scrollPrev();
-      } else if (event.key === "ArrowDown") {
-        event.preventDefault();
-        scrollNext();
-      }
-    },
-    [scrollPrev, scrollNext],
-  );
-
   React.useEffect(() => {
     if (!api || !setApi) return;
     setApi(api);
@@ -125,7 +106,6 @@ function Carousel({
       }}
     >
       <div
-        onKeyDownCapture={handleKeyDown}
         className={cn("relative", className)}
         role="region"
         aria-roledescription="carousel"
@@ -198,7 +178,10 @@ function CarouselPrevious({
         className,
       )}
       disabled={!canScrollPrev}
-      onClick={scrollPrev}
+      onClick={(e) => {
+        scrollPrev();
+        e.currentTarget.blur();
+      }}
       {...props}
     >
       {orientation === "horizontal" ? <ArrowLeft /> : <ArrowUp />}
@@ -228,7 +211,10 @@ function CarouselNext({
         className,
       )}
       disabled={!canScrollNext}
-      onClick={scrollNext}
+      onClick={(e) => {
+        scrollNext();
+        e.currentTarget.blur();
+      }}
       {...props}
     >
       {orientation === "horizontal" ? <ArrowRight /> : <ArrowDown />}
