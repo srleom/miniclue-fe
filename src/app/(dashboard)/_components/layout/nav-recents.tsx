@@ -18,11 +18,13 @@ import { ActionResponse } from "@/lib/api/authenticated-api";
 export function NavRecents({
   items,
   handleUpdateLectureAccessedAt,
+  deleteLecture,
 }: {
   items: { name: string; url: string; lectureId: string }[];
   handleUpdateLectureAccessedAt: (
     lectureId: string,
   ) => Promise<ActionResponse<void>>;
+  deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 }) {
   const { isMobile } = useSidebar();
 
@@ -47,6 +49,7 @@ export function NavRecents({
             lecture={{ lecture_id: item.lectureId, title: item.name }}
             isMobile={isMobile}
             handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+            deleteLecture={deleteLecture}
           />
         ))}
         <SidebarMenuItem>

@@ -14,17 +14,21 @@ import Link from "next/link";
 import { Presentation, MoreHorizontal, Share, Trash2 } from "lucide-react";
 import { ActionResponse } from "@/lib/api/authenticated-api";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
+import DeleteDialog from "../delete-dialog";
 
 export default function NavLecture({
   lecture,
   isMobile,
   handleUpdateLectureAccessedAt,
+  deleteLecture,
 }: {
   lecture: { lecture_id: string; title: string };
   isMobile: boolean;
   handleUpdateLectureAccessedAt: (
     lectureId: string,
   ) => Promise<ActionResponse<void>>;
+  deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 }) {
   const pathname = usePathname();
   const isActive = pathname === `/lecture/${lecture.lecture_id}`;
@@ -77,15 +81,30 @@ export default function NavLecture({
             <span>Share Lecture</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="hover:cursor-pointer"
-            onPointerDown={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
+          <DeleteDialog
+            title="Are you sure you want to delete this lecture?"
+            description="This will permanently delete the lecture and all associated data. This action cannot be undone."
+            onConfirm={async () => {
+              const toastId = toast.loading(`Deleting lecture...`);
+              let result;
+              try {
+                result = await deleteLecture(lecture.lecture_id);
+              } finally {
+                toast.dismiss(toastId);
+              }
+              if (result?.error) {
+                toast.error(result.error);
+              }
+            }}
           >
-            <Trash2 className="text-muted-foreground" />
-            <span>Delete Lecture</span>
-          </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive focus:bg-destructive/10 hover:cursor-pointer"
+              onSelect={(e) => e.preventDefault()}
+            >
+              <Trash2 className="text-destructive" />
+              <span>Delete lecture</span>
+            </DropdownMenuItem>
+          </DeleteDialog>
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>

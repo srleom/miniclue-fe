@@ -10,7 +10,10 @@ import {
   deleteCourse,
   getCourseLectures,
 } from "@/app/(dashboard)/_actions/course-actions";
-import { handleUpdateLectureAccessedAt } from "@/app/(dashboard)/_actions/lecture-actions";
+import {
+  handleUpdateLectureAccessedAt,
+  deleteLecture,
+} from "@/app/(dashboard)/_actions/lecture-actions";
 
 export default async function DashboardLayout({
   children,
@@ -49,6 +52,7 @@ export default async function DashboardLayout({
           deleteCourse={deleteCourse}
           getCourseLectures={getCourseLectures}
           handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+          deleteLecture={deleteLecture}
         />
         <SidebarInset className="flex min-h-0 flex-1 flex-col">
           {children}

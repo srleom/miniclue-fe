@@ -28,6 +28,7 @@ export function AppSidebar({
   deleteCourse,
   getCourseLectures,
   handleUpdateLectureAccessedAt,
+  deleteLecture,
   ...props
 }: {
   navCourses: {
@@ -59,6 +60,7 @@ export function AppSidebar({
   handleUpdateLectureAccessedAt: (
     lectureId: string,
   ) => Promise<ActionResponse<void>>;
+  deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 } & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="inset" {...props}>
@@ -89,10 +91,12 @@ export function AppSidebar({
           deleteCourse={deleteCourse}
           getCourseLectures={getCourseLectures}
           handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+          deleteLecture={deleteLecture}
         />
         <NavRecents
           items={navRecents}
           handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+          deleteLecture={deleteLecture}
         />
         <NavSecondary
           items={[

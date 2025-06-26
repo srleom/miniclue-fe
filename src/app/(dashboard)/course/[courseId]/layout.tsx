@@ -59,7 +59,7 @@ export default async function CourseLayout({
           <NavUser user={user} handleLogout={handleLogout} />
         </div>
       </header>
-      <div className="mx-auto flex w-full flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="mx-auto flex w-full flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0 pb-20">
         {children}
       </div>
     </>

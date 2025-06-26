@@ -68,32 +68,20 @@ export function DropzoneComponent({
       formData.append("files", file);
     });
 
-    const toastId = toast.loading(`Uploading ${files.length} file(s)...`);
+    const toastId = toast.loading(
+      `Uploading ${files.length} file${files.length > 1 ? "s" : ""}...`,
+    );
 
+    let result;
     try {
-      await uploadLectures(courseId, formData);
-      toast.success("Files uploaded successfully!", { id: toastId });
+      result = await uploadLectures(courseId, formData);
       setFiles([]);
-    } catch (error) {
-      // The redirect() function throws an error to stop execution, which we can catch.
-      // We only want to show an error toast if it's not a redirect error.
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "digest" in error &&
-        typeof (error as { digest: unknown }).digest === "string" &&
-        (error as { digest: string }).digest.includes("NEXT_REDIRECT")
-      ) {
-        // This is expected, clean up the loading toast before redirect.
-        toast.dismiss(toastId);
-      } else {
-        toast.error("An error occurred while uploading files.", {
-          id: toastId,
-        });
-        console.error("Upload failed:", error);
-      }
     } finally {
       setIsLoading(false);
+      toast.dismiss(toastId);
+    }
+    if (result?.error) {
+      toast.error(result.error);
     }
   };
 

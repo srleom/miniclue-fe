@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NavLecture from "./nav-lecture";
 import { components } from "@/types/api";
+import DeleteDialog from "../delete-dialog";
 
 export function NavCourses({
   items,
@@ -47,6 +48,7 @@ export function NavCourses({
   deleteCourse,
   getCourseLectures,
   handleUpdateLectureAccessedAt,
+  deleteLecture,
 }: {
   items: {
     title: string;
@@ -71,6 +73,7 @@ export function NavCourses({
   handleUpdateLectureAccessedAt: (
     lectureId: string,
   ) => Promise<ActionResponse<void>>;
+  deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 }) {
   const { isMobile } = useSidebar();
   const pathname = usePathname();
@@ -174,23 +177,30 @@ export function NavCourses({
                         <span>Share course</span>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="hover:cursor-pointer"
-                        onPointerDown={(e) => e.stopPropagation()}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          const result = await deleteCourse(item.courseId);
-                          if (result.error) {
-                            toast.error(result.error);
-                            return;
+                      <DeleteDialog
+                        title="Are you sure you want to delete this course?"
+                        description="This will permanently delete all lectures and all associated data. This action cannot be undone."
+                        onConfirm={async () => {
+                          const toastId = toast.loading(`Deleting course...`);
+                          let result;
+                          try {
+                            result = await deleteCourse(item.courseId);
+                          } finally {
+                            toast.dismiss(toastId);
                           }
-                          toast.success("Course deleted");
+                          if (result?.error) {
+                            toast.error(result.error);
+                          }
                         }}
                       >
-                        <Trash2 className="text-muted-foreground" />
-                        <span>Delete course</span>
-                      </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive focus:bg-destructive/10 hover:cursor-pointer"
+                          onSelect={(e) => e.preventDefault()}
+                        >
+                          <Trash2 className="text-destructive" />
+                          <span>Delete course</span>
+                        </DropdownMenuItem>
+                      </DeleteDialog>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -205,6 +215,20 @@ export function NavCourses({
                       handleUpdateLectureAccessedAt={
                         handleUpdateLectureAccessedAt
                       }
+                      deleteLecture={(lectureId) => {
+                        // Optimistically update the UI
+                        setLecturesMap((prev) => {
+                          const current = prev[item.courseId] || [];
+                          return {
+                            ...prev,
+                            [item.courseId]: current.filter(
+                              (l) => l.lecture_id !== lectureId,
+                            ),
+                          };
+                        });
+                        // Return the server action promise
+                        return deleteLecture(lectureId);
+                      }}
                     />
                   ))}
                 </SidebarMenuSub>
