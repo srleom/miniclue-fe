@@ -1,13 +1,16 @@
 import { AppSidebar } from "@/app/(dashboard)/_components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import { getUserRecents, getUserCourses } from "./sidebar-actions";
+import {
+  getUserRecents,
+  getUserCourses,
+} from "@/app/(dashboard)/_actions/sidebar-actions";
 import {
   createUntitledCourse,
   deleteCourse,
   getCourseLectures,
-  handleUpdateLectureAccessedAt,
-} from "./actions";
+} from "@/app/(dashboard)/_actions/course-actions";
+import { handleUpdateLectureAccessedAt } from "@/app/(dashboard)/_actions/lecture-actions";
 
 export default async function DashboardLayout({
   children,

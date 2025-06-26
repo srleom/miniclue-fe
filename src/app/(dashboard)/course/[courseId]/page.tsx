@@ -1,5 +1,8 @@
 import { Metadata } from "next";
-import { getCourseLectures, getCourseDetails } from "@/app/(dashboard)/actions";
+import {
+  getCourseLectures,
+  getCourseDetails,
+} from "@/app/(dashboard)/_actions/course-actions";
 import { DropzoneComponent } from "@/app/(dashboard)/_components/dropzone";
 import { Folder } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +11,7 @@ import {
   columns,
   LectureResponseDTO,
 } from "@/app/(dashboard)/course/[courseId]/_components/columns";
+import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
 
 interface CoursePageProps {
   params: { courseId: string };
@@ -39,15 +43,12 @@ export default async function CoursePage({ params }: CoursePageProps) {
   }
   const { title: courseTitle, is_default: isDefault } = courseRes.data;
   const lecturesDTO = await getCourseLectures(courseId);
-  console.log(lecturesDTO);
   const tableLectures: LectureResponseDTO[] =
     lecturesDTO.data?.map((lec) => ({
       lecture_id: lec.lecture_id ?? "",
       title: lec.title ?? "",
       created_at: lec.created_at ?? "",
     })) ?? [];
-
-  console.log("First lecture:", tableLectures[0]);
 
   return (
     <div className="mx-auto mt-16 flex w-full flex-col items-center lg:w-3xl">
@@ -58,7 +59,11 @@ export default async function CoursePage({ params }: CoursePageProps) {
       </div>
 
       <div className="mb-12 w-full">
-        <DropzoneComponent isCoursePage={true} courseId={courseId} />
+        <DropzoneComponent
+          isCoursePage={true}
+          courseId={courseId}
+          uploadLectures={uploadLectures}
+        />
       </div>
       <DataTable columns={columns} data={tableLectures} />
     </div>

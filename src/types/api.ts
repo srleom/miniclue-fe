@@ -539,7 +539,7 @@ export interface paths {
     post?: never;
     /**
      * Delete a lecture
-     * @description Deletes a lecture and all its derived data.
+     * @description Deletes a lecture and all its derived database records, removes its PDF from storage, and clears related pending jobs from ingestion, embedding, explanation, and summary queues.
      */
     delete: {
       parameters: {

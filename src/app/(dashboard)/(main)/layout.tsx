@@ -1,4 +1,4 @@
-import { getUserData } from "@/app/(dashboard)/sidebar-actions";
+import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
 import { handleLogout } from "@/app/auth/actions";
 import { NavUser } from "@/app/(dashboard)/_components/layout/nav-user";
 import { SidebarTrigger } from "@/components/ui/sidebar";

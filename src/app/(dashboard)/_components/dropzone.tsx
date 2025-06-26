@@ -3,7 +3,9 @@
 import * as React from "react";
 import { toast } from "sonner";
 
-import { uploadLectures } from "@/app/(dashboard)/actions";
+import { ActionResponse } from "@/lib/api/authenticated-api";
+import { components } from "@/types/api";
+
 import { Button } from "@/components/ui/button";
 import {
   Dropzone,
@@ -28,9 +30,18 @@ import {
 export function DropzoneComponent({
   isCoursePage = false,
   courseId,
+  uploadLectures,
 }: {
   isCoursePage?: boolean;
   courseId?: string;
+  uploadLectures: (
+    courseId: string,
+    formData: FormData,
+  ) => Promise<
+    ActionResponse<
+      components["schemas"]["app_internal_api_v1_dto.LectureUploadResponseDTO"][]
+    >
+  >;
 }) {
   const [files, setFiles] = React.useState<File[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -63,10 +74,16 @@ export function DropzoneComponent({
       await uploadLectures(courseId, formData);
       toast.success("Files uploaded successfully!", { id: toastId });
       setFiles([]);
-    } catch (error: any) {
+    } catch (error) {
       // The redirect() function throws an error to stop execution, which we can catch.
       // We only want to show an error toast if it's not a redirect error.
-      if (error.digest?.includes("NEXT_REDIRECT")) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "digest" in error &&
+        typeof (error as { digest: unknown }).digest === "string" &&
+        (error as { digest: string }).digest.includes("NEXT_REDIRECT")
+      ) {
         // This is expected, clean up the loading toast before redirect.
         toast.dismiss(toastId);
       } else {

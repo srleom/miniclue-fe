@@ -1,5 +1,6 @@
 import { DropzoneComponent } from "@/app/(dashboard)/_components/dropzone";
-import { getUserCourses } from "@/app/(dashboard)/sidebar-actions";
+import { getUserCourses } from "@/app/(dashboard)/_actions/sidebar-actions";
+import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
 import { Button } from "@/components/ui/button";
 
 export default async function Page() {
@@ -27,6 +28,7 @@ export default async function Page() {
         <DropzoneComponent
           isCoursePage={true}
           courseId={defaultCourse?.courseId}
+          uploadLectures={uploadLectures}
         />
       </div>
     </div>
