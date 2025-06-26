@@ -20,45 +20,29 @@ import {
 
 import Link from "next/link";
 import { components } from "@/types/api";
+import { CourseWithLectures, NavRecentsItem } from "../../_types/types";
 
 export function AppSidebar({
   navCourses,
   navRecents,
   createUntitledCourse,
   deleteCourse,
-  getCourseLectures,
   handleUpdateLectureAccessedAt,
+  deleteLecture,
   ...props
 }: {
-  navCourses: {
-    title: string;
-    url: string;
-    courseId: string;
-    isDefault: boolean;
-    isActive?: boolean;
-    items?: { title: string; url: string }[];
-  }[];
-  navRecents: {
-    name: string;
-    lectureId: string;
-    url: string;
-  }[];
+  navCourses: CourseWithLectures[];
+  navRecents: NavRecentsItem[];
   createUntitledCourse: () => Promise<
     ActionResponse<
       components["schemas"]["app_internal_api_v1_dto.CourseResponseDTO"]
     >
   >;
   deleteCourse: (courseId: string) => Promise<ActionResponse<void>>;
-  getCourseLectures: (
-    courseId: string,
-  ) => Promise<
-    ActionResponse<
-      components["schemas"]["app_internal_api_v1_dto.LectureResponseDTO"][]
-    >
-  >;
   handleUpdateLectureAccessedAt: (
     lectureId: string,
   ) => Promise<ActionResponse<void>>;
+  deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 } & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="inset" {...props}>
@@ -87,12 +71,13 @@ export function AppSidebar({
           items={navCourses}
           createUntitledCourse={createUntitledCourse}
           deleteCourse={deleteCourse}
-          getCourseLectures={getCourseLectures}
           handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+          deleteLecture={deleteLecture}
         />
         <NavRecents
           items={navRecents}
           handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+          deleteLecture={deleteLecture}
         />
         <NavSecondary
           items={[

@@ -94,3 +94,37 @@ export async function getLecture(
 
   return { data: data ?? undefined, error: undefined };
 }
+
+export async function deleteLecture(
+  lectureId: string,
+): Promise<ActionResponse<void>> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data: lecture, error: fetchError } = await api.GET(
+    "/lectures/{lectureId}",
+    {
+      params: { path: { lectureId } },
+    },
+  );
+
+  if (fetchError || !lecture?.course_id) {
+    console.error("Fetch lecture for delete error:", fetchError);
+    return { error: "Failed to fetch lecture to determine course." };
+  }
+
+  const { error: deleteError } = await api.DELETE("/lectures/{lectureId}", {
+    params: { path: { lectureId } },
+  });
+
+  if (deleteError) {
+    console.error("Delete lecture error:", deleteError);
+    return { error: "Failed to delete lecture." };
+  }
+
+  revalidateTag(`lectures:${lecture.course_id}`);
+  revalidateTag("recents");
+  redirect(`/course/${lecture.course_id}`);
+}

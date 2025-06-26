@@ -10,7 +10,11 @@ import {
   deleteCourse,
   getCourseLectures,
 } from "@/app/(dashboard)/_actions/course-actions";
-import { handleUpdateLectureAccessedAt } from "@/app/(dashboard)/_actions/lecture-actions";
+import {
+  handleUpdateLectureAccessedAt,
+  deleteLecture,
+} from "@/app/(dashboard)/_actions/lecture-actions";
+import { CourseWithLectures, NavRecentsItem } from "./_types/types";
 
 export default async function DashboardLayout({
   children,
@@ -21,13 +25,8 @@ export default async function DashboardLayout({
   const sidebarCookie = cookieStore.get("sidebar_state")?.value;
   const sidebarOpen = sidebarCookie === "true";
 
-  let navRecents: { name: string; lectureId: string; url: string }[] = [];
-  let navCourses: {
-    title: string;
-    url: string;
-    courseId: string;
-    isDefault: boolean;
-  }[] = [];
+  let navRecents: NavRecentsItem[] = [];
+  let navCourses: CourseWithLectures[] = [];
 
   const recentsRes = await getUserRecents();
   if (recentsRes.data) {
@@ -36,7 +35,21 @@ export default async function DashboardLayout({
 
   const coursesRes = await getUserCourses();
   if (coursesRes.data) {
-    navCourses = coursesRes.data;
+    const lecturePromises = coursesRes.data.map(async (course) => {
+      const result = await getCourseLectures(course.courseId);
+      const lectures =
+        result.data?.filter(
+          (lecture): lecture is { lecture_id: string; title: string } =>
+            lecture.lecture_id !== undefined && lecture.title !== undefined,
+        ) || [];
+      return {
+        ...course,
+        lectures,
+      };
+    });
+
+    navCourses = await Promise.all(lecturePromises);
+    console.log(navCourses);
   }
 
   return (
@@ -47,8 +60,8 @@ export default async function DashboardLayout({
           navRecents={navRecents}
           createUntitledCourse={createUntitledCourse}
           deleteCourse={deleteCourse}
-          getCourseLectures={getCourseLectures}
           handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
+          deleteLecture={deleteLecture}
         />
         <SidebarInset className="flex min-h-0 flex-1 flex-col">
           {children}
