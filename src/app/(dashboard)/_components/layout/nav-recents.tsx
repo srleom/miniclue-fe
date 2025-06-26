@@ -14,13 +14,14 @@ import {
 import Link from "next/link";
 import NavLecture from "./nav-lecture";
 import { ActionResponse } from "@/lib/api/authenticated-api";
+import { NavRecentsItem } from "../../_types/types";
 
 export function NavRecents({
   items,
   handleUpdateLectureAccessedAt,
   deleteLecture,
 }: {
-  items: { name: string; url: string; lectureId: string }[];
+  items: NavRecentsItem[];
   handleUpdateLectureAccessedAt: (
     lectureId: string,
   ) => Promise<ActionResponse<void>>;
