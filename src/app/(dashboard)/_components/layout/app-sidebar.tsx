@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { GalleryVerticalEnd, LifeBuoy, Send } from "lucide-react";
 import { ActionResponse } from "@/lib/api/authenticated-api";

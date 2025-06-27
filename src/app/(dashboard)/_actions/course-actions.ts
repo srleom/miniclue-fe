@@ -71,7 +71,7 @@ export async function getCourseLectures(
 
   const { data, error: fetchError } = await api.GET("/lectures", {
     params: { query: { course_id: courseId } },
-    next: { tags: [`lectures:${courseId}`] },
+    next: { tags: [`lectures:${courseId}`], revalidate: 300 },
   });
 
   if (fetchError) {
