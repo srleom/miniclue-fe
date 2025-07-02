@@ -49,7 +49,6 @@ export default async function DashboardLayout({
     });
 
     navCourses = await Promise.all(lecturePromises);
-    console.log(navCourses);
   }
 
   return (
