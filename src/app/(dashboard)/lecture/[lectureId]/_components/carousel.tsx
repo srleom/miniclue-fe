@@ -89,7 +89,7 @@ export function ExplainerCarousel({
 
   const memoizedCarouselContent = React.useMemo(() => {
     return (
-      <CarouselContent className="-mt-0 h-full basis-full">
+      <CarouselContent className="-mt-0 h-[calc(100vh-9.5rem)] basis-full">
         {Array.from({ length: totalPageCount || 1 }).map((_, index) => {
           const slideNum = index + 1;
           const markdown = explanations[slideNum] ?? "Loading...";
@@ -98,8 +98,8 @@ export function ExplainerCarousel({
               key={index}
               className="h-full basis-full overflow-y-auto pt-0"
             >
-              <Card className="markdown-content h-full w-full overflow-y-auto rounded-lg py-8">
-                <CardContent className="px-10">
+              <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-8 shadow-none">
+                <CardContent className="flex-1 px-10">
                   <ReactMarkdown
                     remarkPlugins={[remarkMath, remarkGfm]}
                     rehypePlugins={[rehypeKatex]}
