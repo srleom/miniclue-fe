@@ -18,7 +18,7 @@ import {
 import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
 
 interface CoursePageProps {
-  params: { courseId: string };
+  params: Promise<{ courseId: string }>;
 }
 
 export async function generateMetadata({

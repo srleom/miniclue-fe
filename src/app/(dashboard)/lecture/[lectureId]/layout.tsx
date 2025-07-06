@@ -22,7 +22,7 @@ export default async function LectureLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { lectureId: string };
+  params: Promise<{ lectureId: string }>;
 }) {
   let user = { name: "", email: "", avatar: "" };
   const userRes = await getUserData();

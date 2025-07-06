@@ -6,7 +6,14 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "50mb",
     },
   },
-  /* config options here */
+  serverExternalPackages: ["import-in-the-middle", "require-in-the-middle"],
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.node$/,
+      loader: "node-loader",
+    });
+    return config;
+  },
 };
 
 export default nextConfig;
