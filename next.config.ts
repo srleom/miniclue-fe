@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
       test: /\.node$/,
       loader: "node-loader",
     });
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      canvas: false,
+    };
     return config;
   },
 };
