@@ -11,7 +11,7 @@ export async function handleLogin() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:3000/auth/callback?next=/",
+      redirectTo: `${process.env.NEXT_PUBLIC_FE_BASE_URL}/auth/callback?next=/`,
       queryParams: {
         access_type: "offline",
         prompt: "consent",
