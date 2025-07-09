@@ -119,7 +119,7 @@ export function ExplainerCarousel({
             );
           } else {
             return (
-              <CarouselItem key={index} className="h-full basis-full">
+              <CarouselItem key={index} className="h-full basis-full pt-0">
                 <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-8 shadow-none">
                   <CardContent className="flex flex-1 items-center justify-center px-10">
                     <LottieAnimation />
