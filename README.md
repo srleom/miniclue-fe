@@ -29,12 +29,23 @@
 
   - `/error` → Custom 404 page (with link back to `/`)
 
-## Full CI/CD Workflow
+## CI/CD Workflow
 
-1. Developer writes code, tests locally, and commits to a feature branch.
-2. Developer opens a PR from the feature branch to main. Preview deployment is automatically created.
-3. Code is reviewed by a reviewer.
-4. Once approved, PR is merged to main.
-5. GitHub Actions workflow builds and deploys to staging.
-6. Developer tests in staging.
-7. If no issues are detected in staging, developer manually deploys to production using Github Actions.
+### Staging Environment
+
+1. A developer writes code on a feature branch and opens a Pull Request to `main`. CI is triggered.
+2. After code review and approval, the PR is merged.
+3. The merge to `main` automatically triggers a GitHub Actions workflow (`cd.yml`).
+4. This workflow deploys to Vercel staging project.
+
+### Production Environment
+
+1. After changes are verified in staging, a release can be deployed to production.
+2. A developer creates and pushes a semantic version git tag (e.g., `v1.2.3`) from the `main` branch.
+   ```bash
+   # From the main branch
+   git tag -a v1.0.0 -m "Release notes"
+   git push origin v1.0.0
+   ```
+3. Pushing the tag automatically triggers the release workflow (`release.yml`).
+4. This workflow deploys to Vercel production project.
