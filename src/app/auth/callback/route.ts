@@ -52,10 +52,10 @@ export async function GET(request: Request) {
       if (isLocalEnv) {
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`);
-      } else if (vercelUrl) {
-        return NextResponse.redirect(`https://${vercelUrl}${next}`);
       } else if (forwardedHost) {
         return NextResponse.redirect(`https://${forwardedHost}${next}`);
+      } else if (vercelUrl) {
+        return NextResponse.redirect(`https://${vercelUrl}${next}`);
       } else {
         return NextResponse.redirect(`${origin}${next}`);
       }

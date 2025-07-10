@@ -12,10 +12,6 @@ export async function handleLogin() {
     provider: "google",
     options: {
       redirectTo: `${process.env.NEXT_PUBLIC_FE_BASE_URL}/auth/callback?next=/`,
-      queryParams: {
-        access_type: "offline",
-        prompt: "consent",
-      },
     },
   });
 
