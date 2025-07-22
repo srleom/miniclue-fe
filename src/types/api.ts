@@ -264,6 +264,68 @@ export interface paths {
     };
     trace?: never;
   };
+  "/dlq": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Process dead-letter queue message
+     * @description Receives a Pub/Sub push from a dead-letter topic and persists the message to the database for manual inspection.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      /** @description Dead-letter queue Pub/Sub push payload */
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["app_internal_api_v1_dto.PubSubPushRequest"];
+        };
+      };
+      responses: {
+        /** @description No Content */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Invalid request body or format */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Internal server error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/lectures": {
     parameters: {
       query?: never;
@@ -677,65 +739,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /**
-     * List lecture notes
-     * @description Retrieves notes for a lecture with pagination
-     */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Limit number of results */
-          limit?: number;
-          /** @description Pagination offset */
-          offset?: number;
-        };
-        header?: never;
-        path: {
-          /** @description Lecture ID */
-          lectureId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["app_internal_api_v1_dto.LectureNoteResponseDTO"][];
-          };
-        };
-        /** @description Unauthorized: User ID not found in context */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-        /** @description Lecture not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-        /** @description Failed to retrieve notes */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-      };
-    };
+    get?: never;
     put?: never;
     /**
      * Create a lecture note
@@ -1321,6 +1325,18 @@ export interface components {
     "app_internal_api_v1_dto.LectureUploadResponseDTO": {
       lecture_id?: string;
       status?: string;
+    };
+    "app_internal_api_v1_dto.PubSubMessage": {
+      attributes?: {
+        [key: string]: string;
+      };
+      /** @description Base64-encoded */
+      data?: string;
+      messageId?: string;
+    };
+    "app_internal_api_v1_dto.PubSubPushRequest": {
+      message?: components["schemas"]["app_internal_api_v1_dto.PubSubMessage"];
+      subscription?: string;
     };
     "app_internal_api_v1_dto.SignedURLResponseDTO": {
       url?: string;

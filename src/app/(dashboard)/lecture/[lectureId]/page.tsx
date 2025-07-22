@@ -35,7 +35,10 @@ import {
   getExplanations,
   getSignedPdfUrl,
   getSummary,
+  getLecture,
 } from "@/app/(dashboard)/_actions/lecture-actions";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export default function LecturePage() {
   const { lectureId } = useParams() as { lectureId: string };
@@ -56,6 +59,12 @@ export default function LecturePage() {
   const [activeTab, setActiveTab] = React.useState<string>("explanation");
   const [summary, setSummary] = React.useState<string | undefined>(undefined);
   const [summaryLoading, setSummaryLoading] = React.useState<boolean>(false);
+  const [lectureStatus, setLectureStatus] = React.useState<string | undefined>(
+    undefined,
+  );
+  const statusChannelRef = React.useRef<
+    ReturnType<typeof supabase.channel> | undefined
+  >(undefined);
 
   React.useEffect(() => {
     setLoading(true);
@@ -174,6 +183,78 @@ export default function LecturePage() {
         setSummaryLoading(false);
       });
   }, [activeTab, summary, lectureId]);
+  // Fetch initial lecture status
+  React.useEffect(() => {
+    getLecture(lectureId).then(({ data, error }) => {
+      if (error) {
+        console.error("Failed fetching lecture:", error);
+        return;
+      }
+      if (data?.status) {
+        setLectureStatus(data.status);
+      }
+    });
+  }, [lectureId]);
+
+  // Subscribe to lecture status changes
+  React.useEffect(() => {
+    if (
+      lectureStatus === undefined ||
+      lectureStatus === "complete" ||
+      lectureStatus === "failed"
+    ) {
+      return;
+    }
+
+    statusChannelRef.current = supabase
+      .channel(`realtime:status:${lectureId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "lectures",
+          filter: `id=eq.${lectureId}`,
+        },
+        ({ new: row }) => {
+          if (row.status) {
+            setLectureStatus(row.status);
+            toast.info(
+              row.status
+                .split("_")
+                .map(
+                  (word: string) =>
+                    word.charAt(0).toUpperCase() + word.slice(1),
+                )
+                .join(" "),
+            );
+          }
+          if (row.status === "complete" || row.status === "failed") {
+            if (row.status === "complete") {
+              toast.success("Success");
+            } else if (row.status === "failed") {
+              toast.error("Error");
+            }
+            if (statusChannelRef.current) {
+              supabase.removeChannel(statusChannelRef.current);
+              statusChannelRef.current = undefined;
+            }
+          }
+        },
+      )
+      .subscribe((_, err) => {
+        if (err) {
+          console.error("Status subscription error:", err);
+        }
+      });
+
+    return () => {
+      if (statusChannelRef.current) {
+        supabase.removeChannel(statusChannelRef.current);
+        statusChannelRef.current = undefined;
+      }
+    };
+  }, [lectureStatus, lectureId, supabase]);
 
   const handlePdfPageChange = (newPage: number) => {
     setScrollSource("pdf");
@@ -186,82 +267,90 @@ export default function LecturePage() {
   };
 
   return (
-    <div className="mx-auto h-[calc(100vh-6rem)] w-full overflow-hidden">
-      <ResizablePanelGroup direction="horizontal" className="h-full">
-        <ResizablePanel className="h-full pr-6">
-          {pdfUrl ? (
-            <PdfViewer
-              fileUrl={pdfUrl}
-              pageNumber={pageNumber}
-              onPageChange={handlePdfPageChange}
-              onDocumentLoad={setTotalPageCount}
-              scrollSource={scrollSource}
-            />
-          ) : (
-            <div className="text-muted-foreground flex h-full flex-col items-center justify-center rounded-lg border">
-              <LottieAnimation />
-            </div>
-          )}
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel className="flex flex-col pl-6">
-          <Tabs
-            defaultValue="explanation"
-            onValueChange={(value) => setActiveTab(value)}
-            className="flex min-h-0 flex-col"
-          >
-            <TabsList className="w-full flex-shrink-0">
-              <TabsTrigger value="explanation" className="hover:cursor-pointer">
-                Explanation
-              </TabsTrigger>
-              <TabsTrigger value="summary" className="hover:cursor-pointer">
-                Summary
-              </TabsTrigger>
-              <TabsTrigger value="chat" className="hover:cursor-pointer">
-                Chat
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent
-              value="explanation"
-              className="mt-3 flex min-h-0 flex-1 flex-col"
-            >
-              <ExplainerCarousel
+    <>
+      {lectureStatus !== "complete" && lectureStatus !== "failed" && (
+        <Toaster />
+      )}
+      <div className="mx-auto h-[calc(100vh-6rem)] w-full overflow-hidden">
+        <ResizablePanelGroup direction="horizontal" className="h-full">
+          <ResizablePanel className="h-full pr-6">
+            {pdfUrl ? (
+              <PdfViewer
+                fileUrl={pdfUrl}
                 pageNumber={pageNumber}
-                onPageChange={handleCarouselPageChange}
-                totalPageCount={totalPageCount}
+                onPageChange={handlePdfPageChange}
+                onDocumentLoad={setTotalPageCount}
                 scrollSource={scrollSource}
-                explanations={explanations}
               />
-            </TabsContent>
-            <TabsContent
-              value="summary"
-              className="mt-3 flex min-h-0 flex-1 flex-col"
+            ) : (
+              <div className="text-muted-foreground flex h-full flex-col items-center justify-center rounded-lg border">
+                <LottieAnimation />
+              </div>
+            )}
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel className="flex flex-col pl-6">
+            <Tabs
+              defaultValue="explanation"
+              onValueChange={(value) => setActiveTab(value)}
+              className="flex min-h-0 flex-col"
             >
-              {summary === undefined || summaryLoading ? (
+              <TabsList className="w-full flex-shrink-0">
+                <TabsTrigger
+                  value="explanation"
+                  className="hover:cursor-pointer"
+                >
+                  Explanation
+                </TabsTrigger>
+                <TabsTrigger value="summary" className="hover:cursor-pointer">
+                  Summary
+                </TabsTrigger>
+                <TabsTrigger value="chat" className="hover:cursor-pointer">
+                  Chat
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent
+                value="explanation"
+                className="mt-3 flex min-h-0 flex-1 flex-col"
+              >
+                <ExplainerCarousel
+                  pageNumber={pageNumber}
+                  onPageChange={handleCarouselPageChange}
+                  totalPageCount={totalPageCount}
+                  scrollSource={scrollSource}
+                  explanations={explanations}
+                />
+              </TabsContent>
+              <TabsContent
+                value="summary"
+                className="mt-3 flex min-h-0 flex-1 flex-col"
+              >
+                {summary === undefined || summaryLoading ? (
+                  <div className="text-muted-foreground flex h-[calc(100vh-9.5rem)] flex-col items-center justify-center rounded-lg border">
+                    <LottieAnimation />
+                  </div>
+                ) : (
+                  <Card className="markdown-content h-[calc(100vh-9.5rem)] w-full overflow-y-auto rounded-lg py-8 shadow-none">
+                    <CardContent className="px-10">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkMath, remarkGfm]}
+                        rehypePlugins={[rehypeKatex]}
+                      >
+                        {summary}
+                      </ReactMarkdown>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+              <TabsContent value="chat" className="mt-3 flex-1">
                 <div className="text-muted-foreground flex h-[calc(100vh-9.5rem)] flex-col items-center justify-center rounded-lg border">
                   <LottieAnimation />
                 </div>
-              ) : (
-                <Card className="markdown-content h-[calc(100vh-9.5rem)] w-full overflow-y-auto rounded-lg py-8 shadow-none">
-                  <CardContent className="px-10">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkMath, remarkGfm]}
-                      rehypePlugins={[rehypeKatex]}
-                    >
-                      {summary}
-                    </ReactMarkdown>
-                  </CardContent>
-                </Card>
-              )}
-            </TabsContent>
-            <TabsContent value="chat" className="mt-3 flex-1">
-              <div className="text-muted-foreground flex h-[calc(100vh-9.5rem)] flex-col items-center justify-center rounded-lg border">
-                <LottieAnimation />
-              </div>
-            </TabsContent>
-          </Tabs>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
+              </TabsContent>
+            </Tabs>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+    </>
   );
 }
