@@ -56,7 +56,6 @@ export default function LecturePage() {
     "pdf" | "carousel" | null
   >(null);
   const [loading, setLoading] = React.useState(true);
-  const [activeTab, setActiveTab] = React.useState<string>("explanation");
   const [summary, setSummary] = React.useState<string | undefined>(undefined);
   const [summaryLoading, setSummaryLoading] = React.useState<boolean>(false);
   const [lectureStatus, setLectureStatus] = React.useState<string | undefined>(
@@ -286,6 +285,21 @@ export default function LecturePage() {
     };
   }, [lectureId, summary, supabase]);
 
+  // Initial fetch of lecture status
+  React.useEffect(() => {
+    console.log("Fetching initial lecture status");
+    getLecture(lectureId).then(({ data, error }) => {
+      if (error) {
+        console.error("Failed fetching lecture:", error);
+        return;
+      }
+      if (data?.status) {
+        console.log("Initial lecture status:", data.status);
+        setLectureStatus(data.status);
+      }
+    });
+  }, [lectureId]);
+
   const handlePdfPageChange = (newPage: number) => {
     setScrollSource("pdf");
     setPageNumber(newPage);
@@ -320,11 +334,7 @@ export default function LecturePage() {
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel className="flex flex-col pl-6">
-            <Tabs
-              defaultValue="explanation"
-              onValueChange={(value) => setActiveTab(value)}
-              className="flex min-h-0 flex-col"
-            >
+            <Tabs defaultValue="explanation" className="flex min-h-0 flex-col">
               <TabsList className="w-full flex-shrink-0">
                 <TabsTrigger
                   value="explanation"
