@@ -65,6 +65,9 @@ export default function LecturePage() {
   const statusChannelRef = React.useRef<
     ReturnType<typeof supabase.channel> | undefined
   >(undefined);
+  const summaryChannelRef = React.useRef<
+    ReturnType<typeof supabase.channel> | undefined
+  >(undefined);
 
   React.useEffect(() => {
     setLoading(true);
@@ -133,6 +136,7 @@ export default function LecturePage() {
         },
       )
       .subscribe((status, err) => {
+        console.log("Explanations subscription status:", status);
         if (err) {
           console.error("Subscription error:", err);
         }
@@ -164,40 +168,6 @@ export default function LecturePage() {
   }, [explanations, totalPageCount, supabase]);
 
   React.useEffect(() => {
-    if (activeTab !== "summary" || summary !== undefined) {
-      return;
-    }
-    setSummaryLoading(true);
-    getSummary(lectureId)
-      .then(({ data, error }) => {
-        if (data?.content) {
-          setSummary(data.content);
-        } else if (error) {
-          console.error("Failed to fetch summary:", error);
-          setSummary("");
-        } else {
-          setSummary("");
-        }
-      })
-      .finally(() => {
-        setSummaryLoading(false);
-      });
-  }, [activeTab, summary, lectureId]);
-  // Fetch initial lecture status
-  React.useEffect(() => {
-    getLecture(lectureId).then(({ data, error }) => {
-      if (error) {
-        console.error("Failed fetching lecture:", error);
-        return;
-      }
-      if (data?.status) {
-        setLectureStatus(data.status);
-      }
-    });
-  }, [lectureId]);
-
-  // Subscribe to lecture status changes
-  React.useEffect(() => {
     if (
       lectureStatus === undefined ||
       lectureStatus === "complete" ||
@@ -206,6 +176,7 @@ export default function LecturePage() {
       return;
     }
 
+    console.log("Subscribing to status channel");
     statusChannelRef.current = supabase
       .channel(`realtime:status:${lectureId}`)
       .on(
@@ -217,7 +188,9 @@ export default function LecturePage() {
           filter: `id=eq.${lectureId}`,
         },
         ({ new: row }) => {
+          console.log("New status row:", row);
           if (row.status) {
+            console.log("Realtime status update:", row.status);
             setLectureStatus(row.status);
             toast.info(
               row.status
@@ -230,6 +203,9 @@ export default function LecturePage() {
             );
           }
           if (row.status === "complete" || row.status === "failed") {
+            console.log(
+              `Status ${row.status} reached, unsubscribing status channel`,
+            );
             if (row.status === "complete") {
               toast.success("Success");
             } else if (row.status === "failed") {
@@ -242,19 +218,73 @@ export default function LecturePage() {
           }
         },
       )
-      .subscribe((_, err) => {
+      .subscribe((status, err) => {
+        console.log("Status subscription status:", status);
         if (err) {
           console.error("Status subscription error:", err);
         }
       });
 
     return () => {
+      console.log("Unsubscribing from status channel on unmount");
       if (statusChannelRef.current) {
         supabase.removeChannel(statusChannelRef.current);
         statusChannelRef.current = undefined;
       }
     };
   }, [lectureStatus, lectureId, supabase]);
+
+  // Initial fetch of summary on mount
+  React.useEffect(() => {
+    setSummaryLoading(true);
+    getSummary(lectureId)
+      .then(({ data }) => {
+        if (data?.content) {
+          setSummary(data.content);
+        }
+      })
+      .finally(() => {
+        setSummaryLoading(false);
+      });
+  }, [lectureId]);
+
+  // Subscribe to INSERT events on summaries for live updates
+  React.useEffect(() => {
+    if (summaryChannelRef.current || summary !== undefined) {
+      return;
+    }
+    console.log("Subscribing to summaries channel");
+    summaryChannelRef.current = supabase
+      .channel(`realtime:summaries:${lectureId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "summaries",
+          filter: `lecture_id=eq.${lectureId}`,
+        },
+        ({ new: row }) => {
+          console.log("New summary row:", row);
+          setSummary(row.content);
+          if (summaryChannelRef.current) {
+            supabase.removeChannel(summaryChannelRef.current);
+            summaryChannelRef.current = undefined;
+          }
+        },
+      )
+      .subscribe((status, err) => {
+        console.log("Summary subscription status:", status);
+        if (err) console.error("Summary subscription error:", err);
+      });
+    return () => {
+      if (summaryChannelRef.current) {
+        console.log("Unsubscribing from summary channel on unmount");
+        supabase.removeChannel(summaryChannelRef.current);
+        summaryChannelRef.current = undefined;
+      }
+    };
+  }, [lectureId, summary, supabase]);
 
   const handlePdfPageChange = (newPage: number) => {
     setScrollSource("pdf");
@@ -325,7 +355,7 @@ export default function LecturePage() {
                 value="summary"
                 className="mt-3 flex min-h-0 flex-1 flex-col"
               >
-                {summary === undefined || summaryLoading ? (
+                {summary === undefined || summaryLoading || summary === "" ? (
                   <div className="text-muted-foreground flex h-[calc(100vh-9.5rem)] flex-col items-center justify-center rounded-lg border">
                     <LottieAnimation />
                   </div>
