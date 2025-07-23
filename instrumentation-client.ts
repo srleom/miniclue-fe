@@ -7,7 +7,7 @@ const isProductionDomain =
 
 if (isProductionDomain) {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-    api_host: "/relay-xYmY/",
+    api_host: "/relay-xYmY",
     ui_host: "https://us.posthog.com",
     defaults: "2025-05-24",
     capture_exceptions: true,
