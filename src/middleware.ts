@@ -18,6 +18,7 @@ export async function middleware(request: NextRequest) {
     );
 
     const headers = new Headers(request.headers);
+    headers.delete("cookie");
     headers.set("host", destinationHost);
 
     return NextResponse.rewrite(newUrl, {
