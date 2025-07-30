@@ -13,7 +13,7 @@ import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
 
 // code
 import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
-import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
+import { getUser } from "@/app/(dashboard)/_actions/user-actions";
 import { handleLogout } from "@/app/auth/actions";
 
 export default async function CourseLayout({
@@ -30,9 +30,13 @@ export default async function CourseLayout({
   }
   const { title: courseTitle } = courseRes.data;
   let user = { name: "", email: "", avatar: "" };
-  const userRes = await getUserData();
+  const userRes = await getUser();
   if (userRes.data) {
-    user = userRes.data;
+    user = {
+      name: userRes.data.name ?? "",
+      email: userRes.data.email ?? "",
+      avatar: userRes.data.avatar_url ?? "",
+    };
   }
 
   return (

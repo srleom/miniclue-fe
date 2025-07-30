@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 // actions
-import { deleteUserAccount } from "@/app/(dashboard)/_actions/settings-actions";
+import { deleteUserAccount } from "@/app/(dashboard)/_actions/user-actions";
 
 export function DeleteAccountButton() {
   const [isDeleting, setIsDeleting] = useState(false);

@@ -9,13 +9,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getInitials } from "@/lib/utils";
 
 // actions
-import { getUserProfile } from "@/app/(dashboard)/_actions/settings-actions";
+import { getUser } from "@/app/(dashboard)/_actions/user-actions";
 
 // components
 import { DeleteAccountButton } from "./_components/delete-account-button";
 
 async function ProfileContent() {
-  const { data: user, error } = await getUserProfile();
+  const { data: user, error } = await getUser();
 
   if (error) {
     return (

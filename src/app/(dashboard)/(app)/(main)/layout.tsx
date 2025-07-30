@@ -3,7 +3,7 @@ import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // code
-import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
+import { getUser } from "@/app/(dashboard)/_actions/user-actions";
 import { handleLogout } from "@/app/auth/actions";
 
 export default async function MainLayout({
@@ -12,9 +12,13 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   let user = { name: "", email: "", avatar: "" };
-  const userRes = await getUserData();
+  const userRes = await getUser();
   if (userRes.data) {
-    user = userRes.data;
+    user = {
+      name: userRes.data.name ?? "",
+      email: userRes.data.email ?? "",
+      avatar: userRes.data.avatar_url ?? "",
+    };
   }
   return (
     <>

@@ -14,7 +14,7 @@ import LectureHeader from "./_components/lecture-header";
 // code
 import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
 import { getLecture } from "@/app/(dashboard)/_actions/lecture-actions";
-import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
+import { getUser } from "@/app/(dashboard)/_actions/user-actions";
 import { handleLogout } from "@/app/auth/actions";
 
 export default async function LectureLayout({
@@ -25,9 +25,13 @@ export default async function LectureLayout({
   params: Promise<{ lectureId: string }>;
 }) {
   let user = { name: "", email: "", avatar: "" };
-  const userRes = await getUserData();
+  const userRes = await getUser();
   if (userRes.data) {
-    user = userRes.data;
+    user = {
+      name: userRes.data.name ?? "",
+      email: userRes.data.email ?? "",
+      avatar: userRes.data.avatar_url ?? "",
+    };
   }
 
   const { lectureId } = await params;

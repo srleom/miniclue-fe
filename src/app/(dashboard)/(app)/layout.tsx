@@ -22,7 +22,7 @@ import {
 import {
   getUserCourses,
   getUserRecents,
-} from "@/app/(dashboard)/_actions/sidebar-actions";
+} from "@/app/(dashboard)/_actions/user-actions";
 
 export default async function DashboardLayout({
   children,

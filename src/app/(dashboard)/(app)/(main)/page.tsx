@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 // code
 import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
-import { getUserCourses } from "@/app/(dashboard)/_actions/sidebar-actions";
+import { getUserCourses } from "@/app/(dashboard)/_actions/user-actions";
 
 export default async function Page() {
   const { data: courses, error } = await getUserCourses();
