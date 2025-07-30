@@ -17,7 +17,7 @@ import { RenameDialog } from "@/app/(dashboard)/(app)/_components/rename-dialog"
 import { Pencil } from "lucide-react";
 
 // code
-import { updateLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
+import { updateLecture } from "@/app/(dashboard)/_actions/lecture-actions";
 
 export interface LectureHeaderProps {
   lectureId: string;

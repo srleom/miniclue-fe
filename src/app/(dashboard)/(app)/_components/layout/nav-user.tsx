@@ -29,6 +29,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+// lib
+import { getInitials } from "@/lib/utils";
+
 export function NavUser({
   user,
   handleLogout,
@@ -55,7 +58,9 @@ export function NavUser({
                   alt={user.name}
                   className="rounded-full"
                 />
-                <AvatarFallback className="rounded-full">M</AvatarFallback>
+                <AvatarFallback className="rounded-full">
+                  {getInitials(user.name)}
+                </AvatarFallback>
               </Avatar>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -73,7 +78,9 @@ export function NavUser({
                     alt={user.name}
                     className="rounded-full"
                   />
-                  <AvatarFallback className="rounded-full">SR</AvatarFallback>
+                  <AvatarFallback className="rounded-full">
+                    {getInitials(user.name)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>

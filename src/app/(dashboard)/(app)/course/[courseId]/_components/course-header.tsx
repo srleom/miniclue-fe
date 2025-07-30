@@ -17,7 +17,7 @@ import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 // code
-import { updateCourse } from "@/app/(dashboard)/(app)/_actions/course-actions";
+import { updateCourse } from "@/app/(dashboard)/_actions/course-actions";
 
 export interface CourseHeaderProps {
   courseId: string;

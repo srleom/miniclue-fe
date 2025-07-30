@@ -36,7 +36,7 @@ import {
   getSignedPdfUrl,
   getSummary,
   getLecture,
-} from "@/app/(dashboard)/(app)/_actions/lecture-actions";
+} from "@/app/(dashboard)/_actions/lecture-actions";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 

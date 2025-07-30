@@ -10,6 +10,7 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 // icons
@@ -19,7 +20,7 @@ import { MoreHorizontal, Presentation } from "lucide-react";
 import { ActionResponse } from "@/lib/api/authenticated-api";
 
 // code
-import { updateLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
+import { updateLecture } from "@/app/(dashboard)/_actions/lecture-actions";
 
 export default function NavLecture({
   lecture,
@@ -35,7 +36,15 @@ export default function NavLecture({
   deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 }) {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
   const isActive = pathname === `/lecture/${lecture.lecture_id}`;
+
+  const handleNavigation = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <SidebarMenuItem key={lecture.lecture_id} className="group/lecture">
       <SidebarMenuButton
@@ -49,7 +58,10 @@ export default function NavLecture({
           await handleUpdateLectureAccessedAt(lecture.lecture_id)
         }
       >
-        <Link href={`/lecture/${lecture.lecture_id}`}>
+        <Link
+          href={`/lecture/${lecture.lecture_id}`}
+          onClick={handleNavigation}
+        >
           <Presentation />
           <span>{lecture.title}</span>
         </Link>

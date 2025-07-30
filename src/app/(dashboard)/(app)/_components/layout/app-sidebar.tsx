@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 // icons
-import { LifeBuoy, Send, Sparkle } from "lucide-react";
+import { Sparkle } from "lucide-react";
 
 // types
 import { components } from "@/types/api";
@@ -101,12 +101,12 @@ export function AppSidebar({
             {
               title: "Support",
               url: "#",
-              icon: LifeBuoy,
+              icon: "LifeBuoy",
             },
             {
               title: "Feedback",
               url: "#",
-              icon: Send,
+              icon: "Send",
             },
           ]}
           className="mt-auto"

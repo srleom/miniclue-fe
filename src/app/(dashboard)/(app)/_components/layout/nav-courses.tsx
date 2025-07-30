@@ -64,8 +64,14 @@ export function NavCourses({
   ) => Promise<ActionResponse<void>>;
   deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 }) {
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
+
+  const handleNavigation = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   const defaultCourse = items.find((item) => item.isDefault);
   const otherCourses = items.filter((item) => !item.isDefault);
@@ -110,6 +116,7 @@ export function NavCourses({
                       <Link
                         href={`/course/${item.courseId}`}
                         className="w-full truncate"
+                        onClick={handleNavigation}
                       >
                         {item.title}
                       </Link>

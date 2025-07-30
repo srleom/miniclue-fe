@@ -12,9 +12,9 @@ import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
 import LectureHeader from "./_components/lecture-header";
 
 // code
-import { getCourseDetails } from "@/app/(dashboard)/(app)/_actions/course-actions";
-import { getLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
-import { getUserData } from "@/app/(dashboard)/(app)/_actions/sidebar-actions";
+import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
+import { getLecture } from "@/app/(dashboard)/_actions/lecture-actions";
+import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
 import { handleLogout } from "@/app/auth/actions";
 
 export default async function LectureLayout({

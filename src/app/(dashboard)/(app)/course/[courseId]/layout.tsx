@@ -12,8 +12,8 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
 
 // code
-import { getCourseDetails } from "@/app/(dashboard)/(app)/_actions/course-actions";
-import { getUserData } from "@/app/(dashboard)/(app)/_actions/sidebar-actions";
+import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
+import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
 import { handleLogout } from "@/app/auth/actions";
 
 export default async function CourseLayout({

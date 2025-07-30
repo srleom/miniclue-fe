@@ -93,11 +93,15 @@ export function DropzoneComponent({
     }
     if (result?.data) {
       let firstLectureId: string | null = null;
+      let hasSuccessfulUpload = false;
+
       result.data.forEach((res) => {
-        if (res.status === "ok" && res.lecture_id) {
+        if (res.lecture_id) {
+          // If we have a lecture_id, the upload was successful
           if (!firstLectureId) {
             firstLectureId = res.lecture_id;
           }
+          hasSuccessfulUpload = true;
           toast.success(`Successfully uploaded ${res.filename}`);
         } else if (res.status === "upload_limit_exceeded") {
           toast.error(
@@ -110,7 +114,8 @@ export function DropzoneComponent({
         }
       });
 
-      if (firstLectureId) {
+      // Only redirect if we have at least one successful upload
+      if (firstLectureId && hasSuccessfulUpload) {
         router.push(`/lecture/${firstLectureId}`);
       }
     }

@@ -1,9 +1,167 @@
-export default function SettingsPage() {
+// react
+import { Suspense } from "react";
+
+// components
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+
+// lib
+import { getInitials } from "@/lib/utils";
+
+// actions
+import { getUserProfile } from "@/app/(dashboard)/_actions/settings-actions";
+
+// components
+import { DeleteAccountButton } from "./_components/delete-account-button";
+
+async function ProfileContent() {
+  const { data: user, error } = await getUserProfile();
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <p className="text-muted-foreground">Failed to load profile</p>
+        <p className="text-destructive text-sm">{error}</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <p className="text-muted-foreground">No user data found</p>
+      </div>
+    );
+  }
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "Unknown";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
-    <div className="mx-auto mt-16 flex w-full flex-col items-center lg:w-3xl">
-      <div className="flex w-full flex-col gap-4">
+    <div className="mx-auto mt-4 flex w-full flex-col items-center md:mt-16 lg:w-3xl">
+      <div className="flex w-full flex-col gap-6">
         <h1 className="text-2xl font-medium">Profile</h1>
+
+        <Card>
+          <CardContent>
+            {/* Profile Information Section */}
+            <div className="space-y-6">
+              <div className="space-y-4">
+                {/* Profile Picture */}
+                <div className="border-border flex items-center justify-between border-b pb-4">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">
+                      Profile picture
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={user.avatar_url}
+                        alt={user.name || "User"}
+                      />
+                      <AvatarFallback className="text-sm">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="border-border flex items-center justify-between border-b pb-4">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">Email</label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm">{user.email}</span>
+                  </div>
+                </div>
+
+                {/* Full Name */}
+                <div className="border-border flex items-center justify-between border-b pb-4">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">Name</label>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-sm">
+                      {user.name || "Not provided"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Account Created */}
+                <div className="border-border flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">
+                      Account created
+                    </label>
+                    <p className="text-muted-foreground text-xs">
+                      When you joined MiniClue
+                    </p>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-sm">
+                      {formatDate(user.created_at)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Danger Zone */}
+      <div className="mt-20 flex w-full flex-col gap-6">
+        <h2 className="text-lg font-medium">Danger zone</h2>
+
+        <Card>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <div className="border-border flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">
+                      Delete account
+                    </label>
+                    <p className="text-muted-foreground text-xs">
+                      Careful! This action cannot be undone.
+                    </p>
+                  </div>
+                  <div className="flex items-center">
+                    <DeleteAccountButton />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto mt-4 flex w-full flex-col items-center md:mt-16 lg:w-3xl">
+          <div className="flex w-full flex-col gap-6">
+            <h1 className="text-2xl font-medium">Profile</h1>
+            <div className="flex items-center justify-center p-8">
+              <p className="text-muted-foreground">Loading profile...</p>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <ProfileContent />
+    </Suspense>
   );
 }

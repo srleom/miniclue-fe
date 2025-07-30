@@ -14,8 +14,8 @@ import CourseHeader from "./_components/course-header";
 import {
   getCourseDetails,
   getCourseLectures,
-} from "@/app/(dashboard)/(app)/_actions/course-actions";
-import { uploadLectures } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
+} from "@/app/(dashboard)/_actions/course-actions";
+import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
 
 interface CoursePageProps {
   params: Promise<{ courseId: string }>;

@@ -33,7 +33,13 @@ export function NavRecents({
   ) => Promise<ActionResponse<void>>;
   deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 }) {
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleNavigation = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -43,7 +49,7 @@ export function NavRecents({
           asChild
           className="hover:bg-sidebar-border absolute top-1.5 right-1 group-hover/recents:opacity-100 hover:cursor-pointer md:opacity-0"
         >
-          <Link href="/">
+          <Link href="/" onClick={handleNavigation}>
             <Plus />
             <span className="sr-only">Add content</span>
           </Link>

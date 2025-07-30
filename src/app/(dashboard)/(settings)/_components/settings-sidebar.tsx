@@ -21,16 +21,25 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const { setOpenMobile, isMobile } = useSidebar();
+
+  const handleNavigation = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="default" variant="default" asChild>
-              <Link href="/">
+              <Link href="/" onClick={handleNavigation}>
                 <ChevronLeft />
                 Back to app
               </Link>
@@ -43,7 +52,7 @@ export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild size="default" variant="default">
-                <Link href="/settings/profile">
+                <Link href="/settings/profile" onClick={handleNavigation}>
                   <CircleUserRound />
                   Profile
                 </Link>
@@ -51,7 +60,7 @@ export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild size="default" variant="default">
-                <Link href="/settings/subscription">
+                <Link href="/settings/subscription" onClick={handleNavigation}>
                   <CreditCard />
                   Subscription
                 </Link>
@@ -59,7 +68,7 @@ export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild size="default" variant="default">
-                <Link href="/settings/usage">
+                <Link href="/settings/usage" onClick={handleNavigation}>
                   <LoaderCircle />
                   Usage
                 </Link>

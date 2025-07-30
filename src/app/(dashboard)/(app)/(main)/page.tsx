@@ -3,8 +3,8 @@ import { DropzoneComponent } from "@/app/(dashboard)/(app)/_components/dropzone"
 import { Button } from "@/components/ui/button";
 
 // code
-import { uploadLectures } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
-import { getUserCourses } from "@/app/(dashboard)/(app)/_actions/sidebar-actions";
+import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
+import { getUserCourses } from "@/app/(dashboard)/_actions/sidebar-actions";
 
 export default async function Page() {
   const { data: courses, error } = await getUserCourses();
@@ -24,8 +24,9 @@ export default async function Page() {
       <h1 className="mt-4 text-center text-4xl font-semibold">
         Ready when you are.
       </h1>
-      <p className="text-muted-foreground mt-2 mb-10 text-center">
-        Upload your PDF lecture slides and get started.
+      <p className="text-muted-foreground mt-4 mb-10 max-w-md text-center">
+        Upload your PDF lecture slides to get started. <br />
+        Files will be added to your default &quot;Drafts&quot; course.
       </p>
       <div className="w-full">
         <DropzoneComponent
