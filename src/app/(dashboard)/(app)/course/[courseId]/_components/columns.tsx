@@ -13,14 +13,14 @@ import { MoreHorizontal } from "lucide-react";
 import { components } from "@/types/api";
 
 // components
-import { ItemActions } from "@/app/(dashboard)/_components/item-actions";
+import { ItemActions } from "@/app/(dashboard)/(app)/_components/item-actions";
 import { Button } from "@/components/ui/button";
 
 // code
 import {
   deleteLecture,
   updateLecture,
-} from "@/app/(dashboard)/_actions/lecture-actions";
+} from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 
 export type LectureResponseDTO =
   components["schemas"]["app_internal_api_v1_dto.LectureResponseDTO"];

@@ -19,7 +19,7 @@ import { MoreHorizontal, Presentation } from "lucide-react";
 import { ActionResponse } from "@/lib/api/authenticated-api";
 
 // code
-import { updateLecture } from "@/app/(dashboard)/_actions/lecture-actions";
+import { updateLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 
 export default function NavLecture({
   lecture,

@@ -1,7 +1,16 @@
 "use client";
 
+// next
+import Link from "next/link";
+
 // icons
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
+import {
+  CircleUserRound,
+  CreditCard,
+  LoaderCircle,
+  LogOut,
+  Sparkles,
+} from "lucide-react";
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -46,7 +55,7 @@ export function NavUser({
                   alt={user.name}
                   className="rounded-full"
                 />
-                <AvatarFallback className="rounded-full">SR</AvatarFallback>
+                <AvatarFallback className="rounded-full">M</AvatarFallback>
               </Avatar>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -74,24 +83,32 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="hover:cursor-pointer">
-                <Sparkles />
-                Upgrade to Pro
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                <Link href="/settings/subscription">
+                  <Sparkles />
+                  Upgrade to Pro
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="hover:cursor-pointer">
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                <Link href="/settings/profile">
+                  <CircleUserRound />
+                  Profile
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:cursor-pointer">
-                <CreditCard />
-                Billing
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                <Link href="/settings/subscription">
+                  <CreditCard />
+                  Subscription
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:cursor-pointer">
-                <Bell />
-                Notifications
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                <Link href="/settings/usage">
+                  <LoaderCircle />
+                  Usage
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -34,7 +34,7 @@ import { ChevronRight, Folder, MoreHorizontal, Plus } from "lucide-react";
 //code
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ItemActions } from "../item-actions";
+import { ItemActions } from "@/app/(dashboard)/(app)/_components/item-actions";
 
 export function NavCourses({
   items,

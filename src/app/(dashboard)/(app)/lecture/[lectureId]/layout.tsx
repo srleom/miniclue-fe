@@ -4,36 +4,44 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { NavUser } from "@/app/(dashboard)/_components/layout/nav-user";
+import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
+import LectureHeader from "./_components/lecture-header";
 
 // code
-import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
-import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
+import { getCourseDetails } from "@/app/(dashboard)/(app)/_actions/course-actions";
+import { getLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
+import { getUserData } from "@/app/(dashboard)/(app)/_actions/sidebar-actions";
 import { handleLogout } from "@/app/auth/actions";
 
-export default async function CourseLayout({
+export default async function LectureLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ courseId: string }>;
+  params: Promise<{ lectureId: string }>;
 }) {
-  const { courseId } = await params;
-  const courseRes = await getCourseDetails(courseId);
-  if (!courseRes.data) {
-    return <p>Course not found</p>;
-  }
-  const { title: courseTitle } = courseRes.data;
   let user = { name: "", email: "", avatar: "" };
   const userRes = await getUserData();
   if (userRes.data) {
     user = userRes.data;
   }
+
+  const { lectureId } = await params;
+  const lectureRes = await getLecture(lectureId);
+  if (!lectureRes.data) {
+    return <p>Lecture not found</p>;
+  }
+  const { title: lectureTitle, course_id: courseId } = lectureRes.data;
+
+  const courseRes = await getCourseDetails(courseId!);
+  if (!courseRes.data) {
+    return <p>Course not found</p>;
+  }
+  const { title: courseTitle } = courseRes.data;
 
   return (
     <>
@@ -53,7 +61,10 @@ export default async function CourseLayout({
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>New</BreadcrumbPage>
+                <LectureHeader
+                  lectureId={lectureId}
+                  lectureTitle={lectureTitle!}
+                />
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -62,7 +73,7 @@ export default async function CourseLayout({
           <NavUser user={user} handleLogout={handleLogout} />
         </div>
       </header>
-      <div className="mx-auto flex w-full flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0 pb-20">
+      <div className="mx-auto flex w-full flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
         {children}
       </div>
     </>

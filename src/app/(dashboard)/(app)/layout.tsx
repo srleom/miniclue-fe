@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { CourseWithLectures, NavRecentsItem } from "./_types/types";
 
 // components
-import { AppSidebar } from "@/app/(dashboard)/_components/layout/app-sidebar";
+import { AppSidebar } from "@/app/(dashboard)/(app)/_components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 // code
@@ -14,15 +14,15 @@ import {
   deleteCourse,
   getCourseLectures,
   updateCourse,
-} from "@/app/(dashboard)/_actions/course-actions";
+} from "@/app/(dashboard)/(app)/_actions/course-actions";
 import {
   deleteLecture,
   handleUpdateLectureAccessedAt,
-} from "@/app/(dashboard)/_actions/lecture-actions";
+} from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 import {
   getUserCourses,
   getUserRecents,
-} from "@/app/(dashboard)/_actions/sidebar-actions";
+} from "@/app/(dashboard)/(app)/_actions/sidebar-actions";
 
 export default async function DashboardLayout({
   children,

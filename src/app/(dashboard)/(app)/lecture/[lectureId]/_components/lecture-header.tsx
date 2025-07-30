@@ -11,13 +11,13 @@ import { BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { RenameDialog } from "@/app/(dashboard)/_components/rename-dialog";
+import { RenameDialog } from "@/app/(dashboard)/(app)/_components/rename-dialog";
 
 // icons
 import { Pencil } from "lucide-react";
 
 // code
-import { updateLecture } from "@/app/(dashboard)/_actions/lecture-actions";
+import { updateLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 
 export interface LectureHeaderProps {
   lectureId: string;

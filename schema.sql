@@ -1,28 +1,11 @@
 -- Enable required extensions
 CREATE EXTENSION IF NOT EXISTS vector;    -- pgvector
+CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA pg_catalog;
+
+GRANT USAGE ON SCHEMA cron TO postgres;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA cron TO postgres;
 
 SET search_path TO public;
-
--------------------------------------------------------------------------------
--- ENUM Types
--------------------------------------------------------------------------------
--- Expanded status to track the full pipeline lifecycle
-CREATE TYPE lecture_status AS ENUM (
-  'uploading',
-  'pending_processing',
-  'parsing',
-  'explaining',
-  'summarising',
-  'complete',
-  'failed'
-);
-
--- Status for dead-letter queue messages
-CREATE TYPE dlq_message_status AS ENUM (
-  'unprocessed',
-  'processed',
-  'ignored'
-);
 
 -------------------------------------------------------------------------------
 -- 1. Course Table
@@ -47,6 +30,7 @@ CREATE TABLE IF NOT EXISTS user_profiles (
   name       TEXT        DEFAULT '',
   email      TEXT        DEFAULT '',
   avatar_url TEXT        DEFAULT '',
+  stripe_customer_id TEXT DEFAULT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -54,6 +38,16 @@ CREATE TABLE IF NOT EXISTS user_profiles (
 -------------------------------------------------------------------------------
 -- 3. Lecture Table
 -------------------------------------------------------------------------------
+CREATE TYPE lecture_status AS ENUM (
+  'uploading',
+  'pending_processing',
+  'parsing',
+  'explaining',
+  'summarising',
+  'complete',
+  'failed'
+);
+
 CREATE TABLE IF NOT EXISTS lectures (
   id                        UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id                   UUID            NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -179,6 +173,7 @@ CREATE TABLE IF NOT EXISTS slide_images (
   type           TEXT, -- Can be NULL until analysis is complete
   ocr_text       TEXT,
   alt_text       TEXT,
+  metadata       JSONB       NOT NULL DEFAULT '{}'::JSONB,
   created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   -- width, height, and image_index removed for simplicity
@@ -204,6 +199,12 @@ CREATE INDEX IF NOT EXISTS idx_notes_lecture_id ON notes(lecture_id);
 -------------------------------------------------------------------------------
 -- 11. Dead-Letter Queue Table
 -------------------------------------------------------------------------------
+CREATE TYPE dlq_message_status AS ENUM (
+  'unprocessed',
+  'processed',
+  'ignored'
+);
+
 CREATE TABLE IF NOT EXISTS dead_letter_messages (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   subscription_name   TEXT NOT NULL,
@@ -218,7 +219,77 @@ CREATE INDEX IF NOT EXISTS idx_dead_letter_messages_status ON dead_letter_messag
 CREATE INDEX IF NOT EXISTS idx_dead_letter_messages_created_at ON dead_letter_messages(created_at);
 
 -------------------------------------------------------------------------------
--- 12. Row-Level Security (RLS) Policies
+-- 12. LLM Calls Table
+-------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS llm_calls (
+  id                 UUID           PRIMARY KEY DEFAULT gen_random_uuid(),
+  lecture_id         UUID           REFERENCES lectures(id) ON DELETE SET NULL,
+  slide_id           UUID           REFERENCES slides(id) ON DELETE SET NULL,
+  call_type          TEXT           NOT NULL CHECK (call_type IN ('ingestion','explanation','embedding','summary','image_analysis','other')),
+  model              TEXT           NOT NULL,
+  prompt_tokens      INT            NOT NULL,
+  completion_tokens  INT            NOT NULL,
+  total_tokens       INT            NOT NULL,
+  currency           TEXT           NOT NULL DEFAULT 'USD',
+  cost               NUMERIC(10,6)  NOT NULL,
+  occurred_at        TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
+  metadata           JSONB          NOT NULL DEFAULT '{}'::JSONB
+);
+CREATE INDEX IF NOT EXISTS idx_llm_calls_occurred_at ON llm_calls(occurred_at);
+
+-------------------------------------------------------------------------------
+-- 13. Subscription Status Enum
+-------------------------------------------------------------------------------
+CREATE TYPE subscription_status AS ENUM (
+  'active',
+  'cancelled',
+  'past_due'
+);
+
+-------------------------------------------------------------------------------
+-- 14. Subscription Plans Table
+-------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS subscription_plans (
+  id              TEXT        PRIMARY KEY,
+  name            TEXT        NOT NULL,
+  price_cents     INT         NOT NULL,
+  billing_period  INTERVAL    NOT NULL,
+  max_uploads     INT         NOT NULL,
+  max_size_mb     INT         NOT NULL,
+  chat_limit      INT         NOT NULL DEFAULT -1,
+  feature_flags   JSONB       NOT NULL DEFAULT '{}'::JSONB
+);
+
+-------------------------------------------------------------------------------
+-- 15. User Subscriptions Table
+-------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS user_subscriptions (
+  user_id    UUID               PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  plan_id    TEXT               NOT NULL REFERENCES subscription_plans(id),
+  stripe_subscription_id TEXT    DEFAULT NULL,
+  starts_at  TIMESTAMPTZ        NOT NULL DEFAULT NOW(),
+  ends_at    TIMESTAMPTZ        NOT NULL,
+  status     subscription_status NOT NULL
+);
+
+-------------------------------------------------------------------------------
+-- 16. Usage Events Table
+-------------------------------------------------------------------------------
+CREATE TYPE usage_event_type AS ENUM (
+  'lecture_upload'
+);
+
+CREATE TABLE IF NOT EXISTS usage_events (
+  id           UUID              PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id      UUID              NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  event_type   usage_event_type  NOT NULL,
+  created_at   TIMESTAMPTZ       NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_usage_events_user_event_time 
+  ON usage_events(user_id, event_type, created_at);
+
+-------------------------------------------------------------------------------
+-- 17. Row-Level Security (RLS) Policies
 -------------------------------------------------------------------------------
 
 -- Enable RLS for all relevant tables
@@ -233,6 +304,10 @@ ALTER TABLE public.explanations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.slide_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.dead_letter_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.llm_calls ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.subscription_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.usage_events ENABLE ROW LEVEL SECURITY;
 
 -- 1. courses: Users can manage their own courses fully.
 CREATE POLICY "Allow all access to own courses" ON public.courses
@@ -304,3 +379,45 @@ CREATE POLICY "Deny all access to dead_letter_messages" ON public.dead_letter_me
   FOR ALL
   USING (false)
   WITH CHECK (false);
+
+-- 12. llm_calls: No access for regular users.
+CREATE POLICY "Deny all access to llm_calls" ON public.llm_calls
+  FOR ALL
+  USING (false)
+  WITH CHECK (false);
+
+-- 13. user_subscriptions: Users can view their own subscription.
+CREATE POLICY "Allow users to view own subscription" ON public.user_subscriptions
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- 14. subscription_plans: No access for regular users.
+CREATE POLICY "Deny all access to subscription_plans" ON public.subscription_plans
+  FOR ALL
+  USING (false)
+  WITH CHECK (false);
+
+-- 15. Usage Events Table
+CREATE POLICY "Deny all access to usage_events" ON public.usage_events
+  FOR ALL USING (false) WITH CHECK (false);
+
+-------------------------------------------------------------------------------
+-- 17. Scheduled Subscription Renewal Job
+-------------------------------------------------------------------------------
+-- This block schedules a cron job to renew beta and free plans.
+-- It will run once daily at 3:00 AM UTC.
+-- NOTE: The pg_cron extension must be enabled in your Supabase project.
+-- This operation is idempotent; it safely does nothing if the job already exists.
+SELECT cron.schedule(
+  'renew-free-expiring-subscriptions', -- Job name
+  '0 3 * * *',                   -- 3:00 AM UTC every day
+  $$
+    UPDATE user_subscriptions
+    SET 
+      starts_at = ends_at,
+      ends_at = ends_at + interval '31 days'
+    WHERE
+      status = 'active'
+      AND plan_id IN ('beta', 'free') -- Only renew non-paid plans
+      AND ends_at <= NOW();
+  $$
+);

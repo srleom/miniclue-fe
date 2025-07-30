@@ -1,9 +1,9 @@
 // components
-import { NavUser } from "@/app/(dashboard)/_components/layout/nav-user";
+import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // code
-import { getUserData } from "@/app/(dashboard)/_actions/sidebar-actions";
+import { getUserData } from "@/app/(dashboard)/(app)/_actions/sidebar-actions";
 import { handleLogout } from "@/app/auth/actions";
 
 export default async function MainLayout({

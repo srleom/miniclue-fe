@@ -23,7 +23,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PdfViewer from "@/app/(dashboard)/lecture/[lectureId]/_components/pdf-viewer";
+import PdfViewer from "@/app/(dashboard)/(app)/lecture/[lectureId]/_components/pdf-viewer";
 import { ExplainerCarousel } from "./_components/carousel";
 import LottieAnimation from "./_components/lottie-animation";
 
@@ -36,7 +36,7 @@ import {
   getSignedPdfUrl,
   getSummary,
   getLecture,
-} from "@/app/(dashboard)/_actions/lecture-actions";
+} from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 

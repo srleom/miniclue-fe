@@ -10,14 +10,14 @@ import { toast } from "sonner";
 import { Folder, Pencil } from "lucide-react";
 
 // components
-import { RenameDialog } from "@/app/(dashboard)/_components/rename-dialog";
+import { RenameDialog } from "@/app/(dashboard)/(app)/_components/rename-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 // code
-import { updateCourse } from "@/app/(dashboard)/_actions/course-actions";
+import { updateCourse } from "@/app/(dashboard)/(app)/_actions/course-actions";
 
 export interface CourseHeaderProps {
   courseId: string;

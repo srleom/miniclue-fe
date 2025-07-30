@@ -2,14 +2,14 @@
 import Link from "next/link";
 
 // icons
-import { GalleryVerticalEnd, LifeBuoy, Send } from "lucide-react";
+import { LifeBuoy, Send, Sparkle } from "lucide-react";
 
 // types
 import { components } from "@/types/api";
 import {
   CourseWithLectures,
   NavRecentsItem,
-} from "@/app/(dashboard)/_types/types";
+} from "@/app/(dashboard)/(app)/_types/types";
 
 // lib
 import { ActionResponse } from "@/lib/api/authenticated-api";
@@ -24,10 +24,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavCourses } from "@/app/(dashboard)/_components/layout/nav-courses";
-import { NavPrimary } from "@/app/(dashboard)/_components/layout/nav-primary";
-import { NavRecents } from "@/app/(dashboard)/_components/layout/nav-recents";
-import { NavSecondary } from "@/app/(dashboard)/_components/layout/nav-secondary";
+import { NavCourses } from "@/app/(dashboard)/(app)/_components/layout/nav-courses";
+import { NavPrimary } from "@/app/(dashboard)/(app)/_components/layout/nav-primary";
+import { NavRecents } from "@/app/(dashboard)/(app)/_components/layout/nav-recents";
+import { NavSecondary } from "@/app/(dashboard)/(app)/_components/layout/nav-secondary";
 
 export function AppSidebar({
   navCourses,
@@ -72,9 +72,9 @@ export function AppSidebar({
               <div className="flex items-center gap-2">
                 <Link
                   href="/"
-                  className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg"
+                  className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md"
                 >
-                  <GalleryVerticalEnd className="size-4" />
+                  <Sparkle className="size-4" />
                 </Link>
               </div>
             </SidebarMenuButton>
