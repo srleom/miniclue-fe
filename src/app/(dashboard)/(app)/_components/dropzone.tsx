@@ -33,10 +33,14 @@ import {
 } from "@/components/ui/file-list";
 import { useRouter } from "next/navigation";
 
+type UserUsageData =
+  components["schemas"]["app_internal_api_v1_dto.UserUsageResponseDTO"];
+
 export function DropzoneComponent({
   isCoursePage = false,
   courseId,
   uploadLectures,
+  userUsage,
 }: {
   isCoursePage?: boolean;
   courseId?: string;
@@ -48,6 +52,7 @@ export function DropzoneComponent({
       components["schemas"]["app_internal_api_v1_dto.LectureUploadResponseDTO"][]
     >
   >;
+  userUsage?: UserUsageData;
 }) {
   const [files, setFiles] = React.useState<File[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -132,6 +137,18 @@ export function DropzoneComponent({
     }
   };
 
+  // Format file size limit for display
+  const formatFileSizeLimit = (maxSizeMb: number) => {
+    if (maxSizeMb >= 1024) {
+      return `${(maxSizeMb / 1024).toFixed(1)}GB`;
+    }
+    return `${maxSizeMb}MB`;
+  };
+
+  // Get the file size limit from user usage or fallback to default
+  const maxFileSizeMb = userUsage?.max_size_mb || 10;
+  const fileSizeLimitText = formatFileSizeLimit(maxFileSizeMb);
+
   return (
     <Dropzone
       accept={{
@@ -151,7 +168,9 @@ export function DropzoneComponent({
                   : "Drop files here or click to upload"}
               </DropzoneTitle>
               <DropzoneDescription className="text-center">
-                You can upload PDF files up to 10MB in size.
+                {userUsage
+                  ? `You can upload PDF files up to ${fileSizeLimitText} in size.`
+                  : "You can upload PDF files up to 10MB in size."}
               </DropzoneDescription>
             </DropzoneGroup>
           </DropzoneGroup>

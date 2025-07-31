@@ -4,14 +4,22 @@ import { Badge } from "@/components/ui/badge";
 
 // code
 import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
-import { getUserCourses } from "@/app/(dashboard)/_actions/user-actions";
+import {
+  getUserCourses,
+  getUserUsage,
+} from "@/app/(dashboard)/_actions/user-actions";
 
 export default async function Page() {
   const { data: courses, error } = await getUserCourses();
+  const { data: userUsage, error: usageError } = await getUserUsage();
 
   if (error) {
     // Handle error case, maybe show a message to the user
     console.error("Failed to load courses:", error);
+  }
+
+  if (usageError) {
+    console.error("Failed to load user usage:", usageError);
   }
 
   const defaultCourse = courses?.find((c) => c.isDefault);
@@ -32,6 +40,7 @@ export default async function Page() {
           isCoursePage={true}
           courseId={defaultCourse?.courseId}
           uploadLectures={uploadLectures}
+          userUsage={userUsage}
         />
       </div>
     </div>
