@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -150,6 +149,19 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
                   <Button disabled className="w-full" size="sm">
                     Current Plan
                   </Button>
+                ) : currentPlanId === "beta" && plan.id === "free" ? (
+                  <Button disabled className="w-full" size="sm">
+                    Not available
+                  </Button>
+                ) : currentPlanId === "beta" &&
+                  (plan.id === "monthly_launch" ||
+                    plan.id === "annual_launch") ? (
+                  <div className="w-full">
+                    <UpgradeButton
+                      plan={plan.id as "monthly_launch" | "annual_launch"}
+                      variant={plan.popular ? "default" : "outline"}
+                    />
+                  </div>
                 ) : currentPlanId === "free" &&
                   (plan.id === "monthly_launch" ||
                     plan.id === "annual_launch") ? (
@@ -170,16 +182,7 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
                   plan.id !== currentPlanId ? (
                   <ManageBillingButton text="Change plan" />
                 ) : (
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full"
-                    size="sm"
-                  >
-                    <Link href="/settings/subscription/manage">
-                      Manage Billing
-                    </Link>
-                  </Button>
+                  <ManageBillingButton text="Manage billing" disabled />
                 )}
               </CardFooter>
             </Card>

@@ -26,7 +26,6 @@ export default async function Page() {
       </h1>
       <p className="text-muted-foreground mt-4 mb-10 max-w-md text-center">
         Upload your PDF lecture slides to get started. <br />
-        Files will be added to your default &quot;Drafts&quot; course.
       </p>
       <div className="w-full">
         <DropzoneComponent

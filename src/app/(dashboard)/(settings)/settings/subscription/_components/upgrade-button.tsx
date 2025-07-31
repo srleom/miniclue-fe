@@ -50,9 +50,6 @@ export function UpgradeButton({ plan, variant }: UpgradeButtonProps) {
   }
 
   // Show only the specific plan button
-  const buttonText =
-    plan === "monthly_launch" ? "Pro Monthly ($10/mo)" : "Pro Annual ($6/mo)";
-
   return (
     <form action={handleUpgradeToPro}>
       <input type="hidden" name="plan" value={plan} />
@@ -63,7 +60,7 @@ export function UpgradeButton({ plan, variant }: UpgradeButtonProps) {
         className="w-full hover:cursor-pointer"
         disabled={isLoading}
       >
-        {isLoading ? "Loading..." : buttonText}
+        {isLoading ? "Loading..." : "Subscribe"}
       </Button>
     </form>
   );
