@@ -9,11 +9,10 @@ import { Button } from "@/components/ui/button";
 // icons
 import { ChevronLeft } from "lucide-react";
 
-export default async function CourseLayout({
+export default async function SettingsLayout({
   children,
 }: {
   children: React.ReactNode;
-  params: Promise<{ courseId: string }>;
 }) {
   return (
     <>

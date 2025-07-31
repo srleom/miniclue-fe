@@ -2,6 +2,7 @@
 
 // next
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // icons
 import {
@@ -26,6 +27,7 @@ import {
 
 export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const { setOpenMobile, isMobile } = useSidebar();
+  const pathname = usePathname();
 
   const handleNavigation = () => {
     if (isMobile) {
@@ -51,7 +53,16 @@ export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup className="mt-2">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild size="default" variant="default">
+              <SidebarMenuButton
+                asChild
+                size="default"
+                variant="default"
+                className={
+                  pathname === "/settings/profile"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : undefined
+                }
+              >
                 <Link href="/settings/profile" onClick={handleNavigation}>
                   <CircleUserRound />
                   Profile
@@ -59,7 +70,16 @@ export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild size="default" variant="default">
+              <SidebarMenuButton
+                asChild
+                size="default"
+                variant="default"
+                className={
+                  pathname === "/settings/subscription"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : undefined
+                }
+              >
                 <Link href="/settings/subscription" onClick={handleNavigation}>
                   <CreditCard />
                   Subscription
@@ -67,7 +87,16 @@ export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild size="default" variant="default">
+              <SidebarMenuButton
+                asChild
+                size="default"
+                variant="default"
+                className={
+                  pathname === "/settings/usage"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : undefined
+                }
+              >
                 <Link href="/settings/usage" onClick={handleNavigation}>
                   <LoaderCircle />
                   Usage

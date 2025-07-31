@@ -1520,6 +1520,72 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/users/me/usage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get user usage
+     * @description Retrieves the authenticated user's current usage within their billing period, including plan details and limits.
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description User usage information including current uploads, plan limits, and billing period */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["app_internal_api_v1_dto.UserUsageResponseDTO"];
+          };
+        };
+        /** @description Unauthorized: user ID not found in context */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description No active subscription found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Failed to retrieve user usage */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1636,6 +1702,16 @@ export interface components {
       email?: string;
       name?: string;
       updated_at?: string;
+      user_id?: string;
+    };
+    "app_internal_api_v1_dto.UserUsageResponseDTO": {
+      billing_period_end?: string;
+      billing_period_start?: string;
+      current_usage?: number;
+      max_size_mb?: number;
+      max_uploads?: number;
+      plan_id?: string;
+      plan_name?: string;
       user_id?: string;
     };
   };

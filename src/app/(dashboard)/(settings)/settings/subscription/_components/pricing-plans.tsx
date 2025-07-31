@@ -147,7 +147,11 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
               <CardFooter className="mt-auto">
                 {isCurrentPlan ? (
                   <ManageBillingButton
-                    text="Manage billing"
+                    text={
+                      currentSubscription.status === "cancelled"
+                        ? "Reactivate subscription"
+                        : "Manage billing"
+                    }
                     variant="default"
                   />
                 ) : currentPlanId === "beta" && plan.id === "free" ? (

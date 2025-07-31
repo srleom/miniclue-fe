@@ -242,3 +242,29 @@ export async function createCheckoutSession(
 
   return { data: data?.url, error: undefined };
 }
+
+/**
+ * Gets the authenticated user's usage details.
+ * @returns {Promise<ActionResponse<components["schemas"]["app_internal_api_v1_dto.UserUsageResponseDTO"]>>}
+ */
+export async function getUserUsage(): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.UserUsageResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/users/me/usage", {
+    next: { tags: ["user-usage"] },
+  });
+
+  if (fetchError) {
+    console.error("Get usage error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data, error: undefined };
+}
