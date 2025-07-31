@@ -16,6 +16,9 @@ import { components } from "@/types/api";
 import { ItemActions } from "@/app/(dashboard)/(app)/_components/item-actions";
 import { Button } from "@/components/ui/button";
 
+// lib
+import { formatDate } from "@/lib/utils";
+
 // code
 import {
   deleteLecture,
@@ -44,20 +47,12 @@ export const columns: ColumnDef<LectureResponseDTO>[] = [
     header: "Created At",
     cell: (info) => {
       const raw = info.row.original.created_at;
-      if (!raw) return "Unknown date";
-
-      const date = new Date(raw);
-      const formatted = new Intl.DateTimeFormat("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }).format(date);
       return (
         <Link
           href={`/lecture/${info.row.original.lecture_id}`}
           className="block h-full w-full"
         >
-          {formatted}
+          {formatDate(raw)}
         </Link>
       );
     },

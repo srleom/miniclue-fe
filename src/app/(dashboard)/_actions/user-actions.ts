@@ -29,7 +29,7 @@ export async function getUser(): Promise<
   }
 
   const { data, error: fetchError } = await api.GET("/users/me", {
-    next: { tags: ["user-profile"], revalidate: 300 },
+    next: { tags: ["user-profile"] },
   });
 
   if (fetchError) {
@@ -54,7 +54,7 @@ export async function getUserRecents(): Promise<
 
   const { data, error: fetchError } = await api.GET("/users/me/recents", {
     query: { limit: 10, offset: 0 },
-    next: { tags: ["recents"], revalidate: 300 },
+    next: { tags: ["recents"] },
   });
 
   if (fetchError) {
@@ -167,4 +167,78 @@ export async function deleteUserAccount(): Promise<ActionResponse<void>> {
     console.error("Delete user account error:", error);
     return { error: "Failed to delete user account" };
   }
+}
+
+/**
+ * Gets the authenticated user's subscription details.
+ * @returns {Promise<ActionResponse<components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"]>>}
+ */
+export async function getUserSubscription(): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/subscriptions", {
+    next: { tags: ["user-subscription"] },
+  });
+
+  if (fetchError) {
+    console.error("Get subscription error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data, error: undefined };
+}
+
+/**
+ * Gets a Stripe Customer Portal URL for the authenticated user.
+ * @returns {Promise<ActionResponse<string>>}
+ */
+export async function getStripePortalUrl(): Promise<ActionResponse<string>> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/subscriptions/portal");
+
+  if (fetchError) {
+    console.error("Get portal URL error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data: data?.url, error: undefined };
+}
+
+/**
+ * Creates a Stripe Checkout session for plan upgrade.
+ * @param {string} plan - The plan to upgrade to
+ * @returns {Promise<ActionResponse<string>>}
+ */
+export async function createCheckoutSession(
+  plan: "monthly" | "annual" | "monthly_launch" | "annual_launch",
+): Promise<ActionResponse<string>> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.POST(
+    "/subscriptions/checkout",
+    {
+      body: { plan },
+    },
+  );
+
+  if (fetchError) {
+    console.error("Create checkout session error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data: data?.url, error: undefined };
 }

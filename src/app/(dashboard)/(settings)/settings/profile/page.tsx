@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 
 // lib
-import { getInitials } from "@/lib/utils";
+import { getInitials, formatDate } from "@/lib/utils";
 
 // actions
 import { getUser } from "@/app/(dashboard)/_actions/user-actions";
@@ -33,15 +33,6 @@ async function ProfileContent() {
       </div>
     );
   }
-
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "Unknown";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   return (
     <div className="mx-auto mt-4 flex w-full flex-col items-center md:mt-16 lg:w-3xl">
@@ -117,8 +108,7 @@ async function ProfileContent() {
         </Card>
       </div>
 
-      {/* Danger Zone */}
-      <div className="mt-20 flex w-full flex-col gap-6">
+      <div className="mt-18 flex w-full flex-col gap-6">
         <h2 className="text-lg font-medium">Danger zone</h2>
 
         <Card>
@@ -154,7 +144,7 @@ export default function SettingsPage() {
         <div className="mx-auto mt-4 flex w-full flex-col items-center md:mt-16 lg:w-3xl">
           <div className="flex w-full flex-col gap-6">
             <h1 className="text-2xl font-medium">Profile</h1>
-            <div className="flex items-center justify-center p-8">
+            <div className="flex items-center">
               <p className="text-muted-foreground">Loading profile...</p>
             </div>
           </div>
