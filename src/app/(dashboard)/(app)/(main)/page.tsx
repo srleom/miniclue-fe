@@ -1,6 +1,6 @@
 // components
 import { DropzoneComponent } from "@/app/(dashboard)/(app)/_components/dropzone";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 // code
 import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
@@ -18,9 +18,9 @@ export default async function Page() {
 
   return (
     <div className="mx-auto mt-16 flex w-full flex-col items-center lg:w-3xl">
-      <Button variant="outline" size="sm" className="w-fit text-xs">
+      <Badge variant="secondary" className="text-xs">
         BETA
-      </Button>
+      </Badge>
       <h1 className="mt-4 text-center text-4xl font-semibold">
         Ready when you are.
       </h1>

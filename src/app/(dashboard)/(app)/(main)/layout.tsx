@@ -3,7 +3,10 @@ import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // code
-import { getUser } from "@/app/(dashboard)/_actions/user-actions";
+import {
+  getUser,
+  getUserSubscription,
+} from "@/app/(dashboard)/_actions/user-actions";
 import { handleLogout } from "@/app/auth/actions";
 
 export default async function MainLayout({
@@ -20,6 +23,11 @@ export default async function MainLayout({
       avatar: userRes.data.avatar_url ?? "",
     };
   }
+
+  // Fetch subscription data
+  const subscriptionRes = await getUserSubscription();
+  const subscription = subscriptionRes.data;
+
   return (
     <>
       <header className="flex h-16 shrink-0 items-center justify-between gap-2">
@@ -27,7 +35,11 @@ export default async function MainLayout({
           <SidebarTrigger className="-ml-1 hover:cursor-pointer" />
         </div>
         <div className="flex items-center gap-2 px-4">
-          <NavUser user={user} handleLogout={handleLogout} />
+          <NavUser
+            user={user}
+            subscription={subscription}
+            handleLogout={handleLogout}
+          />
         </div>
       </header>
       <div className="mx-auto flex w-full flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">

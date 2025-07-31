@@ -7,6 +7,7 @@ import { getUserSubscription } from "@/app/(dashboard)/_actions/user-actions";
 // components
 import { SubscriptionInfo } from "./_components/subscription-info";
 import { PricingPlans } from "./_components/pricing-plans";
+import { PaymentToastHandler } from "./_components/payment-toast-handler";
 
 async function SubscriptionContent() {
   const { data: subscription, error } = await getUserSubscription();
@@ -29,6 +30,7 @@ async function SubscriptionContent() {
 
   return (
     <div className="mx-auto mt-4 flex w-full flex-col items-center md:mt-16 lg:w-3xl">
+      <PaymentToastHandler />
       <div className="flex w-full flex-col gap-6">
         <h1 className="text-2xl font-medium">Subscription</h1>
 

@@ -42,12 +42,124 @@ interface PricingPlansProps {
   currentSubscription: SubscriptionData;
 }
 
+type ButtonConfig =
+  | {
+      type: "manage";
+      text: string;
+      variant: "outline" | "default" | "secondary" | "destructive" | "ghost";
+      disabled: boolean;
+    }
+  | {
+      type: "disabled";
+      text: string;
+      variant: "outline" | "default" | "secondary" | "destructive" | "ghost";
+      disabled: boolean;
+    }
+  | {
+      type: "upgrade";
+      plan: "monthly_launch" | "annual_launch";
+      variant: "outline" | "default" | "secondary" | "destructive" | "ghost";
+      disabled: boolean;
+    };
+
 export function PricingPlans({ currentSubscription }: PricingPlansProps) {
   // Map the Stripe price ID back to frontend plan ID
   const currentPlanId = currentSubscription.plan_id
     ? STRIPE_TO_FRONTEND_MAPPING[currentSubscription.plan_id] ||
       currentSubscription.plan_id
     : "free";
+
+  // Helper function to determine button configuration
+  const getButtonConfig = (
+    planId: string,
+    isCurrentPlan: boolean,
+  ): ButtonConfig => {
+    // Current plan - show manage billing
+    if (isCurrentPlan) {
+      return {
+        type: "manage",
+        text:
+          currentSubscription.status === "cancelled"
+            ? "Reactivate subscription"
+            : "Manage billing",
+        variant: currentPlanId === "annual_launch" ? "default" : "secondary",
+        disabled: false,
+      };
+    }
+
+    // Beta users can't downgrade to free
+    if (currentPlanId === "beta" && planId === "free") {
+      return {
+        type: "disabled",
+        text: "Not available",
+        variant: "outline",
+        disabled: true,
+      };
+    }
+
+    // Upgrade scenarios (free/beta to paid plans)
+    if (
+      (currentPlanId === "free" || currentPlanId === "beta") &&
+      (planId === "monthly_launch" || planId === "annual_launch")
+    ) {
+      return {
+        type: "upgrade",
+        plan: planId as "monthly_launch" | "annual_launch",
+        variant: (planId === "annual_launch" ? "default" : "outline") as
+          | "outline"
+          | "default",
+        disabled: false,
+      };
+    }
+
+    // Pro Annual user - both free and monthly get outline
+    if (currentPlanId === "annual_launch") {
+      if (planId === "free") {
+        return {
+          type: "manage",
+          text: "Downgrade to Free",
+          variant: "outline",
+          disabled: false,
+        };
+      }
+      if (planId === "monthly_launch") {
+        return {
+          type: "manage",
+          text: "Change plan",
+          variant: "outline",
+          disabled: false,
+        };
+      }
+    }
+
+    // Pro Monthly user - annual gets default, free gets outline
+    if (currentPlanId === "monthly_launch") {
+      if (planId === "free") {
+        return {
+          type: "manage",
+          text: "Downgrade to Free",
+          variant: "outline",
+          disabled: false,
+        };
+      }
+      if (planId === "annual_launch") {
+        return {
+          type: "manage",
+          text: "Change plan",
+          variant: "default",
+          disabled: false,
+        };
+      }
+    }
+
+    // Fallback - disabled manage billing
+    return {
+      type: "manage",
+      text: "Manage billing",
+      variant: "outline",
+      disabled: true,
+    };
+  };
 
   const plans = [
     {
@@ -65,7 +177,7 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
     },
     {
       id: "annual_launch",
-      name: "Pro Annual",
+      name: "Pro Annual - Launch",
       price: "$72",
       period: "/ yr",
       description: "",
@@ -79,7 +191,7 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
     },
     {
       id: "monthly_launch",
-      name: "Pro Monthly",
+      name: "Pro Monthly - Launch",
       price: "$10",
       period: "/ mo",
       description: "",
@@ -98,6 +210,7 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan) => {
           const isCurrentPlan = plan.id === currentPlanId;
+          const buttonConfig = getButtonConfig(plan.id, isCurrentPlan);
 
           return (
             <Card
@@ -145,49 +258,23 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
               </CardContent>
 
               <CardFooter className="mt-auto">
-                {isCurrentPlan ? (
-                  <ManageBillingButton
-                    text={
-                      currentSubscription.status === "cancelled"
-                        ? "Reactivate subscription"
-                        : "Manage billing"
-                    }
-                    variant="default"
-                  />
-                ) : currentPlanId === "beta" && plan.id === "free" ? (
+                {buttonConfig.type === "upgrade" ? (
+                  <div className="w-full">
+                    <UpgradeButton
+                      plan={buttonConfig.plan}
+                      variant={buttonConfig.variant}
+                    />
+                  </div>
+                ) : buttonConfig.type === "disabled" ? (
                   <Button disabled className="w-full" size="sm">
-                    Not available
+                    {buttonConfig.text}
                   </Button>
-                ) : currentPlanId === "beta" &&
-                  (plan.id === "monthly_launch" ||
-                    plan.id === "annual_launch") ? (
-                  <div className="w-full">
-                    <UpgradeButton
-                      plan={plan.id as "monthly_launch" | "annual_launch"}
-                      variant={plan.popular ? "default" : "outline"}
-                    />
-                  </div>
-                ) : currentPlanId === "free" &&
-                  (plan.id === "monthly_launch" ||
-                    plan.id === "annual_launch") ? (
-                  <div className="w-full">
-                    <UpgradeButton
-                      plan={plan.id as "monthly_launch" | "annual_launch"}
-                      variant={plan.popular ? "default" : "outline"}
-                    />
-                  </div>
-                ) : (currentPlanId === "monthly_launch" ||
-                    currentPlanId === "annual_launch") &&
-                  plan.id === "free" ? (
-                  <ManageBillingButton text="Downgrade to Free" />
-                ) : (currentPlanId === "monthly_launch" ||
-                    currentPlanId === "annual_launch") &&
-                  (plan.id === "monthly_launch" ||
-                    plan.id === "annual_launch") &&
-                  plan.id !== currentPlanId ? (
-                  <ManageBillingButton text="Change plan" />
                 ) : (
-                  <ManageBillingButton text="Manage billing" disabled />
+                  <ManageBillingButton
+                    text={buttonConfig.text}
+                    variant={buttonConfig.variant}
+                    disabled={buttonConfig.disabled}
+                  />
                 )}
               </CardFooter>
             </Card>

@@ -14,6 +14,7 @@ import {
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,10 +31,17 @@ import {
 } from "@/components/ui/sidebar";
 
 // lib
-import { getInitials } from "@/lib/utils";
+import { getInitials, isPaidUser } from "@/lib/utils";
+
+// types
+import type { components } from "@/types/api";
+
+type SubscriptionData =
+  components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"];
 
 export function NavUser({
   user,
+  subscription,
   handleLogout,
 }: {
   user: {
@@ -41,8 +49,12 @@ export function NavUser({
     email: string;
     avatar: string;
   };
+  subscription?: SubscriptionData;
   handleLogout: () => Promise<void>;
 }) {
+  // Determine if user is on a paid plan
+  const isPaid = isPaidUser(subscription);
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -83,21 +95,32 @@ export function NavUser({
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="truncate font-medium">{user.name}</span>
+                    {isPaid && (
+                      <Badge variant="secondary" className="px-2 py-0 text-xs">
+                        Pro
+                      </Badge>
+                    )}
+                  </div>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="hover:cursor-pointer" asChild>
-                <Link href="/settings/subscription">
-                  <Sparkles />
-                  Upgrade to Pro
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            {!isPaid && (
+              <>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                    <Link href="/settings/subscription">
+                      <Sparkles />
+                      Upgrade to Pro
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+              </>
+            )}
             <DropdownMenuGroup>
               <DropdownMenuItem className="hover:cursor-pointer" asChild>
                 <Link href="/settings/profile">

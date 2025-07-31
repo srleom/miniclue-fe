@@ -106,6 +106,17 @@ export function DropzoneComponent({
         } else if (res.status === "upload_limit_exceeded") {
           toast.error(
             `Could not upload ${res.filename}. You have exceeded your monthly upload limit.`,
+            {
+              action: {
+                label: "Upgrade Plan",
+                onClick: () => router.push("/settings/subscription"),
+              },
+              actionButtonStyle: {
+                backgroundColor: "#fff",
+                color: "var(--primary)",
+                border: "1px solid var(--primary)",
+              },
+            },
           );
         } else {
           toast.error(

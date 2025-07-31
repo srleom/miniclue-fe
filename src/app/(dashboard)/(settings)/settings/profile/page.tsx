@@ -58,7 +58,7 @@ async function ProfileContent() {
                         alt={user.name || "User"}
                       />
                       <AvatarFallback className="text-sm">
-                        {getInitials(user.name)}
+                        {user.name ? getInitials(user.name) : "?"}
                       </AvatarFallback>
                     </Avatar>
                   </div>
