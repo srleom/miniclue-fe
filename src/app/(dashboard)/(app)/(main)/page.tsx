@@ -1,0 +1,39 @@
+// components
+import { DropzoneComponent } from "@/app/(dashboard)/(app)/_components/dropzone";
+import { Button } from "@/components/ui/button";
+
+// code
+import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
+import { getUserCourses } from "@/app/(dashboard)/_actions/user-actions";
+
+export default async function Page() {
+  const { data: courses, error } = await getUserCourses();
+
+  if (error) {
+    // Handle error case, maybe show a message to the user
+    console.error("Failed to load courses:", error);
+  }
+
+  const defaultCourse = courses?.find((c) => c.isDefault);
+
+  return (
+    <div className="mx-auto mt-16 flex w-full flex-col items-center lg:w-3xl">
+      <Button variant="outline" size="sm" className="w-fit text-xs">
+        BETA
+      </Button>
+      <h1 className="mt-4 text-center text-4xl font-semibold">
+        Ready when you are.
+      </h1>
+      <p className="text-muted-foreground mt-4 mb-10 max-w-md text-center">
+        Upload your PDF lecture slides to get started. <br />
+      </p>
+      <div className="w-full">
+        <DropzoneComponent
+          isCoursePage={true}
+          courseId={defaultCourse?.courseId}
+          uploadLectures={uploadLectures}
+        />
+      </div>
+    </div>
+  );
+}

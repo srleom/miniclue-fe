@@ -1,0 +1,244 @@
+"use server";
+
+// next
+import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
+
+// types
+import type { components } from "@/types/api";
+
+// lib
+import {
+  ActionResponse,
+  createAuthenticatedApi,
+} from "@/lib/api/authenticated-api";
+import { createAdminClient } from "@/lib/supabase/server";
+
+/**
+ * Gets the authenticated user's profile info.
+ * @returns {Promise<ActionResponse<components["schemas"]["app_internal_api_v1_dto.UserResponseDTO"]>>}
+ */
+export async function getUser(): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.UserResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/users/me", {
+    next: { tags: ["user-profile"] },
+  });
+
+  if (fetchError) {
+    console.error("Get user error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data, error: undefined };
+}
+
+/**
+ * Gets the authenticated user's recent lectures.
+ * @returns {Promise<ActionResponse<{ name: string; lectureId: string; url: string }[]>>}
+ */
+export async function getUserRecents(): Promise<
+  ActionResponse<{ name: string; lectureId: string; url: string }[]>
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/users/me/recents", {
+    query: { limit: 10, offset: 0 },
+    next: { tags: ["recents"] },
+  });
+
+  if (fetchError) {
+    console.error("Get recents error:", fetchError);
+    return { error: fetchError };
+  }
+
+  const recentsData = data ?? [];
+  const navRecents = recentsData.map(
+    (
+      r: components["schemas"]["app_internal_api_v1_dto.UserRecentLectureResponseDTO"],
+    ) => ({
+      name: r.title ?? "",
+      lectureId: r.lecture_id!,
+      url: `/lecture/${r.lecture_id!}`,
+    }),
+  );
+
+  return { data: navRecents, error: undefined };
+}
+
+/**
+ * Gets the authenticated user's courses.
+ * @returns {Promise<ActionResponse<{ title: string; url: string; courseId: string; isDefault: boolean; isActive: boolean; items: any[] }[]>>}
+ */
+export async function getUserCourses(): Promise<
+  ActionResponse<
+    {
+      title: string;
+      url: string;
+      courseId: string;
+      isDefault: boolean;
+    }[]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/users/me/courses", {
+    next: { tags: ["courses"] },
+  });
+
+  if (fetchError) {
+    console.error("Get courses error:", fetchError);
+    return { error: fetchError };
+  }
+
+  const coursesData = data ?? [];
+  const navCourses = coursesData.map(
+    (
+      c: components["schemas"]["app_internal_api_v1_dto.UserCourseResponseDTO"],
+    ) => ({
+      title: c.title ?? "",
+      url: `/course/${c.course_id!}`,
+      courseId: c.course_id!,
+      isDefault: c.is_default!,
+    }),
+  );
+
+  return { data: navCourses, error: undefined };
+}
+
+/**
+ * Deletes the authenticated user's account.
+ * @returns {Promise<ActionResponse<void>>}
+ */
+export async function deleteUserAccount(): Promise<ActionResponse<void>> {
+  try {
+    // First get the current user's profile to get their ID
+    const { data: user, error: profileError } = await getUser();
+
+    if (profileError || !user) {
+      return { error: "Failed to get user profile" };
+    }
+
+    // Type guard to ensure we have the full user profile with user_id
+    if (!("user_id" in user) || !user.user_id) {
+      return { error: "User ID not found in profile" };
+    }
+
+    // Create Supabase client with service role key for admin operations
+    const supabase = await createAdminClient();
+
+    // Delete the user using Supabase admin API
+    const { error: deleteError } = await supabase.auth.admin.deleteUser(
+      user.user_id,
+      false, // shouldSoftDelete: false
+    );
+
+    if (deleteError) {
+      console.error("Delete user error:", deleteError);
+      return { error: deleteError.message };
+    }
+
+    // Revalidate any cached user data
+    revalidateTag("user-profile");
+
+    // Redirect to login page after successful deletion
+    // This will throw NEXT_REDIRECT which is expected behavior
+    redirect("/auth/login");
+  } catch (error) {
+    // Check if this is a Next.js redirect (expected behavior)
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      // This is expected, let it propagate
+      throw error;
+    }
+
+    console.error("Delete user account error:", error);
+    return { error: "Failed to delete user account" };
+  }
+}
+
+/**
+ * Gets the authenticated user's subscription details.
+ * @returns {Promise<ActionResponse<components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"]>>}
+ */
+export async function getUserSubscription(): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/subscriptions", {
+    next: { tags: ["user-subscription"] },
+  });
+
+  if (fetchError) {
+    console.error("Get subscription error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data, error: undefined };
+}
+
+/**
+ * Gets a Stripe Customer Portal URL for the authenticated user.
+ * @returns {Promise<ActionResponse<string>>}
+ */
+export async function getStripePortalUrl(): Promise<ActionResponse<string>> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/subscriptions/portal");
+
+  if (fetchError) {
+    console.error("Get portal URL error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data: data?.url, error: undefined };
+}
+
+/**
+ * Creates a Stripe Checkout session for plan upgrade.
+ * @param {string} plan - The plan to upgrade to
+ * @returns {Promise<ActionResponse<string>>}
+ */
+export async function createCheckoutSession(
+  plan: "monthly" | "annual" | "monthly_launch" | "annual_launch",
+): Promise<ActionResponse<string>> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.POST(
+    "/subscriptions/checkout",
+    {
+      body: { plan },
+    },
+  );
+
+  if (fetchError) {
+    console.error("Create checkout session error:", fetchError);
+    return { error: fetchError };
+  }
+
+  return { data: data?.url, error: undefined };
+}
