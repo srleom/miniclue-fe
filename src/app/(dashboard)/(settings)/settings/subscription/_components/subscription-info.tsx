@@ -57,17 +57,19 @@ export function SubscriptionInfo({ subscription }: SubscriptionInfoProps) {
         <div className="space-y-6">
           <div className="space-y-4">
             {/* Current Plan */}
-            <div className="border-border flex items-center justify-between border-b pb-4">
+            <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Current plan</label>
               </div>
               <div className="flex items-center">
-                <span className="text-sm">{subscription.name || "Free"}</span>
+                <span className="text-end text-sm break-all">
+                  {subscription.name || "Free"}
+                </span>
               </div>
             </div>
 
             {/* Subscription Status */}
-            <div className="border-border flex items-center justify-between border-b pb-4">
+            <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Status</label>
               </div>
@@ -80,16 +82,16 @@ export function SubscriptionInfo({ subscription }: SubscriptionInfoProps) {
 
             {/* Billing Period */}
             {subscription.starts_at && subscription.ends_at && (
-              <div className="border-border flex items-center justify-between border-b pb-4">
+              <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                 <div className="flex flex-col">
                   <label className="text-sm font-medium">Billing period</label>
                 </div>
                 <div className="flex flex-col items-end text-end text-sm">
-                  <span className="block sm:hidden">
+                  <span className="block break-all sm:hidden">
                     {formatDate(subscription.starts_at)} - <br />
                     {formatDate(subscription.ends_at)}
                   </span>
-                  <span className="hidden sm:block">
+                  <span className="hidden break-all sm:block">
                     {`${formatDate(subscription.starts_at)} - ${formatDate(subscription.ends_at)}`}
                   </span>
                 </div>
@@ -97,14 +99,14 @@ export function SubscriptionInfo({ subscription }: SubscriptionInfoProps) {
             )}
 
             {/* Actions */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Actions</label>
                 <p className="text-muted-foreground text-xs">
                   Manage your subscription
                 </p>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center">
                 {subscription.stripe_subscription_id ? (
                   <ManageBillingButton />
                 ) : (

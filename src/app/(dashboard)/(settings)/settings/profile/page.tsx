@@ -45,7 +45,7 @@ async function ProfileContent() {
             <div className="space-y-6">
               <div className="space-y-4">
                 {/* Profile Picture */}
-                <div className="border-border flex items-center justify-between border-b pb-4">
+                <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">
                       Profile picture
@@ -65,29 +65,31 @@ async function ProfileContent() {
                 </div>
 
                 {/* Email */}
-                <div className="border-border flex items-center justify-between border-b pb-4">
+                <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">Email</label>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm">{user.email}</span>
+                  <div className="flex items-center">
+                    <span className="text-end text-sm break-all">
+                      {user.email}
+                    </span>
                   </div>
                 </div>
 
                 {/* Full Name */}
-                <div className="border-border flex items-center justify-between border-b pb-4">
+                <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">Name</label>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm">
+                    <span className="text-end text-sm break-all">
                       {user.name || "Not provided"}
                     </span>
                   </div>
                 </div>
 
                 {/* Account Created */}
-                <div className="border-border flex items-center justify-between">
+                <div className="border-border flex items-center justify-between gap-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">
                       Account created
@@ -97,7 +99,7 @@ async function ProfileContent() {
                     </p>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm">
+                    <span className="text-end text-sm break-all">
                       {formatDate(user.created_at)}
                     </span>
                   </div>
@@ -115,13 +117,13 @@ async function ProfileContent() {
           <CardContent>
             <div className="space-y-6">
               <div className="space-y-4">
-                <div className="border-border flex items-center justify-between">
+                <div className="border-border flex items-center justify-between gap-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">
                       Delete account
                     </label>
                     <p className="text-muted-foreground text-xs">
-                      Careful! This action cannot be undone.
+                      Warning: This action cannot be undone.
                     </p>
                   </div>
                   <div className="flex items-center">

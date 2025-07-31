@@ -43,7 +43,7 @@ async function UsageContent() {
             <div className="space-y-6">
               <div className="space-y-4">
                 {/* Plan */}
-                <div className="border-border flex items-center justify-between border-b pb-4">
+                <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">Plan</label>
                     <p className="text-muted-foreground text-xs">
@@ -51,7 +51,7 @@ async function UsageContent() {
                     </p>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm">
+                    <span className="text-end text-sm break-all">
                       {usage.plan_name || "No active plan"}
                     </span>
                   </div>
@@ -59,7 +59,7 @@ async function UsageContent() {
 
                 {/* Billing Period */}
                 {usage.billing_period_start && usage.billing_period_end && (
-                  <div className="border-border flex items-center justify-between border-b pb-4">
+                  <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                     <div className="flex flex-col">
                       <label className="text-sm font-medium">
                         Billing period
@@ -69,18 +69,18 @@ async function UsageContent() {
                       </p>
                     </div>
                     <div className="flex flex-col items-end text-end text-sm">
-                      <span className="block sm:hidden">
+                      <span className="block break-all sm:hidden">
                         {formatDate(usage.billing_period_start)} - <br />
                         {formatDate(usage.billing_period_end)}
                       </span>
-                      <span className="hidden sm:block">
+                      <span className="hidden break-all sm:block">
                         {`${formatDate(usage.billing_period_start)} - ${formatDate(usage.billing_period_end)}`}
                       </span>
                     </div>
                   </div>
                 )}
                 {/* Current Usage */}
-                <div className="border-border flex items-center justify-between border-b pb-4">
+                <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">Current usage</label>
                     <p className="text-muted-foreground text-xs">
@@ -88,7 +88,7 @@ async function UsageContent() {
                     </p>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm">
+                    <span className="text-end text-sm break-all">
                       {usage.current_usage || 0} /{" "}
                       {usage.max_uploads === -1
                         ? "∞"
@@ -98,7 +98,7 @@ async function UsageContent() {
                 </div>
 
                 {/* Max Size per Lecture */}
-                <div className="border-border flex items-center justify-between">
+                <div className="border-border flex items-center justify-between gap-4">
                   <div className="flex flex-col">
                     <label className="text-sm font-medium">
                       Max size per lecture
@@ -108,7 +108,7 @@ async function UsageContent() {
                     </p>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm">
+                    <span className="text-end text-sm break-all">
                       {usage.max_size_mb === -1
                         ? "∞"
                         : usage.max_size_mb
