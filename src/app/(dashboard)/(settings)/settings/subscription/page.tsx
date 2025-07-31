@@ -6,13 +6,7 @@ import { getUserSubscription } from "@/app/(dashboard)/_actions/user-actions";
 
 // components
 import { SubscriptionInfo } from "./_components/subscription-info";
-
-// types
-import type { components } from "@/types/api";
 import { PricingPlans } from "./_components/pricing-plans";
-
-type SubscriptionData =
-  components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"];
 
 async function SubscriptionContent() {
   const { data: subscription, error } = await getUserSubscription();

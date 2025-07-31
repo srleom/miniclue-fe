@@ -99,11 +99,6 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan) => {
           const isCurrentPlan = plan.id === currentPlanId;
-          const isUpgradeable =
-            currentPlanId === "free" || currentPlanId === "beta";
-          const isDowngradeable =
-            currentPlanId === "monthly_launch" ||
-            currentPlanId === "annual_launch";
 
           return (
             <Card
