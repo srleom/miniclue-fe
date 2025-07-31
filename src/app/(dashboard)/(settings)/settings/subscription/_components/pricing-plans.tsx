@@ -146,9 +146,10 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
 
               <CardFooter className="mt-auto">
                 {isCurrentPlan ? (
-                  <Button disabled className="w-full" size="sm">
-                    Current Plan
-                  </Button>
+                  <ManageBillingButton
+                    text="Manage billing"
+                    variant="default"
+                  />
                 ) : currentPlanId === "beta" && plan.id === "free" ? (
                   <Button disabled className="w-full" size="sm">
                     Not available

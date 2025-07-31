@@ -1020,6 +1020,68 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/stripe/webhooks": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Process Stripe webhook events
+     * @description Receives and processes Stripe webhook events for subscription management.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      /** @description Stripe webhook payload */
+      requestBody: {
+        content: {
+          "application/json": string;
+        };
+      };
+      responses: {
+        /** @description Webhook processed successfully */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Invalid webhook signature or payload */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Failed to process webhook */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/subscriptions": {
     parameters: {
       query?: never;

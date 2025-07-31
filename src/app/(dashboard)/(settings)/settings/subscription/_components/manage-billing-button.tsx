@@ -15,9 +15,11 @@ import { getStripePortalUrl } from "@/app/(dashboard)/_actions/user-actions";
 export function ManageBillingButton({
   disabled = false,
   text = "Manage billing",
+  variant = "outline",
 }: {
   disabled?: boolean;
   text?: string;
+  variant?: "outline" | "default" | "secondary" | "destructive" | "ghost";
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,7 +50,7 @@ export function ManageBillingButton({
     <form action={handleManageBilling} className="w-full">
       <Button
         type="submit"
-        variant="outline"
+        variant={variant}
         size="sm"
         disabled={disabled || isLoading}
         className="w-full hover:cursor-pointer"
