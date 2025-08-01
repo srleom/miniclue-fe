@@ -107,19 +107,20 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {process.env.NEXT_PUBLIC_SHOW_PRICING_PLANS && !isPaid && (
-              <>
-                <DropdownMenuGroup>
-                  <DropdownMenuItem className="hover:cursor-pointer" asChild>
-                    <Link href="/settings/subscription">
-                      <Sparkles />
-                      Upgrade to Pro
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-              </>
-            )}
+            {process.env.NEXT_PUBLIC_SHOW_PRICING_PLANS === "true" &&
+              !isPaid && (
+                <>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                      <Link href="/settings/subscription">
+                        <Sparkles />
+                        Upgrade to Pro
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                </>
+              )}
             <DropdownMenuGroup>
               <DropdownMenuItem className="hover:cursor-pointer" asChild>
                 <Link href="/settings/profile">

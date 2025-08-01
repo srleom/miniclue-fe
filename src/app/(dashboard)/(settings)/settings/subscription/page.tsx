@@ -38,7 +38,7 @@ async function SubscriptionContent() {
         <SubscriptionBanner subscription={subscriptionData} />
         <SubscriptionInfo subscription={subscriptionData} />
 
-        {process.env.NEXT_PUBLIC_SHOW_PRICING_PLANS && (
+        {process.env.NEXT_PUBLIC_SHOW_PRICING_PLANS === "true" && (
           <div className="mt-18 flex w-full flex-col gap-6">
             <h2 className="text-lg font-medium">Pricing plans</h2>
             <PricingPlans currentSubscription={subscriptionData} />
