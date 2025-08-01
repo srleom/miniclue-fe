@@ -28,6 +28,24 @@ export function isPaidUser(
   );
 }
 
+export function getPlanDisplayName(
+  subscription?: components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"],
+): string {
+  if (!subscription?.plan_id) {
+    return "Free";
+  }
+
+  // If it's a paid plan, show "Pro"
+  if (isPaidUser(subscription)) {
+    return "Pro";
+  }
+
+  // For non-paid plans, show the plan name with first letter capitalized
+  return (
+    subscription.plan_id.charAt(0).toUpperCase() + subscription.plan_id.slice(1)
+  );
+}
+
 export const formatDate = (dateString?: string): string => {
   if (!dateString) return "Unknown";
   return new Date(dateString).toLocaleDateString("en-GB", {

@@ -94,7 +94,7 @@ export function ExplainerCarousel({
 
   const memoizedCarouselContent = React.useMemo(() => {
     return (
-      <CarouselContent className="-mt-0 h-[calc(100vh-9.5rem)] basis-full">
+      <CarouselContent className="-mt-0 h-full basis-full">
         {Array.from({ length: totalPageCount || 1 }).map((_, index) => {
           const slideNum = index + 1;
           const markdown = explanations[slideNum] ?? "";
@@ -105,8 +105,8 @@ export function ExplainerCarousel({
                 key={index}
                 className="h-full basis-full overflow-y-auto pt-0"
               >
-                <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-8 shadow-none">
-                  <CardContent className="flex-1 px-10">
+                <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-6 shadow-none sm:py-8">
+                  <CardContent className="flex-1 px-6 sm:px-8">
                     <ReactMarkdown
                       remarkPlugins={[remarkMath, remarkGfm]}
                       rehypePlugins={[rehypeKatex]}
@@ -120,8 +120,8 @@ export function ExplainerCarousel({
           } else {
             return (
               <CarouselItem key={index} className="h-full basis-full pt-0">
-                <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-8 shadow-none">
-                  <CardContent className="flex flex-1 items-center justify-center px-10">
+                <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-6 shadow-none sm:py-8">
+                  <CardContent className="flex flex-1 items-center justify-center px-6 sm:px-8">
                     <LottieAnimation />
                   </CardContent>
                 </Card>

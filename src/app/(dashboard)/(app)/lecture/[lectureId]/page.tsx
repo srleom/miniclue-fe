@@ -23,12 +23,17 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import PdfViewer from "@/app/(dashboard)/(app)/lecture/[lectureId]/_components/pdf-viewer";
 import { ExplainerCarousel } from "./_components/carousel";
 import LottieAnimation from "./_components/lottie-animation";
 
 // lib
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
+
+// hooks
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // code
 import {
@@ -39,9 +44,14 @@ import {
 } from "@/app/(dashboard)/_actions/lecture-actions";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { MessageCircleMore, FileText, BookOpen } from "lucide-react";
 
 export default function LecturePage() {
   const { lectureId } = useParams() as { lectureId: string };
+  const isMobile = useIsMobile();
+  const [mobileView, setMobileView] = React.useState<"pdf" | "explanation">(
+    "pdf",
+  );
   const [supabase] = React.useState(() => createClient());
   const channelRef = React.useRef<
     ReturnType<typeof supabase.channel> | undefined
@@ -313,14 +323,53 @@ export default function LecturePage() {
     setPageNumber(newPage);
   };
 
+  // Mobile toggle component
+  const MobileToggle = () => (
+    <div className="flex w-full justify-center gap-2 p-4 pt-0">
+      <Button
+        variant={mobileView === "pdf" ? "default" : "outline"}
+        size="sm"
+        onClick={() => setMobileView("pdf")}
+        className="flex items-center gap-2"
+      >
+        <FileText className="h-4 w-4" />
+        PDF
+      </Button>
+      <Button
+        variant={mobileView === "explanation" ? "default" : "outline"}
+        size="sm"
+        onClick={() => setMobileView("explanation")}
+        className="flex items-center gap-2"
+      >
+        <BookOpen className="h-4 w-4" />
+        Explanation
+      </Button>
+    </div>
+  );
+
+  if (isMobile === undefined) {
+    return (
+      <div className="text-muted-foreground flex h-full flex-col items-center justify-center rounded-lg border">
+        <LottieAnimation />
+      </div>
+    );
+  }
+
   return (
     <>
       {lectureStatus !== "complete" && lectureStatus !== "failed" && (
         <Toaster />
       )}
-      <div className="mx-auto h-[calc(100vh-6rem)] w-full overflow-hidden">
-        <ResizablePanelGroup direction="horizontal" className="h-full">
-          <ResizablePanel className="h-full pr-6">
+      <div className="flex h-full w-full flex-col overflow-hidden">
+        {isMobile && <MobileToggle />}
+        <ResizablePanelGroup direction="horizontal" className="min-h-0 flex-1">
+          <ResizablePanel
+            className={cn(
+              "h-full min-h-0 overflow-auto",
+              !isMobile && "pr-6",
+              isMobile && mobileView !== "pdf" && "hidden",
+            )}
+          >
             {pdfUrl ? (
               <PdfViewer
                 fileUrl={pdfUrl}
@@ -335,9 +384,18 @@ export default function LecturePage() {
               </div>
             )}
           </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel className="flex flex-col pl-6">
-            <Tabs defaultValue="explanation" className="flex min-h-0 flex-col">
+          <ResizableHandle withHandle className={cn(isMobile && "hidden")} />
+          <ResizablePanel
+            className={cn(
+              "flex min-h-0 flex-col",
+              !isMobile && "pl-6",
+              isMobile && mobileView !== "explanation" && "hidden",
+            )}
+          >
+            <Tabs
+              defaultValue="explanation"
+              className="flex min-h-0 flex-1 flex-col"
+            >
               <TabsList className="w-full flex-shrink-0">
                 <TabsTrigger
                   value="explanation"
@@ -369,12 +427,12 @@ export default function LecturePage() {
                 className="mt-3 flex min-h-0 flex-1 flex-col"
               >
                 {summary === undefined || summaryLoading || summary === "" ? (
-                  <div className="text-muted-foreground flex h-[calc(100vh-9.5rem)] flex-col items-center justify-center rounded-lg border">
+                  <div className="text-muted-foreground flex h-full flex-col items-center justify-center rounded-lg border">
                     <LottieAnimation />
                   </div>
                 ) : (
-                  <Card className="markdown-content h-[calc(100vh-9.5rem)] w-full overflow-y-auto rounded-lg py-8 shadow-none">
-                    <CardContent className="px-10">
+                  <Card className="markdown-content flex h-full w-full overflow-y-auto rounded-lg py-6 shadow-none sm:py-8">
+                    <CardContent className="px-6 sm:px-8">
                       <ReactMarkdown
                         remarkPlugins={[remarkMath, remarkGfm]}
                         rehypePlugins={[rehypeKatex]}
@@ -385,10 +443,33 @@ export default function LecturePage() {
                   </Card>
                 )}
               </TabsContent>
-              <TabsContent value="chat" className="mt-3 flex-1">
-                <div className="text-muted-foreground flex h-[calc(100vh-9.5rem)] flex-col items-center justify-center rounded-lg border">
-                  <LottieAnimation />
-                </div>
+              <TabsContent
+                value="chat"
+                className="mt-3 flex min-h-0 flex-1 flex-col"
+              >
+                <Card className="flex h-full w-full overflow-y-auto rounded-lg py-8 shadow-none">
+                  <CardContent className="flex h-full flex-col items-center justify-center px-6 md:px-10">
+                    <div className="space-y-4 text-center">
+                      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-lg bg-blue-100">
+                        <MessageCircleMore className="size-7 text-blue-600" />
+                      </div>
+                      <div className="space-y-2">
+                        <h2 className="text-xl font-semibold text-gray-900 md:text-2xl">
+                          Chat Feature Coming Soon
+                        </h2>
+                        <p className="text-sm text-gray-600 md:max-w-lg">
+                          We&apos;re building an interactive chat feature that
+                          will let you ask questions about this lecture and get
+                          instant AI-powered responses.
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2 text-xs text-gray-500">
+                        <div className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></div>
+                        <span>In development</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
             </Tabs>
           </ResizablePanel>

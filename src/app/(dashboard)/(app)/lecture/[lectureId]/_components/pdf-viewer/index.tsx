@@ -162,25 +162,27 @@ export default function PdfViewer({
 
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-      <Viewer
-        fileUrl={fileUrl}
-        onPageChange={(e) => {
-          const newPage = e.currentPage + 1;
-          if (newPage !== pageNumber) {
-            onPageChange(newPage);
-          }
-        }}
-        onDocumentLoad={(e) => onDocumentLoad(e.doc.numPages)}
-        plugins={[
-          defaultLayoutPluginInstance,
-          zoomPluginInstance,
-          getFilePluginInstance,
-          searchPluginInstance,
-          pageNavigationPluginInstance,
-        ]}
-        defaultScale={SpecialZoomLevel.PageWidth}
-        scrollMode={ScrollMode.Vertical}
-      />
+      <div className="h-full w-full overflow-auto">
+        <Viewer
+          fileUrl={fileUrl}
+          onPageChange={(e) => {
+            const newPage = e.currentPage + 1;
+            if (newPage !== pageNumber) {
+              onPageChange(newPage);
+            }
+          }}
+          onDocumentLoad={(e) => onDocumentLoad(e.doc.numPages)}
+          plugins={[
+            defaultLayoutPluginInstance,
+            zoomPluginInstance,
+            getFilePluginInstance,
+            searchPluginInstance,
+            pageNavigationPluginInstance,
+          ]}
+          defaultScale={SpecialZoomLevel.PageFit}
+          scrollMode={ScrollMode.Vertical}
+        />
+      </div>
     </Worker>
   );
 }

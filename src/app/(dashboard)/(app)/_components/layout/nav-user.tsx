@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/sidebar";
 
 // lib
-import { getInitials, isPaidUser } from "@/lib/utils";
+import { getInitials, isPaidUser, getPlanDisplayName } from "@/lib/utils";
 
 // types
 import type { components } from "@/types/api";
@@ -54,6 +54,7 @@ export function NavUser({
 }) {
   // Determine if user is on a paid plan
   const isPaid = isPaidUser(subscription);
+  const planDisplayName = getPlanDisplayName(subscription);
 
   return (
     <SidebarMenu>
@@ -97,18 +98,16 @@ export function NavUser({
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <div className="flex items-center gap-2">
                     <span className="truncate font-medium">{user.name}</span>
-                    {isPaid && (
-                      <Badge variant="secondary" className="px-2 py-0 text-xs">
-                        Pro
-                      </Badge>
-                    )}
+                    <Badge variant="secondary" className="px-2 py-0 text-xs">
+                      {planDisplayName}
+                    </Badge>
                   </div>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {!isPaid && (
+            {process.env.NEXT_PUBLIC_SHOW_PRICING_PLANS && !isPaid && (
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem className="hover:cursor-pointer" asChild>

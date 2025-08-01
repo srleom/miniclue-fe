@@ -36,10 +36,12 @@ async function SubscriptionContent() {
 
         <SubscriptionInfo subscription={subscriptionData} />
 
-        <div className="mt-18 flex w-full flex-col gap-6">
-          <h2 className="text-lg font-medium">Pricing plans</h2>
-          <PricingPlans currentSubscription={subscriptionData} />
-        </div>
+        {process.env.NEXT_PUBLIC_SHOW_PRICING_PLANS && (
+          <div className="mt-18 flex w-full flex-col gap-6">
+            <h2 className="text-lg font-medium">Pricing plans</h2>
+            <PricingPlans currentSubscription={subscriptionData} />
+          </div>
+        )}
       </div>
     </div>
   );
