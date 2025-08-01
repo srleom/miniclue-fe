@@ -8,6 +8,7 @@ import { getUserSubscription } from "@/app/(dashboard)/_actions/user-actions";
 import { SubscriptionInfo } from "./_components/subscription-info";
 import { PricingPlans } from "./_components/pricing-plans";
 import { PaymentToastHandler } from "./_components/payment-toast-handler";
+import { SubscriptionBanner } from "./_components/subscription-banner";
 
 async function SubscriptionContent() {
   const { data: subscription, error } = await getUserSubscription();
@@ -34,6 +35,7 @@ async function SubscriptionContent() {
       <div className="flex w-full flex-col gap-6">
         <h1 className="text-2xl font-medium">Subscription</h1>
 
+        <SubscriptionBanner subscription={subscriptionData} />
         <SubscriptionInfo subscription={subscriptionData} />
 
         {process.env.NEXT_PUBLIC_SHOW_PRICING_PLANS && (

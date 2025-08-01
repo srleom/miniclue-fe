@@ -42,7 +42,6 @@ import {
   getSummary,
   getLecture,
 } from "@/app/(dashboard)/_actions/lecture-actions";
-import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { MessageCircleMore, FileText, BookOpen } from "lucide-react";
 
@@ -68,9 +67,7 @@ export default function LecturePage() {
   const [loading, setLoading] = React.useState(true);
   const [summary, setSummary] = React.useState<string | undefined>(undefined);
   const [summaryLoading, setSummaryLoading] = React.useState<boolean>(false);
-  const [lectureStatus, setLectureStatus] = React.useState<string | undefined>(
-    undefined,
-  );
+  const [, setLectureStatus] = React.useState<string | undefined>(undefined);
   const statusChannelRef = React.useRef<
     ReturnType<typeof supabase.channel> | undefined
   >(undefined);
@@ -357,9 +354,6 @@ export default function LecturePage() {
 
   return (
     <>
-      {lectureStatus !== "complete" && lectureStatus !== "failed" && (
-        <Toaster />
-      )}
       <div className="flex h-full w-full flex-col overflow-hidden">
         {isMobile && <MobileToggle />}
         <ResizablePanelGroup direction="horizontal" className="min-h-0 flex-1">

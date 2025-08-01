@@ -10,6 +10,9 @@ import { formatDate } from "@/lib/utils";
 // actions
 import { getUserUsage } from "@/app/(dashboard)/_actions/user-actions";
 
+// components
+import { Badge } from "@/components/ui/badge";
+
 async function UsageContent() {
   const { data: usage, error } = await getUserUsage();
 
@@ -50,10 +53,15 @@ async function UsageContent() {
                       Your current subscription plan
                     </p>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-2">
                     <span className="text-end text-sm break-all">
                       {usage.plan_name || "No active plan"}
                     </span>
+                    {usage.status === "past_due" && (
+                      <Badge variant="destructive" className="text-xs">
+                        Past Due
+                      </Badge>
+                    )}
                   </div>
                 </div>
 

@@ -59,7 +59,10 @@ export function SubscriptionInfo({ subscription }: SubscriptionInfoProps) {
             {/* Current Plan */}
             <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
               <div className="flex flex-col">
-                <label className="text-sm font-medium">Current plan</label>
+                <label className="text-sm font-medium">Plan</label>
+                <p className="text-muted-foreground text-xs">
+                  Your current subscription plan
+                </p>
               </div>
               <div className="flex items-center">
                 <span className="text-end text-sm break-all">
@@ -72,6 +75,9 @@ export function SubscriptionInfo({ subscription }: SubscriptionInfoProps) {
             <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Status</label>
+                <p className="text-muted-foreground text-xs">
+                  Your current subscription status
+                </p>
               </div>
               <div className="flex items-center">
                 <Badge variant={statusVariant} className="text-xs">
@@ -85,6 +91,9 @@ export function SubscriptionInfo({ subscription }: SubscriptionInfoProps) {
               <div className="border-border flex items-center justify-between gap-4 border-b pb-4">
                 <div className="flex flex-col">
                   <label className="text-sm font-medium">Billing period</label>
+                  <p className="text-muted-foreground text-xs">
+                    Your current billing cycle
+                  </p>
                 </div>
                 <div className="flex flex-col items-end text-end text-sm">
                   <span className="block break-all sm:hidden">
@@ -108,7 +117,22 @@ export function SubscriptionInfo({ subscription }: SubscriptionInfoProps) {
               </div>
               <div className="flex items-center">
                 {subscription.stripe_subscription_id ? (
-                  <ManageBillingButton />
+                  <ManageBillingButton
+                    text={
+                      subscription.status === "past_due"
+                        ? "Update Payment"
+                        : subscription.status === "cancelled"
+                          ? "Resubscribe"
+                          : "Manage billing"
+                    }
+                    variant={
+                      subscription.status === "past_due"
+                        ? "destructive"
+                        : subscription.status === "cancelled"
+                          ? "outline"
+                          : "outline"
+                    }
+                  />
                 ) : (
                   <ManageBillingButton disabled />
                 )}

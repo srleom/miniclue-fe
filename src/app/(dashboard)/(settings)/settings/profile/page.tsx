@@ -94,9 +94,6 @@ async function ProfileContent() {
                     <label className="text-sm font-medium">
                       Account created
                     </label>
-                    <p className="text-muted-foreground text-xs">
-                      When you joined MiniClue
-                    </p>
                   </div>
                   <div className="flex items-center">
                     <span className="text-end text-sm break-all">

@@ -1,16 +1,10 @@
 "use client";
 
-// react
-import { useState } from "react";
-
-// third-party
-import { toast } from "sonner";
-
 // components
 import { Button } from "@/components/ui/button";
 
-// actions
-import { getStripePortalUrl } from "@/app/(dashboard)/_actions/user-actions";
+// utils
+import { useManageBilling } from "./billing-utils";
 
 export function ManageBillingButton({
   disabled = false,
@@ -21,30 +15,7 @@ export function ManageBillingButton({
   text?: string;
   variant?: "outline" | "default" | "secondary" | "destructive" | "ghost";
 }) {
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function handleManageBilling() {
-    setIsLoading(true);
-    try {
-      const { data: portalUrl, error } = await getStripePortalUrl();
-
-      if (error) {
-        console.error("Failed to get portal URL:", error);
-        toast.error("Failed to access billing portal. Please try again.");
-        return;
-      }
-
-      if (portalUrl) {
-        window.open(portalUrl, "_blank");
-        toast.success("Redirecting to billing portal...");
-      }
-    } catch (error) {
-      console.error("Failed to get portal URL:", error);
-      toast.error("An unexpected error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const { handleManageBilling, isLoading } = useManageBilling();
 
   return (
     <form action={handleManageBilling} className="w-full">

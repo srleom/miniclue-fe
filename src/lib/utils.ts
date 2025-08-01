@@ -23,9 +23,14 @@ export function isPaidUser(
   return !!(
     subscription?.plan_id &&
     subscription.plan_id !== "free" &&
-    subscription.plan_id !== "beta" &&
-    subscription.status === "active"
+    subscription.plan_id !== "beta"
   );
+}
+
+export function isSubscriptionPastDue(
+  subscription?: components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"],
+): boolean {
+  return subscription?.status === "past_due";
 }
 
 export function getPlanDisplayName(

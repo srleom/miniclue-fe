@@ -7,11 +7,14 @@ import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
 import {
   getUserCourses,
   getUserUsage,
+  getUserSubscription,
 } from "@/app/(dashboard)/_actions/user-actions";
 
 export default async function Page() {
   const { data: courses, error } = await getUserCourses();
   const { data: userUsage, error: usageError } = await getUserUsage();
+  const { data: subscription, error: subscriptionError } =
+    await getUserSubscription();
 
   if (error) {
     // Handle error case, maybe show a message to the user
@@ -20,6 +23,10 @@ export default async function Page() {
 
   if (usageError) {
     console.error("Failed to load user usage:", usageError);
+  }
+
+  if (subscriptionError) {
+    console.error("Failed to load subscription:", subscriptionError);
   }
 
   const defaultCourse = courses?.find((c) => c.isDefault);
@@ -41,6 +48,7 @@ export default async function Page() {
           courseId={defaultCourse?.courseId}
           uploadLectures={uploadLectures}
           userUsage={userUsage}
+          subscription={subscription}
         />
       </div>
     </div>

@@ -1091,7 +1091,7 @@ export interface paths {
     };
     /**
      * Get current user's subscription
-     * @description Retrieves the authenticated user's current subscription details.
+     * @description Retrieves the authenticated user's current subscription details, including edge cases like past_due status.
      */
     get: {
       parameters: {
@@ -1120,7 +1120,7 @@ export interface paths {
             "application/json": string;
           };
         };
-        /** @description No active subscription */
+        /** @description No subscription found */
         404: {
           headers: {
             [name: string]: unknown;
@@ -1716,6 +1716,7 @@ export interface components {
       max_uploads?: number;
       plan_id?: string;
       plan_name?: string;
+      status?: string;
       user_id?: string;
     };
   };

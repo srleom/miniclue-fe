@@ -33,14 +33,21 @@ import {
 } from "@/components/ui/file-list";
 import { useRouter } from "next/navigation";
 
+// lib
+import { isSubscriptionPastDue } from "@/lib/utils";
+
 type UserUsageData =
   components["schemas"]["app_internal_api_v1_dto.UserUsageResponseDTO"];
+
+type SubscriptionData =
+  components["schemas"]["app_internal_api_v1_dto.SubscriptionResponseDTO"];
 
 export function DropzoneComponent({
   isCoursePage = false,
   courseId,
   uploadLectures,
   userUsage,
+  subscription,
 }: {
   isCoursePage?: boolean;
   courseId?: string;
@@ -53,6 +60,7 @@ export function DropzoneComponent({
     >
   >;
   userUsage?: UserUsageData;
+  subscription?: SubscriptionData;
 }) {
   const [files, setFiles] = React.useState<File[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -63,6 +71,25 @@ export function DropzoneComponent({
   };
 
   const handleUpload = async () => {
+    // Check if subscription is past due before allowing uploads
+    if (isSubscriptionPastDue(subscription)) {
+      toast.error(
+        "Your last payment failed. Please update your payment method to continue using MiniClue.",
+        {
+          action: {
+            label: "Update Payment",
+            onClick: () => router.push("/settings/subscription"),
+          },
+          actionButtonStyle: {
+            backgroundColor: "#fff",
+            color: "var(--primary)",
+            border: "1px solid var(--primary)",
+          },
+        },
+      );
+      return;
+    }
+
     if (!isCoursePage || !courseId) {
       toast.error("Course ID is missing. Cannot upload files.");
       return;

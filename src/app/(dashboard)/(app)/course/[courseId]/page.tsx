@@ -16,7 +16,10 @@ import {
   getCourseLectures,
 } from "@/app/(dashboard)/_actions/course-actions";
 import { uploadLectures } from "@/app/(dashboard)/_actions/lecture-actions";
-import { getUserUsage } from "@/app/(dashboard)/_actions/user-actions";
+import {
+  getUserUsage,
+  getUserSubscription,
+} from "@/app/(dashboard)/_actions/user-actions";
 
 interface CoursePageProps {
   params: Promise<{ courseId: string }>;
@@ -49,9 +52,15 @@ export default async function CoursePage({ params }: CoursePageProps) {
   const { title: courseTitle, is_default: isDefault } = courseRes.data;
   const lecturesDTO = await getCourseLectures(courseId);
   const { data: userUsage, error: usageError } = await getUserUsage();
+  const { data: subscription, error: subscriptionError } =
+    await getUserSubscription();
 
   if (usageError) {
     console.error("Failed to load user usage:", usageError);
+  }
+
+  if (subscriptionError) {
+    console.error("Failed to load subscription:", subscriptionError);
   }
 
   const tableLectures: LectureResponseDTO[] =
@@ -75,6 +84,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
           courseId={courseId}
           uploadLectures={uploadLectures}
           userUsage={userUsage}
+          subscription={subscription}
         />
       </div>
       <DataTable columns={columns} data={tableLectures} />

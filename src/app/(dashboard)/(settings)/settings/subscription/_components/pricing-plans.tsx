@@ -76,13 +76,28 @@ export function PricingPlans({ currentSubscription }: PricingPlansProps) {
   ): ButtonConfig => {
     // Current plan - show manage billing
     if (isCurrentPlan) {
+      let text = "Manage billing";
+      let variant:
+        | "outline"
+        | "default"
+        | "secondary"
+        | "destructive"
+        | "ghost" = "secondary";
+
+      if (currentSubscription.status === "cancelled") {
+        text = "Resubscribe";
+        variant = "secondary";
+      } else if (currentSubscription.status === "past_due") {
+        text = "Update Payment";
+        variant = "destructive";
+      } else {
+        variant = currentPlanId === "annual_launch" ? "default" : "secondary";
+      }
+
       return {
         type: "manage",
-        text:
-          currentSubscription.status === "cancelled"
-            ? "Reactivate subscription"
-            : "Manage billing",
-        variant: currentPlanId === "annual_launch" ? "default" : "secondary",
+        text,
+        variant,
         disabled: false,
       };
     }
