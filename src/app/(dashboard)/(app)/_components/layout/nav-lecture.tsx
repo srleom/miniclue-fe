@@ -27,6 +27,7 @@ export default function NavLecture({
   isMobile,
   handleUpdateLectureAccessedAt,
   deleteLecture,
+  onRenameSuccess,
 }: {
   lecture: { lecture_id: string; title: string };
   isMobile: boolean;
@@ -34,6 +35,7 @@ export default function NavLecture({
     lectureId: string,
   ) => Promise<ActionResponse<void>>;
   deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
+  onRenameSuccess?: () => void;
 }) {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
@@ -71,13 +73,14 @@ export default function NavLecture({
         itemType="lecture"
         renameAction={updateLecture}
         deleteAction={deleteLecture}
+        onRenameSuccess={onRenameSuccess}
         dropdownMenuContentProps={{
           className: "w-48",
           side: isMobile ? "bottom" : "right",
           align: isMobile ? "end" : "start",
         }}
       >
-        <SidebarMenuAction className="opacity-0 group-hover/lecture:opacity-100">
+        <SidebarMenuAction className="opacity-100 md:opacity-0 md:group-hover/lecture:opacity-100">
           <MoreHorizontal />
           <span className="sr-only">More</span>
         </SidebarMenuAction>

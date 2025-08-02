@@ -2,6 +2,7 @@
 
 // next
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 // icons
@@ -38,11 +39,12 @@ export function NavRecents({
   deleteLecture: (lectureId: string) => Promise<ActionResponse<void>>;
 }) {
   const { isMobile, setOpenMobile } = useSidebar();
-  const [recents, setRecents] = useState<NavRecentsItem[]>(items);
+  const router = useRouter();
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [totalCount, setTotalCount] = useState<number>(
-    items[0]?.totalCount ?? 0,
-  );
+  const [additionalItems, setAdditionalItems] = useState<NavRecentsItem[]>([]);
+
+  const allItems = [...items, ...additionalItems];
+  const hasMore = allItems.length < (allItems[0]?.totalCount ?? 0);
 
   const handleNavigation = () => {
     if (isMobile) {
@@ -50,30 +52,27 @@ export function NavRecents({
     }
   };
 
-  const hasMore = recents.length < totalCount;
+  const handleRenameSuccess = () => {
+    // Refresh the page data to get updated recents
+    router.refresh();
+  };
 
   const handleLoadMore = async () => {
     if (isLoadingMore || !hasMore) return;
 
     setIsLoadingMore(true);
     try {
-      const result = await getUserRecents(5, recents.length);
+      const result = await getUserRecents(5, allItems.length);
 
       if (result.data && result.data.length > 0) {
         // Check for duplicates by comparing lecture IDs
-        const existingIds = new Set(recents.map((item) => item.lectureId));
+        const existingIds = new Set(allItems.map((item) => item.lectureId));
         const newItems = result.data.filter(
           (item) => !existingIds.has(item.lectureId),
         );
 
         if (newItems.length > 0) {
-          // Add only new items to the existing list
-          setRecents((prev) => [...prev, ...newItems]);
-
-          // Update total count from the first item (they should all have the same totalCount)
-          if (newItems[0]?.totalCount) {
-            setTotalCount(newItems[0].totalCount);
-          }
+          setAdditionalItems((prev) => [...prev, ...newItems]);
         }
       }
     } catch (error) {
@@ -89,7 +88,7 @@ export function NavRecents({
         <span>Recents</span>
         <SidebarGroupAction
           asChild
-          className="hover:bg-sidebar-border absolute top-1.5 right-1 group-hover/recents:opacity-100 hover:cursor-pointer md:opacity-0"
+          className="hover:bg-sidebar-border absolute top-1.5 right-1 opacity-100 group-hover/recents:opacity-100 hover:cursor-pointer md:opacity-0 md:group-hover/recents:opacity-100"
         >
           <Link href="/" onClick={handleNavigation}>
             <Plus />
@@ -98,13 +97,14 @@ export function NavRecents({
         </SidebarGroupAction>
       </SidebarGroupLabel>
       <SidebarMenu>
-        {recents.map((item) => (
+        {allItems.map((item) => (
           <NavLecture
             key={item.lectureId}
             lecture={{ lecture_id: item.lectureId, title: item.name }}
             isMobile={isMobile}
             handleUpdateLectureAccessedAt={handleUpdateLectureAccessedAt}
             deleteLecture={deleteLecture}
+            onRenameSuccess={handleRenameSuccess}
           />
         ))}
         {hasMore && (

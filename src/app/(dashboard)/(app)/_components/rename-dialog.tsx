@@ -27,7 +27,7 @@ export function RenameDialog({
         onCloseAutoFocus={(event) => event.preventDefault()}
         className="sm:max-w-[425px]"
       >
-        <DialogHeader>
+        <DialogHeader className="text-start">
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>

@@ -107,12 +107,12 @@ export function NavCourses({
                     <SidebarMenuButton
                       className={
                         pathname === `/course/${item.courseId}`
-                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                          : undefined
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground group"
+                          : "group"
                       }
                     >
-                      <ChevronRight className="hidden transition-transform group-hover/collapsible:block group-data-[state=open]/collapsible:rotate-90" />
-                      <Folder className="group-hover/collapsible:hidden" />
+                      <ChevronRight className="block transition-transform group-hover/collapsible:block group-data-[state=open]:rotate-90 md:hidden" />
+                      <Folder className="hidden group-hover/collapsible:hidden md:block" />
                       <Link
                         href={`/course/${item.courseId}`}
                         className="w-full truncate"
@@ -135,7 +135,7 @@ export function NavCourses({
                         align: isMobile ? "end" : "start",
                       }}
                     >
-                      <SidebarMenuAction className="opacity-0 group-hover/collapsible:opacity-100">
+                      <SidebarMenuAction className="opacity-100 md:opacity-0 md:group-hover/collapsible:opacity-100">
                         <MoreHorizontal />
                         <span className="sr-only">More</span>
                       </SidebarMenuAction>

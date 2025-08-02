@@ -14,8 +14,6 @@ import { Pencil, Trash2 } from "lucide-react";
 import { ActionResponse } from "@/lib/api/authenticated-api";
 
 // components
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,9 +21,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import DeleteDialog from "./delete-dialog";
 import { RenameDialog } from "./rename-dialog";
+import { RenameForm } from "./rename-form";
 
 type Item = {
   id: string;
@@ -75,40 +73,18 @@ export function ItemActions<T>({
           }
           title={`Rename ${itemType}`}
           form={
-            <form
-              action={async (formData: FormData) => {
-                const name = formData.get("name") as string;
-                const result = await renameAction(item.id, name);
-                if (result.error) {
-                  toast.error(result.error as string);
-                } else {
-                  toast.success(
-                    `${
-                      itemType.charAt(0).toUpperCase() + itemType.slice(1)
-                    } renamed`,
-                  );
-                  setOpenMenu(false);
-                  onRenameSuccess?.();
-                }
+            <RenameForm
+              id={item.id}
+              defaultValue={item.title}
+              action={renameAction}
+              successMessage={`${
+                itemType.charAt(0).toUpperCase() + itemType.slice(1)
+              } renamed`}
+              onSuccess={() => {
+                setOpenMenu(false);
+                onRenameSuccess?.();
               }}
-              className="grid gap-4"
-            >
-              <div className="grid gap-3">
-                <Input name="name" defaultValue={item.title} />
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline" className="cursor-pointer">
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button type="submit" className="cursor-pointer">
-                    Save
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </form>
+            />
           }
         />
         {!isDefault && (

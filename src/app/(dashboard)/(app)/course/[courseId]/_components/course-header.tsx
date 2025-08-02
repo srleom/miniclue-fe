@@ -3,18 +3,13 @@
 // react
 import * as React from "react";
 
-// third-party
-import { toast } from "sonner";
-
 // icons
 import { Folder, Pencil } from "lucide-react";
 
 // components
 import { RenameDialog } from "@/app/(dashboard)/(app)/_components/rename-dialog";
+import { RenameForm } from "@/app/(dashboard)/(app)/_components/rename-form";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 
 // code
 import { updateCourse } from "@/app/(dashboard)/_actions/course-actions";
@@ -40,41 +35,19 @@ export default function CourseHeader({
           trigger={
             <button
               type="button"
-              className="text-muted-foreground ml-2 cursor-pointer opacity-0 group-hover:opacity-100"
+              className="text-muted-foreground ml-2 cursor-pointer opacity-100 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100"
             >
               <Pencil size={20} />
             </button>
           }
           title="Rename course"
           form={
-            <form
-              action={async (formData: FormData) => {
-                const name = formData.get("name") as string;
-                const result = await updateCourse(courseId, name);
-                if (result.error) {
-                  toast.error(result.error);
-                } else {
-                  toast.success("Course renamed");
-                }
-              }}
-              className="grid gap-4"
-            >
-              <div className="grid gap-3">
-                <Input
-                  id={`course-name-${courseId}`}
-                  name="name"
-                  defaultValue={courseTitle}
-                />
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button type="submit">Save</Button>
-                </DialogClose>
-              </DialogFooter>
-            </form>
+            <RenameForm
+              id={courseId}
+              defaultValue={courseTitle}
+              action={updateCourse}
+              successMessage="Course renamed"
+            />
           }
         />
       )}

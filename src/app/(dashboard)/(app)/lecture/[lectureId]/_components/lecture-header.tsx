@@ -3,15 +3,10 @@
 // react
 import * as React from "react";
 
-// third-party
-import { toast } from "sonner";
-
 // components
 import { BreadcrumbPage } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { RenameDialog } from "@/app/(dashboard)/(app)/_components/rename-dialog";
+import { RenameForm } from "@/app/(dashboard)/(app)/_components/rename-form";
 
 // icons
 import { Pencil } from "lucide-react";
@@ -35,45 +30,19 @@ export default function LectureHeader({
         trigger={
           <button
             type="button"
-            className="text-muted-foreground ml-1 cursor-pointer opacity-0 group-hover:opacity-100"
+            className="text-muted-foreground ml-1 cursor-pointer opacity-100 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100"
           >
             <Pencil size={12} />
           </button>
         }
         title="Rename lecture"
         form={
-          <form
-            action={async (formData: FormData) => {
-              const name = formData.get("name") as string;
-              const result = await updateLecture(lectureId, name);
-              if (result.error) {
-                toast.error(result.error);
-              } else {
-                toast.success("Lecture renamed");
-              }
-            }}
-            className="grid gap-4"
-          >
-            <div className="grid gap-3">
-              <Input
-                id={`lecture-name-${lectureId}`}
-                name="name"
-                defaultValue={lectureTitle}
-              />
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline" className="cursor-pointer">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button type="submit" className="cursor-pointer">
-                  Save
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </form>
+          <RenameForm
+            id={lectureId}
+            defaultValue={lectureTitle}
+            action={updateLecture}
+            successMessage="Lecture renamed"
+          />
         }
       />
     </div>
