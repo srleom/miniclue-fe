@@ -35,6 +35,7 @@ import { useRouter } from "next/navigation";
 
 // lib
 import { isSubscriptionPastDue } from "@/lib/utils";
+import { logger } from "@/lib/logger";
 
 type UserUsageData =
   components["schemas"]["app_internal_api_v1_dto.UserUsageResponseDTO"];
@@ -53,10 +54,10 @@ export function DropzoneComponent({
   courseId?: string;
   uploadLectures: (
     courseId: string,
-    formData: FormData,
+    files: File[],
   ) => Promise<
     ActionResponse<
-      components["schemas"]["app_internal_api_v1_dto.LectureUploadResponseDTO"][]
+      components["schemas"]["app_internal_api_v1_dto.LectureUploadCompleteResponseDTO"][]
     >
   >;
   userUsage?: UserUsageData;
@@ -73,6 +74,7 @@ export function DropzoneComponent({
   const handleUpload = async () => {
     // Check if subscription is past due before allowing uploads
     if (isSubscriptionPastDue(subscription)) {
+      logger.warn("Upload blocked due to past due subscription");
       toast.error(
         "Your last payment failed. Please update your payment method to continue using MiniClue.",
         {
@@ -91,21 +93,21 @@ export function DropzoneComponent({
     }
 
     if (!isCoursePage || !courseId) {
+      logger.error("Upload failed: Course ID is missing", {
+        isCoursePage,
+        courseId,
+      });
       toast.error("Course ID is missing. Cannot upload files.");
       return;
     }
 
     if (files.length === 0) {
+      logger.info("Upload attempted with no files");
       toast.info("No files to upload.");
       return;
     }
 
     setIsLoading(true);
-
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
 
     const toastId = toast.loading(
       `Uploading ${files.length} file${files.length > 1 ? "s" : ""}...`,
@@ -113,53 +115,88 @@ export function DropzoneComponent({
 
     let result;
     try {
-      result = await uploadLectures(courseId, formData);
+      logger.info("Starting file upload", {
+        fileCount: files.length,
+        courseId,
+      });
+      result = await uploadLectures(courseId, files);
       setFiles([]);
+    } catch (error) {
+      logger.error("Upload failed with exception", { error, courseId });
+      throw error;
     } finally {
       setIsLoading(false);
       toast.dismiss(toastId);
     }
+
     if (result?.error) {
+      logger.error("Upload API returned error", { error: result.error });
       toast.error(result.error);
       return;
     }
+
     if (result?.data) {
       let firstLectureId: string | null = null;
       let hasSuccessfulUpload = false;
+      let successCount = 0;
+      let errorCount = 0;
 
-      result.data.forEach((res) => {
-        if (res.lecture_id) {
-          // If we have a lecture_id, the upload was successful
+      result.data.forEach((res, index) => {
+        if (
+          (res.status === "success" || res.status === "pending_processing") &&
+          res.lecture_id
+        ) {
+          // If we have a lecture_id and status is success or pending_processing, the upload was successful
           if (!firstLectureId) {
             firstLectureId = res.lecture_id;
           }
           hasSuccessfulUpload = true;
-          toast.success(`Successfully uploaded ${res.filename}`);
-        } else if (res.status === "upload_limit_exceeded") {
-          toast.error(
-            `Could not upload ${res.filename}. You have exceeded your monthly upload limit.`,
-            {
-              action: {
-                label: "Upgrade Plan",
-                onClick: () => router.push("/settings/subscription"),
-              },
-              actionButtonStyle: {
-                backgroundColor: "#fff",
-                color: "var(--primary)",
-                border: "1px solid var(--primary)",
-              },
-            },
+          successCount++;
+          toast.success(
+            `Successfully uploaded ${files[index]?.name || "file"}`,
           );
-        } else {
+        } else if (res.status === "error") {
+          errorCount++;
+          logger.error("File upload failed", {
+            fileName: files[index]?.name,
+            error: res.message,
+            status: res.status,
+          });
           toast.error(
-            `An unexpected error occurred while uploading ${res.filename}.`,
+            `Failed to upload ${files[index]?.name || "file"}: ${res.message || "Unknown error"}`,
           );
         }
       });
 
+      logger.info("Upload processing complete", {
+        successCount,
+        errorCount,
+        firstLectureId,
+        hasSuccessfulUpload,
+      });
+
+      // Show summary toast
+      if (successCount > 0 && errorCount > 0) {
+        toast.info(
+          `Upload complete: ${successCount} successful, ${errorCount} failed`,
+        );
+      } else if (successCount > 0) {
+        toast.success(
+          `Successfully uploaded ${successCount} file${successCount > 1 ? "s" : ""}`,
+        );
+      }
+
       // Only redirect if we have at least one successful upload
       if (firstLectureId && hasSuccessfulUpload) {
+        logger.info("Redirecting to lecture page", {
+          lectureId: firstLectureId,
+        });
         router.push(`/lecture/${firstLectureId}`);
+      } else {
+        logger.warn("No redirect - no successful uploads", {
+          firstLectureId,
+          hasSuccessfulUpload,
+        });
       }
     }
   };

@@ -4,6 +4,9 @@
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
+// aws-sdk
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
 // types
 import { components } from "@/types/api";
 
@@ -13,6 +16,17 @@ import {
   createAuthenticatedApi,
 } from "@/lib/api/authenticated-api";
 import { logger } from "@/lib/logger";
+
+// S3 client configuration for Supabase Storage
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION || "",
+  endpoint: process.env.AWS_S3_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+  },
+  forcePathStyle: true, // Required for Supabase Storage
+});
 
 export async function handleUpdateLectureAccessedAt(
   lectureId: string,
@@ -39,38 +53,180 @@ export async function handleUpdateLectureAccessedAt(
   return { error: undefined };
 }
 
-export async function uploadLectures(
+export async function getUploadUrls(
   courseId: string,
-  formData: FormData,
+  filenames: string[],
 ): Promise<
   ActionResponse<
-    components["schemas"]["app_internal_api_v1_dto.LectureUploadResponseDTO"][]
+    components["schemas"]["app_internal_api_v1_dto.LectureBatchUploadURLResponseDTO"]
   >
 > {
-  formData.append("course_id", courseId);
-
   const { api, error } = await createAuthenticatedApi();
   if (error || !api) {
     return { error };
   }
 
-  const { data, error: uploadError } = await api.POST("/lectures", {
-    // The type is set to `any` because `openapi-fetch` supports FormData directly,
-    // but the auto-generated type from `openapi-typescript` is incorrect for file uploads.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    body: formData as any,
-    bodySerializer: (body) => body,
-  });
+  const { data, error: uploadError } = await api.POST(
+    "/lectures/batch-upload-url",
+    {
+      body: {
+        course_id: courseId,
+        filenames,
+      },
+    },
+  );
 
   if (uploadError) {
-    logger.error("Upload lectures error:", uploadError);
+    logger.error("Get upload URLs error:", uploadError);
     return { error: uploadError };
   }
 
-  revalidateTag(`lectures:${courseId}`);
-  revalidateTag("recents");
+  return { data, error: undefined };
+}
+
+export async function uploadFileToS3(
+  file: File,
+  uploadUrl: string,
+): Promise<ActionResponse<void>> {
+  try {
+    // Convert File to Buffer for S3 upload
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Parse the presigned URL to extract bucket and key
+    const url = new URL(uploadUrl);
+    const pathParts = url.pathname.split("/");
+
+    // For Supabase Storage, the path structure is typically: /storage/v1/s3/bucket-name/key
+    // So we need to extract bucket and key from this structure
+    const bucketIndex = pathParts.findIndex((part) => part === "s3") + 1;
+    const bucket = pathParts[bucketIndex];
+    const key = pathParts.slice(bucketIndex + 1).join("/");
+
+    logger.info("Uploading to S3:", { bucket, key, fileSize: buffer.length });
+
+    const command = new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: buffer,
+      ContentType: file.type,
+    });
+
+    await s3Client.send(command);
+
+    return { error: undefined };
+  } catch (error) {
+    logger.error("S3 upload error:", error);
+    return { error: "Failed to upload file to S3" };
+  }
+}
+
+export async function completeUpload(
+  lectureId: string,
+): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.LectureUploadCompleteResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: completeError } = await api.POST(
+    "/lectures/{lectureId}/upload-complete",
+    {
+      params: { path: { lectureId } },
+      body: {},
+    },
+  );
+
+  if (completeError) {
+    logger.error("Complete upload error:", completeError);
+    return { error: completeError };
+  }
 
   return { data, error: undefined };
+}
+
+export async function uploadLectures(
+  courseId: string,
+  files: File[],
+): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.LectureUploadCompleteResponseDTO"][]
+  >
+> {
+  try {
+    // Step 1: Get presigned URLs for all files
+    const filenames = files.map((file) => file.name);
+    const { data: uploadUrlsData, error: urlsError } = await getUploadUrls(
+      courseId,
+      filenames,
+    );
+
+    if (urlsError || !uploadUrlsData?.uploads) {
+      return { error: urlsError || "Failed to get upload URLs" };
+    }
+
+    const uploads = uploadUrlsData.uploads;
+    const results: components["schemas"]["app_internal_api_v1_dto.LectureUploadCompleteResponseDTO"][] =
+      [];
+
+    // Step 2: Upload each file to S3
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const upload = uploads[i];
+
+      if (!file || !upload?.upload_url || !upload?.lecture_id) {
+        results.push({
+          lecture_id: upload?.lecture_id,
+          status: "error",
+          message: "Invalid file or upload URL or lecture ID",
+        });
+        continue;
+      }
+
+      // Upload file to S3
+      const { error: uploadError } = await uploadFileToS3(
+        file,
+        upload.upload_url,
+      );
+
+      if (uploadError) {
+        results.push({
+          lecture_id: upload.lecture_id,
+          status: "error",
+          message: uploadError,
+        });
+        continue;
+      }
+
+      // Step 3: Complete the upload
+      const { data: completeData, error: completeError } = await completeUpload(
+        upload.lecture_id,
+      );
+
+      if (completeError) {
+        results.push({
+          lecture_id: upload.lecture_id,
+          status: "error",
+          message: completeError,
+        });
+      } else {
+        results.push(completeData!);
+      }
+    }
+
+    // Revalidate cache
+    revalidateTag(`lectures:${courseId}`);
+    revalidateTag("recents");
+
+    return { data: results, error: undefined };
+  } catch (error) {
+    logger.error("Upload lectures error:", error);
+    return { error: "Failed to upload lectures" };
+  }
 }
 
 export async function getLecture(

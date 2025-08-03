@@ -392,9 +392,25 @@ export interface paths {
       };
     };
     put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/lectures/batch-upload-url": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
     /**
-     * Upload lecture PDFs
-     * @description Uploads one or more PDF files to create new lectures under the specified course.
+     * Get upload URLs for lectures
+     * @description Initiates lecture uploads by creating lecture records and returning presigned URLs for direct S3 upload. Works for both single and multiple files.
      */
     post: {
       parameters: {
@@ -403,16 +419,10 @@ export interface paths {
         path?: never;
         cookie?: never;
       };
+      /** @description Upload URL request */
       requestBody: {
         content: {
-          "multipart/form-data": {
-            /** @description Course ID */
-            course_id: string;
-            /** @description Lecture title (used as default for all files) */
-            title?: string;
-            /** @description PDF files */
-            files: Record<string, never>[];
-          };
+          "application/json": components["schemas"]["app_internal_api_v1_dto.LectureUploadURLRequestDTO"];
         };
       };
       responses: {
@@ -422,10 +432,10 @@ export interface paths {
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["app_internal_api_v1_dto.LectureUploadResponseDTO"][];
+            "application/json": components["schemas"]["app_internal_api_v1_dto.LectureBatchUploadURLResponseDTO"];
           };
         };
-        /** @description Bad Request */
+        /** @description Invalid JSON payload or validation failed */
         400: {
           headers: {
             [name: string]: unknown;
@@ -443,6 +453,15 @@ export interface paths {
             "application/json": string;
           };
         };
+        /** @description Upload limit exceeded */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
         /** @description Course not found or access denied */
         404: {
           headers: {
@@ -452,7 +471,7 @@ export interface paths {
             "application/json": string;
           };
         };
-        /** @description Failed to upload lecture PDFs */
+        /** @description Failed to create upload URLs */
         500: {
           headers: {
             [name: string]: unknown;
@@ -732,7 +751,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/lectures/{lectureId}/notes": {
+  "/lectures/{lectureId}/note": {
     parameters: {
       query?: never;
       header?: never;
@@ -945,6 +964,89 @@ export interface paths {
     };
     put?: never;
     post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/lectures/{lectureId}/upload-complete": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Complete lecture upload
+     * @description Finalizes a lecture upload by verifying the file exists in storage and triggering processing.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          /** @description Lecture ID */
+          lectureId: string;
+        };
+        cookie?: never;
+      };
+      /** @description Upload complete request */
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["app_internal_api_v1_dto.LectureUploadCompleteRequestDTO"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["app_internal_api_v1_dto.LectureUploadCompleteResponseDTO"];
+          };
+        };
+        /** @description Invalid JSON payload */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Unauthorized: User ID not found in context */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Lecture not found or access denied */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Failed to complete upload */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
     delete?: never;
     options?: never;
     head?: never;
@@ -1609,6 +1711,9 @@ export interface components {
       is_default?: boolean;
       title?: string;
     };
+    "app_internal_api_v1_dto.LectureBatchUploadURLResponseDTO": {
+      uploads?: components["schemas"]["app_internal_api_v1_dto.LectureUploadURLResponseDTO"][];
+    };
     "app_internal_api_v1_dto.LectureExplanationResponseDTO": {
       content?: string;
       created_at?: string;
@@ -1649,10 +1754,22 @@ export interface components {
       course_id?: string;
       title?: string;
     };
-    "app_internal_api_v1_dto.LectureUploadResponseDTO": {
-      filename?: string;
+    "app_internal_api_v1_dto.LectureUploadCompleteRequestDTO": Record<
+      string,
+      never
+    >;
+    "app_internal_api_v1_dto.LectureUploadCompleteResponseDTO": {
       lecture_id?: string;
+      message?: string;
       status?: string;
+    };
+    "app_internal_api_v1_dto.LectureUploadURLRequestDTO": {
+      course_id: string;
+      filenames: string[];
+    };
+    "app_internal_api_v1_dto.LectureUploadURLResponseDTO": {
+      lecture_id?: string;
+      upload_url?: string;
     };
     "app_internal_api_v1_dto.PubSubMessage": {
       attributes?: {
