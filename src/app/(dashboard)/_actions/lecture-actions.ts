@@ -4,9 +4,6 @@
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-// aws-sdk
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-
 // types
 import { components } from "@/types/api";
 
@@ -16,17 +13,6 @@ import {
   createAuthenticatedApi,
 } from "@/lib/api/authenticated-api";
 import { logger } from "@/lib/logger";
-
-// S3 client configuration for Supabase Storage
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION || "",
-  endpoint: process.env.AWS_S3_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
-  },
-  forcePathStyle: true, // Required for Supabase Storage
-});
 
 export async function handleUpdateLectureAccessedAt(
   lectureId: string,
@@ -82,43 +68,6 @@ export async function getUploadUrls(
   }
 
   return { data, error: undefined };
-}
-
-export async function uploadFileToS3(
-  file: File,
-  uploadUrl: string,
-): Promise<ActionResponse<void>> {
-  try {
-    // Convert File to Buffer for S3 upload
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Parse the presigned URL to extract bucket and key
-    const url = new URL(uploadUrl);
-    const pathParts = url.pathname.split("/");
-
-    // For Supabase Storage, the path structure is typically: /storage/v1/s3/bucket-name/key
-    // So we need to extract bucket and key from this structure
-    const bucketIndex = pathParts.findIndex((part) => part === "s3") + 1;
-    const bucket = pathParts[bucketIndex];
-    const key = pathParts.slice(bucketIndex + 1).join("/");
-
-    logger.info("Uploading to S3:", { bucket, key, fileSize: buffer.length });
-
-    const command = new PutObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Body: buffer,
-      ContentType: file.type,
-    });
-
-    await s3Client.send(command);
-
-    return { error: undefined };
-  } catch (error) {
-    logger.error("S3 upload error:", error);
-    return { error: "Failed to upload file to S3" };
-  }
 }
 
 export async function completeUpload(
