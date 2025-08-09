@@ -31,7 +31,7 @@ export default function NavLecture({
   currentCourseId,
 }: {
   lecture: { lecture_id: string; title: string };
-  isMobile: boolean;
+  isMobile: boolean | undefined;
   handleUpdateLectureAccessedAt: (
     lectureId: string,
   ) => Promise<ActionResponse<void>>;

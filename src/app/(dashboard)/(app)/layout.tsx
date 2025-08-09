@@ -68,7 +68,7 @@ export default async function DashboardLayout({
     })) ?? [];
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-[100dvh] overflow-hidden">
       <SidebarProvider defaultOpen={sidebarOpen}>
         <AppSidebar
           navCourses={navCourses}
