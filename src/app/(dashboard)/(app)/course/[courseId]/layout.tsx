@@ -10,6 +10,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
+// next
+import Link from "next/link";
+// ui
+import { Button } from "@/components/ui/button";
+// icons
+import { BookX } from "lucide-react";
 
 // code
 import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
@@ -29,7 +35,27 @@ export default async function CourseLayout({
   const { courseId } = await params;
   const courseRes = await getCourseDetails(courseId);
   if (!courseRes.data) {
-    return <p>Course not found</p>;
+    return (
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center px-4 py-12">
+        <div className="mx-auto max-w-md text-center">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full border">
+            <BookX className="text-muted-foreground size-6" />
+          </div>
+          <h1 className="text-foreground text-2xl font-semibold">
+            Course not found
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            The course you&apos;re looking for doesn&apos;t exist or you
+            don&apos;t have access.
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Button asChild>
+              <Link href="/">Go to dashboard</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
   const { title: courseTitle } = courseRes.data;
   let user = { name: "", email: "", avatar: "" };

@@ -147,11 +147,13 @@
 }
 
 .markdown-content ul {
-  @apply mb-4 list-inside list-disc space-y-1;
+  /* Use outside markers so block children (e.g., <p>) don't force content to a new line */
+  @apply mb-4 list-outside list-disc space-y-1 pl-5;
 }
 
 .markdown-content ol {
-  @apply mb-4 list-inside list-decimal space-y-1;
+  /* Use outside markers so block children (e.g., <p>) don't force content to a new line */
+  @apply mb-4 list-outside list-decimal space-y-1 pl-5;
 }
 
 .markdown-content li {

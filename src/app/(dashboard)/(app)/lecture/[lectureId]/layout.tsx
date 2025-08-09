@@ -11,6 +11,15 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { NavUser } from "@/app/(dashboard)/(app)/_components/layout/nav-user";
 import LectureHeader from "./_components/lecture-header";
 
+// next
+import Link from "next/link";
+
+// ui
+import { Button } from "@/components/ui/button";
+
+// icons
+import { BookX } from "lucide-react";
+
 // code
 import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
 import { getLecture } from "@/app/(dashboard)/_actions/lecture-actions";
@@ -40,13 +49,53 @@ export default async function LectureLayout({
   const { lectureId } = await params;
   const lectureRes = await getLecture(lectureId);
   if (!lectureRes.data) {
-    return <p>Lecture not found</p>;
+    return (
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center px-4 py-12">
+        <div className="mx-auto max-w-md text-center">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full border">
+            <BookX className="text-muted-foreground size-6" />
+          </div>
+          <h1 className="text-foreground text-2xl font-semibold">
+            Lecture not found
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            The lecture you&apos;re looking for doesn&apos;t exist or you
+            don&apos;t have access.
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Button asChild>
+              <Link href="/">Go to dashboard</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
   const { title: lectureTitle, course_id: courseId } = lectureRes.data;
 
   const courseRes = await getCourseDetails(courseId!);
   if (!courseRes.data) {
-    return <p>Course not found</p>;
+    return (
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center px-4 py-12">
+        <div className="mx-auto max-w-md text-center">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full border">
+            <BookX className="text-muted-foreground size-6" />
+          </div>
+          <h1 className="text-foreground text-2xl font-semibold">
+            Course not found
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            The course you&apos;re looking for doesn&apos;t exist or you
+            don&apos;t have access.
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Button asChild>
+              <Link href="/">Go to dashboard</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
   const { title: courseTitle } = courseRes.data;
 
