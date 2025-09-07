@@ -32,7 +32,7 @@ import { Switch } from "@/components/ui/switch";
 import { useTheme } from "next-themes";
 
 export function NavSecondary() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -55,7 +55,7 @@ export function NavSecondary() {
                 <span>Dark Mode</span>
                 {mounted && (
                   <Switch
-                    checked={theme === "dark"}
+                    checked={resolvedTheme === "dark"}
                     onCheckedChange={handleThemeToggle}
                     className="ml-auto"
                     onClick={(e) => e.stopPropagation()}
