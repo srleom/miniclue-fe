@@ -165,18 +165,7 @@ export function DropzoneComponent({
         return;
       }
 
-      const normalizedApiKeys = user.api_keys_provided
-        ? Object.entries(user.api_keys_provided).reduce(
-            (acc, [key, value]) => {
-              const normalizedKey = key.replace(/^['"]|['"]$/g, "");
-              acc[normalizedKey] = value;
-              return acc;
-            },
-            {} as Record<string, boolean>,
-          )
-        : {};
-
-      const openaiKeyProvided = normalizedApiKeys.openai ?? false;
+      const openaiKeyProvided = user.api_keys_provided?.openai ?? false;
       setHasOpenAIKey(openaiKeyProvided);
       setIsCheckingKey(false);
     };

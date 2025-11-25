@@ -19,20 +19,9 @@ async function APIKeyContent() {
     );
   }
 
-  const normalizedApiKeys = user?.api_keys_provided
-    ? Object.entries(user.api_keys_provided).reduce(
-        (acc, [key, value]) => {
-          const normalizedKey = key.replace(/^['"]|['"]$/g, "");
-          acc[normalizedKey] = value;
-          return acc;
-        },
-        {} as Record<string, boolean>,
-      )
-    : {};
-
   const apiKeysStatus = {
-    openai: normalizedApiKeys.openai ?? false,
-    gemini: normalizedApiKeys.gemini ?? false,
+    openai: user?.api_keys_provided?.openai ?? false,
+    gemini: user?.api_keys_provided?.gemini ?? false,
   };
 
   return (
