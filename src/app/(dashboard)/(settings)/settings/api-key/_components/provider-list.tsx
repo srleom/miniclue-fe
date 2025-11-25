@@ -4,11 +4,27 @@
 import { useState } from "react";
 
 // icons
-import { Check, X, ChevronRight } from "lucide-react";
+import { Check, X, ChevronRight, Trash2 } from "lucide-react";
+
+// third-party
+import { toast } from "sonner";
 
 // components
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ApiKeyDialog } from "./api-key-dialog";
+
+// actions
+import { deleteAPIKey } from "../_actions/api-key-actions";
 
 export type Provider = "openai" | "gemini";
 
@@ -37,24 +53,24 @@ const providers: ProviderInfo[] = [
       </svg>
     ),
   },
-  {
-    id: "gemini",
-    name: "Google Gemini",
-    logo: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
-        className="h-6 w-6"
-      >
-        <path
-          fill="currentColor"
-          d="M12 11h8.533q.066.578.067 1.184c0 2.734-.98 5.036-2.678 6.6c-1.485 1.371-3.518 2.175-5.942 2.175A8.976 8.976 0 0 1 3 11.98A8.976 8.976 0 0 1 11.98 3c2.42 0 4.453.89 6.008 2.339L16.526 6.8C15.368 5.681 13.803 5 12 5a7 7 0 0 0 0 14c3.527 0 6.144-2.608 6.577-6H12z"
-        />
-      </svg>
-    ),
-  },
+  // {
+  //   id: "gemini",
+  //   name: "Google Gemini",
+  //   logo: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       width="32"
+  //       height="32"
+  //       viewBox="0 0 24 24"
+  //       className="h-6 w-6"
+  //     >
+  //       <path
+  //         fill="currentColor"
+  //         d="M12 11h8.533q.066.578.067 1.184c0 2.734-.98 5.036-2.678 6.6c-1.485 1.371-3.518 2.175-5.942 2.175A8.976 8.976 0 0 1 3 11.98A8.976 8.976 0 0 1 11.98 3c2.42 0 4.453.89 6.008 2.339L16.526 6.8C15.368 5.681 13.803 5 12 5a7 7 0 0 0 0 14c3.527 0 6.144-2.608 6.577-6H12z"
+  //       />
+  //     </svg>
+  //   ),
+  // },
 ];
 
 interface ProviderListProps {
@@ -67,6 +83,9 @@ export function ProviderList({ apiKeysStatus, onUpdate }: ProviderListProps) {
     null,
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [deleteProvider, setDeleteProvider] = useState<Provider | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleProviderClick = (provider: Provider) => {
     setSelectedProvider(provider);
@@ -83,6 +102,40 @@ export function ProviderList({ apiKeysStatus, onUpdate }: ProviderListProps) {
     if (selectedProvider) {
       onUpdate(selectedProvider);
     }
+  };
+
+  const handleDeleteClick = (provider: Provider, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDeleteProvider(provider);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteProvider) return;
+
+    setIsDeleting(true);
+    try {
+      const result = await deleteAPIKey(deleteProvider);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success(
+          `${deleteProvider === "openai" ? "OpenAI" : "Google Gemini"} API key deleted successfully`,
+        );
+        onUpdate(deleteProvider);
+        setIsDeleteDialogOpen(false);
+        setDeleteProvider(null);
+      }
+    } catch {
+      toast.error("Failed to delete API key");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteDialogOpen(false);
+    setDeleteProvider(null);
   };
 
   return (
@@ -113,15 +166,28 @@ export function ProviderList({ apiKeysStatus, onUpdate }: ProviderListProps) {
                     <span>Not added</span>
                   </div>
                 )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleProviderClick(provider.id)}
-                  className="gap-2"
-                >
-                  {hasKey ? "Edit" : "Add"}
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleProviderClick(provider.id)}
+                    className="gap-2"
+                  >
+                    {hasKey ? "Edit" : "Add"}
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                  {hasKey && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => handleDeleteClick(provider.id, e)}
+                      className="text-destructive hover:text-destructive"
+                      disabled={isDeleting}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           );
@@ -143,6 +209,44 @@ export function ProviderList({ apiKeysStatus, onUpdate }: ProviderListProps) {
           hasKey={apiKeysStatus[selectedProvider] ?? false}
         />
       )}
+
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleDeleteCancel();
+          } else {
+            setIsDeleteDialogOpen(true);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete API Key</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete your{" "}
+              {deleteProvider === "openai" ? "OpenAI" : "Google Gemini"} API
+              key? This action cannot be undone and you will need to add a new
+              key to use this provider again.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={handleDeleteCancel}
+              disabled={isDeleting}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

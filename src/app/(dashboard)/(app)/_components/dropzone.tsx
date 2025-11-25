@@ -32,6 +32,7 @@ import {
   FileListSize,
 } from "@/components/ui/file-list";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // lib
 import { logger } from "@/lib/logger";
@@ -41,6 +42,7 @@ import {
   uploadLecturesFromClient,
   completeUploadFromClient,
 } from "@/app/(dashboard)/_actions/lecture-actions";
+import { getUser } from "@/app/(dashboard)/_actions/user-actions";
 import { createClient as createSupabaseClient } from "@/lib/supabase/client";
 
 // Client-side upload function
@@ -145,9 +147,50 @@ export function DropzoneComponent({
 }) {
   const [files, setFiles] = React.useState<File[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [hasOpenAIKey, setHasOpenAIKey] = React.useState<boolean | null>(null);
+  const [isCheckingKey, setIsCheckingKey] = React.useState(true);
   const router = useRouter();
 
+  React.useEffect(() => {
+    const checkOpenAIKey = async () => {
+      setIsCheckingKey(true);
+      const { data: user, error } = await getUser();
+
+      if (error || !user) {
+        logger.error("Failed to fetch user profile for API key check", {
+          error,
+        });
+        setHasOpenAIKey(false);
+        setIsCheckingKey(false);
+        return;
+      }
+
+      const normalizedApiKeys = user.api_keys_provided
+        ? Object.entries(user.api_keys_provided).reduce(
+            (acc, [key, value]) => {
+              const normalizedKey = key.replace(/^['"]|['"]$/g, "");
+              acc[normalizedKey] = value;
+              return acc;
+            },
+            {} as Record<string, boolean>,
+          )
+        : {};
+
+      const openaiKeyProvided = normalizedApiKeys.openai ?? false;
+      setHasOpenAIKey(openaiKeyProvided);
+      setIsCheckingKey(false);
+    };
+
+    checkOpenAIKey();
+  }, []);
+
   const onDrop = (acceptedFiles: File[]) => {
+    if (hasOpenAIKey === false) {
+      toast.error(
+        "OpenAI API key is required to upload lectures. Please add your API key in settings.",
+      );
+      return;
+    }
     setFiles(acceptedFiles);
   };
 
@@ -158,6 +201,14 @@ export function DropzoneComponent({
         courseId,
       });
       toast.error("Course ID is missing. Cannot upload files.");
+      return;
+    }
+
+    if (hasOpenAIKey === false) {
+      toast.error(
+        "OpenAI API key is required to upload lectures. Please add your API key in settings.",
+      );
+      router.push("/settings/api-key");
       return;
     }
 
@@ -267,6 +318,7 @@ export function DropzoneComponent({
         "application/pdf": [".pdf"],
       }}
       onDropAccepted={onDrop}
+      disabled={hasOpenAIKey === false || isCheckingKey}
     >
       <div className="grid w-full gap-4">
         <DropzoneZone className="flex min-h-[14em] items-center justify-center md:min-h-[16em]">
@@ -275,12 +327,29 @@ export function DropzoneComponent({
             <DropzoneUploadIcon />
             <DropzoneGroup>
               <DropzoneTitle>
-                {isCoursePage
-                  ? "Upload lectures here"
-                  : "Drop files here or click to upload"}
+                {isCheckingKey
+                  ? "Checking API key..."
+                  : hasOpenAIKey === false
+                    ? "OpenAI API key required"
+                    : isCoursePage
+                      ? "Upload lectures here"
+                      : "Drop files here or click to upload"}
               </DropzoneTitle>
               <DropzoneDescription className="text-center">
-                You can upload PDF files.
+                {hasOpenAIKey === false ? (
+                  <>
+                    Please add your OpenAI API key in{" "}
+                    <Link
+                      href="/settings/api-key"
+                      className="text-primary underline"
+                    >
+                      settings
+                    </Link>{" "}
+                    to upload lectures.
+                  </>
+                ) : (
+                  "You can upload PDF files."
+                )}
               </DropzoneDescription>
             </DropzoneGroup>
           </DropzoneGroup>
@@ -306,7 +375,7 @@ export function DropzoneComponent({
           <div className="flex justify-end">
             <Button
               onClick={handleUpload}
-              disabled={isLoading}
+              disabled={isLoading || hasOpenAIKey === false || isCheckingKey}
               className="w-full hover:cursor-pointer sm:w-auto"
             >
               {isLoading

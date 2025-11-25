@@ -53,12 +53,12 @@ export async function storeAPIKey(
 }
 
 /**
- * Gets the user's API key status for a specific provider.
+ * Deletes the user's API key securely.
  * @param {"openai" | "gemini"} provider - The API provider
  * @returns {Promise<ActionResponse<components["schemas"]["app_internal_api_v1_dto.APIKeyResponseDTO"]>>}
  */
-export async function getAPIKeyStatus(
-  provider: "openai" | "gemini" = "openai",
+export async function deleteAPIKey(
+  provider: "openai" | "gemini",
 ): Promise<
   ActionResponse<
     components["schemas"]["app_internal_api_v1_dto.APIKeyResponseDTO"]
@@ -69,18 +69,21 @@ export async function getAPIKeyStatus(
     return { error };
   }
 
-  const { data, error: fetchError } = await api.GET("/users/me/api-key", {
+  const { data, error: fetchError } = await api.DELETE("/users/me/api-key", {
     params: {
-      query: {
-        provider: provider as "openai" | "gemini",
-      },
+      query: { provider: provider as "openai" | "gemini" },
     },
   });
 
   if (fetchError) {
-    logger.error("Get API key status error:", fetchError);
+    logger.error("Delete API key error:", fetchError);
     return { error: fetchError };
   }
+
+  // Revalidate user profile cache to reflect the updated API key status
+  revalidateTag("user-profile");
+  // Also revalidate the API key settings page to ensure it shows updated status
+  revalidatePath("/settings/api-key");
 
   return { data, error: undefined };
 }
