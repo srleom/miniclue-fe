@@ -4,7 +4,7 @@
 import Link from "next/link";
 
 // icons
-import { CircleUserRound, LogOut } from "lucide-react";
+import { CircleUserRound, Key, LogOut } from "lucide-react";
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -88,6 +88,12 @@ export function NavUser({
                 <Link href="/settings/profile">
                   <CircleUserRound />
                   Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="hover:cursor-pointer" asChild>
+                <Link href="/settings/api-key">
+                  <Key />
+                  API Keys
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>

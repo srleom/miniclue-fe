@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 // icons
-import { ChevronLeft, CircleUserRound } from "lucide-react";
+import { ChevronLeft, CircleUserRound, Key } from "lucide-react";
 
 // components
 import {
@@ -62,6 +62,23 @@ export function SettingsSidebar(props: React.ComponentProps<typeof Sidebar>) {
                 <Link href="/settings/profile" onClick={handleNavigation}>
                   <CircleUserRound />
                   Profile
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                size="default"
+                variant="default"
+                className={
+                  pathname === "/settings/api-key"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : undefined
+                }
+              >
+                <Link href="/settings/api-key" onClick={handleNavigation}>
+                  <Key />
+                  API Keys
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

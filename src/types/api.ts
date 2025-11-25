@@ -1243,6 +1243,139 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/users/me/api-key": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get API key status
+     * @description Retrieves whether the user has provided an API key for a specific provider.
+     */
+    get: {
+      parameters: {
+        query: {
+          /** @description API provider (openai, gemini) */
+          provider: "openai" | "gemini";
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["app_internal_api_v1_dto.APIKeyResponseDTO"];
+          };
+        };
+        /** @description Missing or invalid provider parameter */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Unauthorized: User ID not found in context */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Internal server error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
+    put?: never;
+    /**
+     * Store user's OpenAI API key
+     * @description Stores the user's OpenAI API key securely in Google Cloud Secret Manager and updates the user profile flag.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      /** @description API key request */
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["app_internal_api_v1_dto.APIKeyRequestDTO"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["app_internal_api_v1_dto.APIKeyResponseDTO"];
+          };
+        };
+        /** @description Invalid JSON payload or validation failed */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Unauthorized: User ID not found in context */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Failed to store API key */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/users/me/courses": {
     parameters: {
       query?: never;
@@ -1366,6 +1499,15 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    "app_internal_api_v1_dto.APIKeyRequestDTO": {
+      api_key: string;
+      /** @enum {string} */
+      provider: "openai" | "gemini";
+    };
+    "app_internal_api_v1_dto.APIKeyResponseDTO": {
+      has_provided_key?: boolean;
+      provider?: string;
+    };
     "app_internal_api_v1_dto.CourseCreateDTO": {
       description?: string;
       is_default?: boolean;
@@ -1483,6 +1625,9 @@ export interface components {
       total_count?: number;
     };
     "app_internal_api_v1_dto.UserResponseDTO": {
+      api_keys_provided?: {
+        [key: string]: boolean;
+      };
       avatar_url?: string;
       created_at?: string;
       email?: string;
