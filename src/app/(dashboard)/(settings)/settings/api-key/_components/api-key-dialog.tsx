@@ -9,6 +9,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import * as z from "zod";
 
+// icons
+import { HelpCircle } from "lucide-react";
+
 // components
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +32,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { OpenAIAPIKeyTutorialDialog } from "./openai-api-key-tutorial-dialog";
 
 // actions
 import { storeAPIKey } from "../_actions/api-key-actions";
@@ -92,6 +96,7 @@ export function ApiKeyDialog({
   hasKey,
 }: ApiKeyDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
 
   const form = useForm<ApiKeyFormValues>({
     resolver: zodResolver(apiKeySchema),
@@ -175,6 +180,19 @@ export function ApiKeyDialog({
                   <FormDescription>
                     Your API key will be encrypted and stored securely. We
                     cannot access your key.
+                    {provider === "openai" && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsTutorialOpen(true);
+                        }}
+                        className="text-primary ml-1 inline-flex items-center gap-1 hover:underline"
+                      >
+                        <HelpCircle className="h-3 w-3" />
+                        How to get your API key
+                      </button>
+                    )}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -201,6 +219,12 @@ export function ApiKeyDialog({
           </form>
         </Form>
       </DialogContent>
+      {provider === "openai" && (
+        <OpenAIAPIKeyTutorialDialog
+          open={isTutorialOpen}
+          onOpenChange={setIsTutorialOpen}
+        />
+      )}
     </Dialog>
   );
 }
