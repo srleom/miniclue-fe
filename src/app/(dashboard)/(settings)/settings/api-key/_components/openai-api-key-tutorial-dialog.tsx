@@ -68,7 +68,7 @@ const steps = [
     number: 4,
     title: "Copy your API key",
     description:
-      "Copy your API key immediately and paste it into the API key field. You won't be able to see it again after closing the dialog. The key will start with 'sk-'.",
+      "Copy your API key immediately and paste it into the API key field in MiniClue. You won't be able to see it again after closing the dialog in OpenAI Platform.",
   },
   {
     number: 5,

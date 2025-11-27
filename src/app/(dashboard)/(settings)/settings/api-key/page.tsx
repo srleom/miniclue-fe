@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 // components
 import { ProviderListWrapper } from "./_components/provider-list-wrapper";
+import { APIKeyHeader } from "./_components/api-key-header";
 
 // actions
 import { getUser } from "@/app/(dashboard)/_actions/user-actions";
@@ -27,12 +28,7 @@ async function APIKeyContent() {
   return (
     <div className="mx-auto mt-4 flex w-full flex-col items-center md:mt-16 lg:w-3xl">
       <div className="flex w-full flex-col gap-12">
-        <div>
-          <h1 className="text-2xl font-semibold">API Keys</h1>
-          <p className="text-muted-foreground mt-2">
-            Bring your own keys from LLM providers.
-          </p>
-        </div>
+        <APIKeyHeader />
 
         <div>
           <h2 className="text-muted-foreground mb-4 text-sm font-medium tracking-tighter uppercase">
@@ -51,7 +47,7 @@ export default function APIKeySettingsPage() {
       fallback={
         <div className="mx-auto mt-4 flex w-full flex-col items-center md:mt-16 lg:w-3xl">
           <div className="flex w-full flex-col gap-6">
-            <h1 className="text-2xl font-semibold">API Keys</h1>
+            <APIKeyHeader />
             <div className="flex items-center">
               <p className="text-muted-foreground">Loading...</p>
             </div>
