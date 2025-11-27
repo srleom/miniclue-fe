@@ -29,7 +29,7 @@ import { RenameDialog } from "./rename-dialog";
 import { RenameForm } from "./rename-form";
 
 // code
-import { moveLecture } from "@/app/(dashboard)/_actions/lecture-actions";
+import { moveLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 
 type Item = {
   id: string;

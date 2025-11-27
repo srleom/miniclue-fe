@@ -41,7 +41,7 @@ import { logger } from "@/lib/logger";
 import {
   uploadLecturesFromClient,
   completeUploadFromClient,
-} from "@/app/(dashboard)/_actions/lecture-actions";
+} from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 import { getUser } from "@/app/(dashboard)/_actions/user-actions";
 import { createClient as createSupabaseClient } from "@/lib/supabase/client";
 

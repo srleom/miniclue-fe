@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { BookX } from "lucide-react";
 
 // code
-import { getCourseDetails } from "@/app/(dashboard)/_actions/course-actions";
+import { getCourseDetails } from "@/app/(dashboard)/(app)/_actions/course-actions";
 import { getUser } from "@/app/(dashboard)/_actions/user-actions";
 import { handleLogout } from "@/app/auth/actions";
 

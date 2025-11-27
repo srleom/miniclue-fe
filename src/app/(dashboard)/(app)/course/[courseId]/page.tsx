@@ -11,7 +11,7 @@ import CourseHeader from "./_components/course-header";
 import {
   getCourseDetails,
   getCourseLectures,
-} from "@/app/(dashboard)/_actions/course-actions";
+} from "@/app/(dashboard)/(app)/_actions/course-actions";
 import { getUserCourses } from "@/app/(dashboard)/_actions/user-actions";
 
 // lib

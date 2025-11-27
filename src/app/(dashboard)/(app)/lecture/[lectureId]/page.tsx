@@ -42,7 +42,7 @@ import {
   getSignedPdfUrl,
   getSummary,
   getLecture,
-} from "@/app/(dashboard)/_actions/lecture-actions";
+} from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 import { toast } from "sonner";
 import { MessageCircleMore, FileText, BookOpen } from "lucide-react";
 

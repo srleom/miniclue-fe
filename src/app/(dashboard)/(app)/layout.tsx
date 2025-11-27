@@ -14,11 +14,11 @@ import {
   deleteCourse,
   getCourseLectures,
   updateCourse,
-} from "@/app/(dashboard)/_actions/course-actions";
+} from "@/app/(dashboard)/(app)/_actions/course-actions";
 import {
   deleteLecture,
   handleUpdateLectureAccessedAt,
-} from "@/app/(dashboard)/_actions/lecture-actions";
+} from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 import {
   getUserCourses,
   getUserRecents,

@@ -12,7 +12,7 @@ import { RenameForm } from "@/app/(dashboard)/(app)/_components/rename-form";
 import { Badge } from "@/components/ui/badge";
 
 // code
-import { updateCourse } from "@/app/(dashboard)/_actions/course-actions";
+import { updateCourse } from "@/app/(dashboard)/(app)/_actions/course-actions";
 
 export interface CourseHeaderProps {
   courseId: string;

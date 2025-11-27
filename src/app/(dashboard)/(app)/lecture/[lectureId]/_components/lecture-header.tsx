@@ -12,7 +12,7 @@ import { RenameForm } from "@/app/(dashboard)/(app)/_components/rename-form";
 import { Pencil } from "lucide-react";
 
 // code
-import { updateLecture } from "@/app/(dashboard)/_actions/lecture-actions";
+import { updateLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 
 export interface LectureHeaderProps {
   lectureId: string;
