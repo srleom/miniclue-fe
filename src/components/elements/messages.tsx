@@ -64,7 +64,7 @@ function PureMessages({
               <div className="space-y-2 text-center">
                 <h2 className="text-3xl font-semibold">Hello there!</h2>
                 <p className="text-muted-foreground">
-                  Ask me anything about the lecture
+                  Ask me anything about the lecture.
                 </p>
               </div>
             </div>

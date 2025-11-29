@@ -158,6 +158,7 @@ export function ChatComponent({
 
         const remainingChats = chats.filter((chat) => chat.id !== idToDelete);
         onChatsChange(remainingChats);
+        toast.success("Chat deleted successfully");
 
         if (chatId === idToDelete) {
           // Switch to the first remaining chat
