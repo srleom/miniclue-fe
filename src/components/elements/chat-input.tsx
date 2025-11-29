@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { ModelSelectorCompact } from "./model-selector";
 
 type ChatInputProps = {
   chatId: string;
@@ -18,6 +19,7 @@ type ChatInputProps = {
   }) => void;
   stop: () => void;
   selectedModelId: string;
+  onModelChange: (modelId: string) => void;
 };
 
 function PureChatInput({
@@ -26,6 +28,8 @@ function PureChatInput({
   status,
   sendMessage,
   stop,
+  selectedModelId,
+  onModelChange,
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -106,7 +110,13 @@ function PureChatInput({
           value={input}
         />
       </div>
-      <div className="mt-2 flex items-center justify-end">
+      <div className="mt-2 flex items-center justify-between pt-2">
+        <div className="flex items-center gap-0.5 sm:gap-0.5">
+          <ModelSelectorCompact
+            selectedModelId={selectedModelId}
+            onModelChange={onModelChange}
+          />
+        </div>
         {status === "submitted" || status === "streaming" ? (
           <Button
             className="bg-foreground text-background hover:bg-foreground/90 size-8 rounded-full p-1 transition-colors duration-200"

@@ -17,6 +17,16 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { History } from "lucide-react";
 
+function getCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(";").shift() ?? null;
+  }
+  return null;
+}
+
 type ChatComponentProps = {
   lectureId: string;
   chatId: string | null;
@@ -36,13 +46,27 @@ export function ChatComponent({
   onChatsChange,
   isLoadingChats,
 }: ChatComponentProps) {
-  const [currentModelId] = React.useState(DEFAULT_CHAT_MODEL);
+  const [currentModelId, setCurrentModelId] = React.useState(() => {
+    const cookieModel = getCookie("chat-model");
+    return cookieModel ?? DEFAULT_CHAT_MODEL;
+  });
   const [input, setInput] = React.useState("");
+
+  // Use ref to ensure transport always uses the latest model
+  const currentModelIdRef = React.useRef(currentModelId);
+  React.useEffect(() => {
+    currentModelIdRef.current = currentModelId;
+  }, [currentModelId]);
 
   const transport = React.useMemo(() => {
     if (!chatId) return null;
-    return createChatTransport(lectureId, chatId, currentModelId);
-  }, [lectureId, chatId, currentModelId]);
+    // Use ref to get current model at call time, not creation time
+    return createChatTransport(
+      lectureId,
+      chatId,
+      () => currentModelIdRef.current,
+    );
+  }, [lectureId, chatId]);
 
   // Normalize initial messages from database to ensure they have correct structure
   // SDK handles streaming messages correctly, but initial messages from DB might be incomplete
@@ -229,6 +253,7 @@ export function ChatComponent({
           chatId={chatId}
           input={input}
           selectedModelId={currentModelId}
+          onModelChange={setCurrentModelId}
           sendMessage={sendMessage}
           setInput={setInput}
           status={status}

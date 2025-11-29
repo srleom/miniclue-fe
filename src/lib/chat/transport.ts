@@ -5,8 +5,9 @@ import { logger } from "@/lib/logger";
 export function createChatTransport(
   lectureId: string,
   chatId: string,
-  model: string,
+  model: string | (() => string),
 ): ChatTransport<ChatMessage> {
+  const getModel = typeof model === "function" ? model : () => model;
   return {
     async sendMessages({ messages }) {
       const lastMessage = messages[messages.length - 1];
@@ -21,6 +22,9 @@ export function createChatTransport(
           text: part.text || "",
         }));
 
+      // Get current model at call time, not creation time
+      const currentModel = getModel();
+
       const response = await fetch(
         `/api/lectures/${lectureId}/chats/${chatId}/stream`,
         {
@@ -29,7 +33,7 @@ export function createChatTransport(
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model,
+            model: currentModel,
             parts,
           }),
         },

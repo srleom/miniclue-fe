@@ -1,25 +1,28 @@
-export const DEFAULT_CHAT_MODEL = "gpt-4o-mini";
+export const DEFAULT_CHAT_MODEL = "gpt-4.1-mini";
 
-export type ChatModel = {
-  id: string;
-  name: string;
-  description: string;
-};
-
-export const chatModels: ChatModel[] = [
+export const chatModels: { id: string; name: string }[] = [
   {
-    id: "gpt-4o-mini",
-    name: "GPT-4o Mini",
-    description: "Fast and efficient model for quick responses",
+    id: "gpt-4.1",
+    name: "GPT-4.1",
   },
   {
-    id: "gpt-4o",
-    name: "GPT-4o",
-    description: "Advanced model with enhanced reasoning capabilities",
+    id: "gpt-4.1-mini",
+    name: "GPT-4.1 mini",
+  },
+  {
+    id: "gpt-4.1-nano",
+    name: "GPT-4.1 nano",
+  },
+  {
+    id: "gpt-5.1",
+    name: "GPT-5.1",
+  },
+  {
+    id: "gpt-5-mini",
+    name: "GPT-5 mini",
   },
   {
     id: "gpt-5-nano",
-    name: "GPT-5 Nano",
-    description: "The smallest model in the GPT-5 family",
+    name: "GPT-5 nano",
   },
 ];

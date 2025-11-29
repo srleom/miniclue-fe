@@ -1,5 +1,8 @@
 "use server";
 
+// next
+import { cookies } from "next/headers";
+
 // types
 import { components } from "@/types/api";
 
@@ -150,4 +153,9 @@ export async function deleteChat(
   }
 
   return { error: undefined };
+}
+
+export async function saveChatModelAsCookie(model: string) {
+  const cookieStore = await cookies();
+  cookieStore.set("chat-model", model);
 }
