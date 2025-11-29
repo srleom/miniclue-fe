@@ -104,7 +104,6 @@ export async function getMessages(
   lectureId: string,
   chatId: string,
   limit: number = 100,
-  offset: number = 0,
 ): Promise<
   ActionResponse<
     components["schemas"]["app_internal_api_v1_dto.MessageResponseDTO"][]
@@ -119,7 +118,7 @@ export async function getMessages(
     "/lectures/{lectureId}/chats/{chatId}/messages",
     {
       params: { path: { lectureId, chatId } },
-      query: { limit, offset },
+      query: { limit },
     },
   );
 

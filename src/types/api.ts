@@ -953,15 +953,13 @@ export interface paths {
     };
     /**
      * List messages in a chat
-     * @description Retrieves all messages for a specific chat with pagination support. Messages are returned in chronological order (oldest first).
+     * @description Retrieves all messages for a specific chat. Messages are returned in chronological order (oldest first).
      */
     get: {
       parameters: {
         query?: {
           /** @description Maximum number of messages to return */
           limit?: number;
-          /** @description Number of messages to skip */
-          offset?: number;
         };
         header?: never;
         path: {
