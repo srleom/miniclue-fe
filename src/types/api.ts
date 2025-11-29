@@ -941,7 +941,76 @@ export interface paths {
     };
     options?: never;
     head?: never;
-    patch?: never;
+    /**
+     * Update a chat
+     * @description Updates a chat's title.
+     */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          /** @description Lecture ID */
+          lectureId: string;
+          /** @description Chat ID */
+          chatId: string;
+        };
+        cookie?: never;
+      };
+      /** @description Chat update request */
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["app_internal_api_v1_dto.ChatUpdateDTO"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["app_internal_api_v1_dto.ChatResponseDTO"];
+          };
+        };
+        /** @description Invalid JSON payload or validation failed */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Unauthorized: User ID not found in context */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Chat not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Failed to update chat */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
     trace?: never;
   };
   "/lectures/{lectureId}/chats/{chatId}/messages": {
@@ -1939,6 +2008,9 @@ export interface components {
     "app_internal_api_v1_dto.ChatStreamRequestDTO": {
       model: string;
       parts: components["schemas"]["app_internal_api_v1_dto.MessagePartDTO"][];
+    };
+    "app_internal_api_v1_dto.ChatUpdateDTO": {
+      title?: string;
     };
     "app_internal_api_v1_dto.CourseCreateDTO": {
       description?: string;

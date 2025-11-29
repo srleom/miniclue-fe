@@ -102,6 +102,67 @@ export function ChatComponent({
       },
     });
 
+  // Track previous status to detect when streaming completes
+  const prevStatusRef = React.useRef(status);
+
+  // Check for title update when streaming completes and this was the first message
+  React.useEffect(() => {
+    // Check if streaming just completed (status changed from streaming to something else)
+    const prevStatus = String(prevStatusRef.current);
+    const currentStatus = String(status);
+    const justFinishedStreaming =
+      prevStatus === "streaming" && currentStatus !== "streaming";
+
+    // Check if this was the first message (user + assistant = 2 messages)
+    const isFirstMessage = messages.length === 2;
+
+    // Update ref AFTER checking (so next render can detect the change)
+    prevStatusRef.current = status;
+
+    if (justFinishedStreaming && isFirstMessage && chatId) {
+      // This was the first message - poll for updated title with retries
+      const checkTitle = async (attempt = 1, maxAttempts = 5) => {
+        try {
+          const { getChat } = await import(
+            "@/app/(dashboard)/(app)/_actions/chat-actions"
+          );
+          const { data: updatedChat } = await getChat(lectureId, chatId);
+          if (
+            updatedChat &&
+            updatedChat.title &&
+            updatedChat.title !== "New Chat"
+          ) {
+            // Title found - update local chats state
+            const updatedChats = chats.map((chat) =>
+              chat.id === chatId
+                ? { ...chat, title: updatedChat.title || chat.title }
+                : chat,
+            );
+            await onChatsChange(updatedChats);
+          } else if (attempt < maxAttempts) {
+            // Title not ready yet - retry with exponential backoff
+            const delay = Math.min(500 * Math.pow(2, attempt - 1), 5000); // Max 5 seconds
+            setTimeout(() => checkTitle(attempt + 1, maxAttempts), delay);
+          }
+        } catch (error) {
+          logger.error("[Title Update] Failed to fetch updated chat title", {
+            error,
+            attempt,
+            chatId,
+          });
+          // Retry on error if attempts remaining
+          if (attempt < maxAttempts) {
+            const delay = Math.min(500 * Math.pow(2, attempt - 1), 5000);
+            setTimeout(() => checkTitle(attempt + 1, maxAttempts), delay);
+          }
+        }
+      };
+
+      // Start polling after initial delay
+      setTimeout(() => checkTitle(), 500);
+    }
+  }, [status, messages.length, chatId, lectureId, chats, onChatsChange]);
+
   // Sync initialMessages with useChat's internal state when chatId or initialMessages change
   // This ensures messages are properly loaded when switching between chats
   React.useEffect(() => {

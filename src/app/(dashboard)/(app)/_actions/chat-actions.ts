@@ -154,6 +154,36 @@ export async function deleteChat(
   return { error: undefined };
 }
 
+export async function updateChatTitle(
+  lectureId: string,
+  chatId: string,
+  title: string,
+): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.ChatResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: updateError } = await api.PATCH(
+    "/lectures/{lectureId}/chats/{chatId}",
+    {
+      params: { path: { lectureId, chatId } },
+      body: { title },
+    },
+  );
+
+  if (updateError) {
+    logger.error("Update chat title error:", updateError);
+    return { error: updateError };
+  }
+
+  return { data, error: undefined };
+}
+
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
   cookieStore.set("chat-model", model);
