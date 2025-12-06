@@ -195,3 +195,64 @@ export async function deleteUserAccount(): Promise<ActionResponse<void>> {
     return { error: "Failed to delete user account" };
   }
 }
+
+/**
+ * List available models and enabled state for the current user.
+ */
+export async function getUserModels(): Promise<
+  ActionResponse<
+    components["schemas"]["app_internal_api_v1_dto.ModelsResponseDTO"]
+  >
+> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { data, error: fetchError } = await api.GET("/users/me/models", {
+    next: { tags: ["user-models"] },
+  });
+
+  if (fetchError) {
+    logger.error("Get user models error:", fetchError);
+    const message =
+      typeof fetchError === "string" ? fetchError : JSON.stringify(fetchError);
+    return { error: message };
+  }
+
+  return {
+    data: data ?? { providers: [] },
+    error: undefined,
+  };
+}
+
+/**
+ * Toggle a model on or off for the current user.
+ */
+export async function setModelPreference(
+  provider: components["schemas"]["app_internal_api_v1_dto.ModelPreferenceRequestDTO"]["provider"],
+  model: string,
+  enabled: boolean,
+): Promise<ActionResponse<void>> {
+  const { api, error } = await createAuthenticatedApi();
+  if (error || !api) {
+    return { error };
+  }
+
+  const { error: fetchError } = await api.PUT("/users/me/models", {
+    body: {
+      provider,
+      model,
+      enabled,
+    },
+  });
+
+  if (fetchError) {
+    logger.error("Set model preference error:", fetchError);
+    const message =
+      typeof fetchError === "string" ? fetchError : JSON.stringify(fetchError);
+    return { error: message };
+  }
+
+  return { error: undefined };
+}

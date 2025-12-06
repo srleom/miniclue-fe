@@ -20,6 +20,7 @@ type ChatInputProps = {
   stop: () => void;
   selectedModelId: string;
   onModelChange: (modelId: string) => void;
+  availableModels?: { id: string; name: string }[];
 };
 
 function PureChatInput({
@@ -30,6 +31,7 @@ function PureChatInput({
   stop,
   selectedModelId,
   onModelChange,
+  availableModels,
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -115,6 +117,7 @@ function PureChatInput({
           <ModelSelectorCompact
             selectedModelId={selectedModelId}
             onModelChange={onModelChange}
+            models={availableModels}
           />
         </div>
         {status === "submitted" || status === "streaming" ? (

@@ -1919,6 +1919,136 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/users/me/models": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List available models for the user
+     * @description Returns curated models for providers where the user has added API keys, including enabled state
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["app_internal_api_v1_dto.ModelsResponseDTO"];
+          };
+        };
+        /** @description Unauthorized: User ID not found in context */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Failed to list models */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
+    /**
+     * Update a model enablement preference
+     * @description Toggles a curated model for a provider for the current user
+     */
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      /** @description Model preference update */
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["app_internal_api_v1_dto.ModelPreferenceRequestDTO"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["app_internal_api_v1_dto.ModelToggleDTO"];
+          };
+        };
+        /** @description Invalid JSON payload or validation failed */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Unauthorized: User ID not found in context */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description User not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+        /** @description Failed to update model preference */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": string;
+          };
+        };
+      };
+    };
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/users/me/recents": {
     parameters: {
       query?: never;
@@ -2103,6 +2233,24 @@ export interface components {
       parts?: components["schemas"]["app_internal_api_v1_dto.MessagePartDTO"][];
       role?: string;
     };
+    "app_internal_api_v1_dto.ModelPreferenceRequestDTO": {
+      enabled?: boolean;
+      model: string;
+      /** @enum {string} */
+      provider: "openai" | "gemini" | "anthropic" | "xai" | "deepseek";
+    };
+    "app_internal_api_v1_dto.ModelToggleDTO": {
+      enabled?: boolean;
+      id?: string;
+      name?: string;
+    };
+    "app_internal_api_v1_dto.ModelsResponseDTO": {
+      providers?: components["schemas"]["app_internal_api_v1_dto.ProviderModelsDTO"][];
+    };
+    "app_internal_api_v1_dto.ProviderModelsDTO": {
+      models?: components["schemas"]["app_internal_api_v1_dto.ModelToggleDTO"][];
+      provider?: string;
+    };
     "app_internal_api_v1_dto.PubSubMessage": {
       attributes?: {
         [key: string]: string;
@@ -2146,6 +2294,11 @@ export interface components {
       avatar_url?: string;
       created_at?: string;
       email?: string;
+      model_preferences?: {
+        [key: string]: {
+          [key: string]: boolean;
+        };
+      };
       name?: string;
       updated_at?: string;
       user_id?: string;

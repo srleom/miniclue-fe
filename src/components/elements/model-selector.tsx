@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, startTransition, useEffect, useMemo, useState } from "react";
+import { memo, startTransition, useEffect, useMemo } from "react";
 import { saveChatModelAsCookie } from "@/app/(dashboard)/(app)/_actions/chat-actions";
 import {
   Select,
@@ -15,34 +15,61 @@ import { CpuIcon } from "lucide-react";
 function PureModelSelectorCompact({
   selectedModelId,
   onModelChange,
+  models,
 }: {
   selectedModelId: string;
   onModelChange?: (modelId: string) => void;
+  models?: { id: string; name: string }[];
 }) {
-  const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
+  // Use provided models if available, otherwise fall back to the default list
+  const availableModels = useMemo(() => models ?? chatModels, [models]);
 
+  // Determine the model to show - if selected model is not available, use first available
+  const displayModel = useMemo(() => {
+    if (availableModels.length === 0) {
+      return null;
+    }
+
+    // Check if selected model is available
+    const isSelectedModelAvailable = availableModels.some(
+      (model) => model.id === selectedModelId,
+    );
+
+    if (isSelectedModelAvailable) {
+      return availableModels.find((model) => model.id === selectedModelId);
+    } else {
+      // Fall back to first available model
+      return availableModels[0];
+    }
+  }, [availableModels, selectedModelId]);
+
+  // Handle side effect: update model when selected model is not available
   useEffect(() => {
-    setOptimisticModelId(selectedModelId);
-  }, [selectedModelId]);
-
-  const selectedModel = useMemo(
-    () => chatModels.find((model) => model.id === optimisticModelId),
-    [optimisticModelId],
-  );
+    if (
+      displayModel &&
+      displayModel.id !== selectedModelId &&
+      availableModels.length > 0
+    ) {
+      // Notify parent about the change
+      onModelChange?.(displayModel.id);
+      startTransition(() => {
+        saveChatModelAsCookie(displayModel.id);
+      });
+    }
+  }, [displayModel, selectedModelId, availableModels.length, onModelChange]);
 
   return (
     <Select
-      onValueChange={(modelName) => {
-        const model = chatModels.find((m) => m.name === modelName);
+      onValueChange={(modelId) => {
+        const model = availableModels.find((m) => m.id === modelId);
         if (model) {
-          setOptimisticModelId(model.id);
           onModelChange?.(model.id);
           startTransition(() => {
             saveChatModelAsCookie(model.id);
           });
         }
       }}
-      value={selectedModel?.name}
+      value={displayModel?.id}
     >
       <SelectTrigger
         className={cn(
@@ -53,14 +80,14 @@ function PureModelSelectorCompact({
         <div className="flex items-center gap-2">
           <CpuIcon size={16} className="text-inherit" />
           <span className="hidden text-xs font-medium sm:block">
-            {selectedModel?.name}
+            {displayModel?.name}
           </span>
         </div>
       </SelectTrigger>
       <SelectContent className="p-0">
         <div className="flex flex-col gap-px">
-          {chatModels.map((model) => (
-            <SelectItem key={model.id} value={model.name}>
+          {availableModels.map((model) => (
+            <SelectItem key={model.id} value={model.id}>
               <div className="truncate text-xs font-medium">{model.name}</div>
             </SelectItem>
           ))}

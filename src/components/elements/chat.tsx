@@ -2,6 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import * as React from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import type { ChatMessage } from "@/types/chat";
 import { generateUUID } from "@/lib/utils";
@@ -13,9 +14,10 @@ import { Messages } from "./messages";
 import { ChatInput } from "./chat-input";
 import type { Chat } from "@/types/chat";
 import { logger } from "@/lib/logger";
+import { getUserModels } from "@/app/(dashboard)/_actions/user-actions";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { History } from "lucide-react";
+import { History, MessageSquare, Cpu } from "lucide-react";
 
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
@@ -51,6 +53,57 @@ export function ChatComponent({
     return cookieModel ?? DEFAULT_CHAT_MODEL;
   });
   const [input, setInput] = React.useState("");
+  const [availableModels, setAvailableModels] = React.useState<
+    { id: string; name: string; enabled: boolean }[]
+  >([]);
+
+  // Fetch user's model availability
+  React.useEffect(() => {
+    const fetchModels = async () => {
+      const { data, error } = await getUserModels();
+
+      if (error || !data) {
+        logger.error("Failed to fetch models for chat", {
+          error,
+        });
+        return;
+      }
+
+      const models =
+        data.providers?.flatMap(
+          (p) =>
+            p.models
+              ?.map((m) => ({
+                id: m.id ?? "",
+                name: m.name ?? m.id ?? "",
+                enabled: Boolean(m.enabled),
+              }))
+              .filter((m) => m.id !== "") ?? [],
+        ) ?? [];
+
+      setAvailableModels(models);
+    };
+
+    fetchModels();
+  }, []);
+
+  const enabledModels = React.useMemo(
+    () => availableModels.filter((m) => m.enabled),
+    [availableModels],
+  );
+
+  // Ensure selected model is valid
+  React.useEffect(() => {
+    if (enabledModels.length === 0) {
+      return;
+    }
+    const exists = enabledModels.some((m) => m.id === currentModelId);
+    if (!exists) {
+      setCurrentModelId(enabledModels[0]?.id ?? currentModelId);
+    }
+  }, [enabledModels, currentModelId]);
+
+  const hasAvailableModels = enabledModels.length > 0;
 
   // Use ref to ensure transport always uses the latest model
   const currentModelIdRef = React.useRef(currentModelId);
@@ -260,19 +313,51 @@ export function ChatComponent({
 
   if (!chatId) {
     return (
-      <div className="flex h-full flex-col items-center justify-center">
-        <div className="space-y-4 text-center">
-          <h2 className="text-xl font-semibold">No chat selected</h2>
-          <p className="text-muted-foreground text-sm">
-            Create a new chat to start a conversation
-          </p>
-          <button
-            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium"
-            onClick={handleNewChat}
-            type="button"
-          >
-            New Chat
-          </button>
+      <div className="flex h-full flex-col items-center justify-center p-6">
+        <div className="flex max-w-md flex-col items-center space-y-6 text-center">
+          <div className="bg-muted flex size-16 items-center justify-center rounded-full">
+            <MessageSquare className="text-muted-foreground size-8" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              No chat selected
+            </h2>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Create a new chat to start a conversation with your AI assistant
+            </p>
+          </div>
+          <Button onClick={handleNewChat} size="lg">
+            <MessageSquare className="size-4" />
+            New chat
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if no models are available
+  if (!hasAvailableModels) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center p-6">
+        <div className="flex max-w-md flex-col items-center space-y-6 text-center">
+          <div className="bg-muted flex size-16 items-center justify-center rounded-full">
+            <Cpu className="text-muted-foreground size-8" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              No AI models available
+            </h2>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              You need to enable at least one model to use chat features. Go to
+              settings to configure your AI models.
+            </p>
+          </div>
+          <Button asChild size="lg">
+            <Link href="/settings/models">
+              <Cpu className="size-4" />
+              Add models
+            </Link>
+          </Button>
         </div>
       </div>
     );
@@ -319,6 +404,7 @@ export function ChatComponent({
           setInput={setInput}
           status={status}
           stop={stop}
+          availableModels={enabledModels}
         />
       </div>
     </div>
