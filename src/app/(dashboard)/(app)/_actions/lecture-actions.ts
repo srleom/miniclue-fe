@@ -166,6 +166,12 @@ export async function getLecture(
   return { data: data ?? undefined, error: undefined };
 }
 
+/**
+ * DEPRECATED: This function is no longer actively used.
+ * Explanation generation (Step 5 in data flow) has been removed.
+ * May still return legacy data from existing lectures but will return
+ * empty arrays for newly uploaded lectures.
+ */
 export async function getExplanations(
   lectureId: string,
 ): Promise<
@@ -254,6 +260,12 @@ export async function getSignedPdfUrl(
   return { data: data ?? undefined, error: undefined };
 }
 
+/**
+ * DEPRECATED: This function is no longer actively used.
+ * Summary generation (Step 6 in data flow) has been removed.
+ * May still return legacy data from existing lectures but will return
+ * empty content for newly uploaded lectures.
+ */
 export async function getSummary(
   lectureId: string,
 ): Promise<

@@ -252,9 +252,6 @@ export function DropzoneComponent({
           }
           hasSuccessfulUpload = true;
           successCount++;
-          toast.success(
-            `Successfully uploaded ${files[index]?.name || "file"}`,
-          );
         } else if (res.status === "error") {
           errorCount++;
           logger.error("File upload failed", {

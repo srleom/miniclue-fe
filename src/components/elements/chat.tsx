@@ -14,6 +14,7 @@ import { Messages } from "./messages";
 import { ChatInput } from "./chat-input";
 import type { Chat } from "@/types/chat";
 import { logger } from "@/lib/logger";
+import type { LectureStatus } from "@/hooks/use-lecture-status";
 import { getUserModels } from "@/app/(dashboard)/_actions/user-actions";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -38,6 +39,7 @@ type ChatComponentProps = {
   onChatsChange: (chats: Chat[]) => void | Promise<void>;
   isLoadingChats?: boolean;
   disabled?: boolean;
+  lectureStatus?: LectureStatus;
 };
 
 export function ChatComponent({
@@ -49,6 +51,7 @@ export function ChatComponent({
   onChatsChange,
   isLoadingChats,
   disabled,
+  lectureStatus,
 }: ChatComponentProps) {
   const [currentModelId, setCurrentModelId] = React.useState(() => {
     const cookieModel = getCookie("chat-model");
@@ -408,6 +411,7 @@ export function ChatComponent({
         setMessages={setMessages}
         status={status}
         isLoading={isEffectivelyDisabled}
+        lectureStatus={lectureStatus}
       />
 
       <div className="bg-background sticky bottom-0 z-10 flex w-full gap-2 pb-3 md:pb-4">

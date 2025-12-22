@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowDownIcon } from "lucide-react";
-import { memo, useEffect } from "react";
+import { ArrowDownIcon, Ban } from "lucide-react";
+import { memo, useEffect, useMemo } from "react";
 import type { ChatMessage } from "@/types/chat";
 import { useMessages } from "@/hooks/use-chat-messages";
 import { Conversation, ConversationContent } from "./conversation";
 import { PreviewMessage } from "./message";
-import LottieAnimation from "@/app/(dashboard)/(app)/lecture/[lectureId]/_components/lottie-animation";
+import type { LectureStatus } from "@/hooks/use-lecture-status";
 
 type MessagesProps = {
   chatId: string;
@@ -19,6 +19,7 @@ type MessagesProps = {
   isReadonly: boolean;
   selectedModelId: string;
   isLoading?: boolean;
+  lectureStatus?: LectureStatus;
 };
 
 function PureMessages({
@@ -29,6 +30,7 @@ function PureMessages({
   regenerate,
   isReadonly,
   isLoading,
+  lectureStatus,
 }: MessagesProps) {
   const {
     containerRef: messagesContainerRef,
@@ -54,6 +56,15 @@ function PureMessages({
     }
   }, [status, messagesContainerRef]);
 
+  const statusLabel = useMemo(() => {
+    if (!lectureStatus) return "Preparing...";
+    if (lectureStatus === "failed") return "Processing Failed";
+    return lectureStatus
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }, [lectureStatus]);
+
   return (
     <div
       className="overscroll-behavior-contain -webkit-overflow-scrolling-touch flex-1 touch-pan-y overflow-y-scroll"
@@ -63,8 +74,30 @@ function PureMessages({
       <Conversation className="mx-auto flex h-full min-w-0 flex-col gap-4 md:gap-6">
         <ConversationContent className="flex h-full flex-col gap-4 py-4 md:gap-6">
           {isLoading ? (
-            <div className="flex h-full flex-col items-center justify-center py-12">
-              <LottieAnimation />
+            <div className="flex h-full flex-col items-center justify-center gap-4 py-12 text-center">
+              {lectureStatus && lectureStatus !== "complete" ? (
+                <>
+                  <div className="relative flex items-center justify-center">
+                    {lectureStatus === "failed" ? (
+                      <div className="bg-destructive/10 flex h-12 w-12 items-center justify-center rounded-full">
+                        <Ban className="text-destructive h-6 w-6 rotate-45" />
+                      </div>
+                    ) : (
+                      <div className="border-primary/30 border-t-primary h-12 w-12 animate-spin rounded-full border-4" />
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-medium">{statusLabel}</h3>
+                    <p className="text-muted-foreground max-w-[240px] text-xs">
+                      {lectureStatus === "failed"
+                        ? "Something went wrong while processing your lecture."
+                        : "Processing your lecture content..."}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <div className="border-primary/30 border-t-primary h-10 w-10 animate-spin rounded-full border-4" />
+              )}
             </div>
           ) : (
             <>

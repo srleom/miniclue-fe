@@ -46,13 +46,11 @@ export default function PdfViewer({
   pageNumber,
   onPageChange,
   onDocumentLoad,
-  scrollSource,
 }: {
   fileUrl: string;
   pageNumber: number;
   onPageChange: (page: number) => void;
   onDocumentLoad: (totalPages: number) => void;
-  scrollSource: "pdf" | "carousel" | null;
 }) {
   const zoomPluginInstance = zoomPlugin();
   const getFilePluginInstance = getFilePlugin();
@@ -61,11 +59,8 @@ export default function PdfViewer({
   const { jumpToPage } = pageNavigationPluginInstance;
 
   React.useEffect(() => {
-    // Only jump if the change came from the carousel
-    if (scrollSource === "carousel") {
-      jumpToPage(pageNumber - 1);
-    }
-  }, [pageNumber, jumpToPage, scrollSource]);
+    jumpToPage(pageNumber - 1);
+  }, [pageNumber, jumpToPage]);
 
   const renderToolbar = (
     Toolbar: (props: ToolbarProps) => React.ReactElement,

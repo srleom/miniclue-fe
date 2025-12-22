@@ -4,8 +4,18 @@ import { toast } from "sonner";
 import { getLecture } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 import { useSupabase } from "@/hooks/use-supabase";
 
+export type LectureStatus =
+  | "uploading"
+  | "pending_processing"
+  | "parsing"
+  | "processing"
+  | "complete"
+  | "failed"
+  | null;
+
 export function useLectureStatus(lectureId: string) {
   const supabase = useSupabase();
+  const [lectureStatus, setLectureStatus] = React.useState<LectureStatus>(null);
   const statusChannelRef = React.useRef<
     ReturnType<typeof supabase.channel> | undefined
   >(undefined);
@@ -17,10 +27,12 @@ export function useLectureStatus(lectureId: string) {
         logger.error("Failed fetching lecture:", error);
         return;
       }
-      const st = data?.status;
+      const st = data?.status as LectureStatus;
       if (!st) {
         return;
       }
+
+      setLectureStatus(st);
 
       if (st === "complete" || st === "failed") {
         logger.subscription(
@@ -47,19 +59,14 @@ export function useLectureStatus(lectureId: string) {
           },
           ({ new: row }) => {
             if (!row.status) return;
-            logger.debug("Status: received update", row.status);
-            const label = row.status
-              .split("_")
-              .map(
-                (word: string) => word.charAt(0).toUpperCase() + word.slice(1),
-              )
-              .join(" ");
-            toast.info(label);
+            const newStatus = row.status as LectureStatus;
+            setLectureStatus(newStatus);
+            logger.debug("Status: received update", newStatus);
             if (row.status === "complete") {
               logger.debug(
                 "Status: terminal status 'complete' reached, unsubscribing",
               );
-              toast.success("Success");
+              toast.success("Lecture processed successfully");
               if (statusChannelRef.current) {
                 supabase.removeChannel(statusChannelRef.current);
                 statusChannelRef.current = undefined;
@@ -68,7 +75,7 @@ export function useLectureStatus(lectureId: string) {
               logger.debug(
                 "Status: terminal status 'failed' reached, unsubscribing",
               );
-              toast.error("Error");
+              toast.error("Lecture processing failed");
               if (statusChannelRef.current) {
                 supabase.removeChannel(statusChannelRef.current);
                 statusChannelRef.current = undefined;
@@ -91,4 +98,6 @@ export function useLectureStatus(lectureId: string) {
       }
     };
   }, [lectureId, supabase]);
+
+  return { lectureStatus };
 }

@@ -1,22 +1,12 @@
 "use client";
 
-// styles
-import "katex/dist/katex.min.css";
-
 // react
 import * as React from "react";
 
 // next
 import { useParams } from "next/navigation";
 
-// third-party
-import ReactMarkdown from "react-markdown";
-import rehypeKatex from "rehype-katex";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-
 // components
-import { Card, CardContent } from "@/components/ui/card";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -24,19 +14,21 @@ import {
 } from "@/components/ui/resizable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PdfViewer from "@/app/(dashboard)/(app)/lecture/[lectureId]/_components/pdf-viewer";
-import { ExplainerCarousel } from "./_components/carousel";
 import LottieAnimation from "./_components/lottie-animation";
 import { MobileToggle } from "./_components/mobile-toggle";
 import { ChatComponent } from "@/components/elements/chat";
+import { Card } from "@/components/ui/card";
 
 // lib
 import { cn } from "@/lib/utils";
+
+// icons
+import { SquareCheckBig } from "lucide-react";
 
 // hooks
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLecturePdf } from "@/hooks/use-lecture-pdf";
 import { useLectureStatus } from "@/hooks/use-lecture-status";
-import { useLectureSummary } from "@/hooks/use-lecture-summary";
 import { useLectureChats } from "@/hooks/use-lecture-chats";
 
 export default function LecturePage() {
@@ -44,21 +36,14 @@ export default function LecturePage() {
 
   // Mobile detection
   const isMobile = useIsMobile();
-  const [mobileView, setMobileView] = React.useState<"pdf" | "explanation">(
-    "pdf",
-  );
+  const [mobileView, setMobileView] = React.useState<"pdf" | "tools">("pdf");
 
   // PDF viewer state
   const [pageNumber, setPageNumber] = React.useState(1);
-  const [scrollSource, setScrollSource] = React.useState<
-    "pdf" | "carousel" | null
-  >(null);
 
   // Custom hooks for lecture data
-  const { pdfUrl, explanations, totalPageCount, setTotalPageCount } =
-    useLecturePdf(lectureId);
-  useLectureStatus(lectureId);
-  const { summary, summaryLoading } = useLectureSummary(lectureId);
+  const { pdfUrl, setTotalPageCount } = useLecturePdf(lectureId);
+  const { lectureStatus } = useLectureStatus(lectureId);
   const {
     currentChatId,
     chats,
@@ -70,12 +55,6 @@ export default function LecturePage() {
   } = useLectureChats(lectureId);
 
   const handlePdfPageChange = (newPage: number) => {
-    setScrollSource("pdf");
-    setPageNumber(newPage);
-  };
-
-  const handleCarouselPageChange = (newPage: number) => {
-    setScrollSource("carousel");
     setPageNumber(newPage);
   };
 
@@ -107,7 +86,6 @@ export default function LecturePage() {
                 pageNumber={pageNumber}
                 onPageChange={handlePdfPageChange}
                 onDocumentLoad={setTotalPageCount}
-                scrollSource={scrollSource}
               />
             ) : (
               <div className="text-muted-foreground flex h-full flex-col items-center justify-center rounded-lg border">
@@ -120,14 +98,20 @@ export default function LecturePage() {
             className={cn(
               "flex min-h-0 flex-col",
               !isMobile && "pl-6",
-              isMobile && mobileView !== "explanation" && "hidden",
+              isMobile && mobileView !== "tools" && "hidden",
             )}
           >
             <Tabs
-              defaultValue="explanation"
+              defaultValue="chat"
               className="flex min-h-0 flex-1 flex-col gap-1"
             >
               <TabsList className="w-full flex-shrink-0">
+                <TabsTrigger value="chat" className="hover:cursor-pointer">
+                  Chat
+                </TabsTrigger>
+                <TabsTrigger value="quiz" className="hover:cursor-pointer">
+                  Quiz
+                </TabsTrigger>
                 <TabsTrigger
                   value="explanation"
                   className="hover:cursor-pointer"
@@ -137,11 +121,53 @@ export default function LecturePage() {
                 <TabsTrigger value="summary" className="hover:cursor-pointer">
                   Summary
                 </TabsTrigger>
-                <TabsTrigger value="chat" className="hover:cursor-pointer">
-                  Chat
-                </TabsTrigger>
               </TabsList>
+
               <TabsContent
+                value="chat"
+                className="mt-3 flex min-h-0 flex-1 flex-col"
+              >
+                <ChatComponent
+                  chatId={currentChatId}
+                  chats={chats}
+                  initialMessages={
+                    currentChatId ? chatMessages[currentChatId] || [] : []
+                  }
+                  isLoadingChats={isLoadingChats}
+                  lectureId={lectureId}
+                  onChatChange={handleChatChange}
+                  onChatsChange={handleChatsChange}
+                  lectureStatus={lectureStatus}
+                  disabled={
+                    isLoadingChats ||
+                    isLoadingMessages ||
+                    lectureStatus !== "complete"
+                  }
+                />
+              </TabsContent>
+
+              <TabsContent
+                value="quiz"
+                className="mt-3 flex min-h-0 flex-1 flex-col"
+              >
+                <Card className="flex flex-1 flex-col items-center justify-center rounded-lg border p-8 text-center shadow-none">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="mb-3 flex items-center gap-2 rounded-full bg-amber-100 p-4">
+                      <SquareCheckBig className="h-8 w-8" />
+                    </div>
+                    <h2 className="text-foreground text-xl font-medium">
+                      Quiz Feature Coming Soon
+                    </h2>
+                    <p className="text-muted-foreground max-w-sm text-sm">
+                      We&apos;re building an MCQ quiz generator for you to test
+                      your knowledge on this lecture. Stay tuned!
+                    </p>
+                  </div>
+                </Card>
+              </TabsContent>
+
+              {/* DEPRECATED: Explanation and summary tabs content */}
+              {/* <TabsContent
                 value="explanation"
                 className="mt-3 flex min-h-0 flex-1 flex-col"
               >
@@ -173,24 +199,7 @@ export default function LecturePage() {
                     </CardContent>
                   </Card>
                 )}
-              </TabsContent>
-              <TabsContent
-                value="chat"
-                className="mt-3 flex min-h-0 flex-1 flex-col"
-              >
-                <ChatComponent
-                  chatId={currentChatId}
-                  chats={chats}
-                  initialMessages={
-                    currentChatId ? chatMessages[currentChatId] || [] : []
-                  }
-                  isLoadingChats={isLoadingChats}
-                  lectureId={lectureId}
-                  onChatChange={handleChatChange}
-                  onChatsChange={handleChatsChange}
-                  disabled={isLoadingChats || isLoadingMessages}
-                />
-              </TabsContent>
+              </TabsContent> */}
             </Tabs>
           </ResizablePanel>
         </ResizablePanelGroup>

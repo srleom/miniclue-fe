@@ -1,3 +1,9 @@
+/**
+ * DEPRECATED: This hook is no longer actively used.
+ * Summary generation (Step 6 in data flow) has been removed from the lecture feature.
+ * This hook may still return legacy data from existing lectures but will return
+ * undefined for newly uploaded lectures.
+ */
 import * as React from "react";
 import { logger } from "@/lib/logger";
 import { getSummary } from "@/app/(dashboard)/(app)/_actions/lecture-actions";

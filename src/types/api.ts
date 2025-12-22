@@ -1180,8 +1180,9 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * List lecture explanations
-     * @description Retrieves explanations for a lecture with pagination
+     * List lecture explanations (DEPRECATED)
+     * @deprecated
+     * @description DEPRECATED: This endpoint is no longer actively generating new explanations. Explanation generation (Step 5 in data flow) has been removed. This endpoint may still return legacy data from existing lectures but will return empty arrays for newly uploaded lectures.
      */
     get: {
       parameters: {
@@ -1404,8 +1405,9 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get lecture summary
-     * @description Retrieves a lecture's summary by its ID.
+     * Get lecture summary (DEPRECATED)
+     * @deprecated
+     * @description DEPRECATED: This endpoint is no longer actively generating new summaries. Summary generation (Step 6 in data flow) has been removed. This endpoint may still return legacy data from existing lectures but will return empty content for newly uploaded lectures.
      */
     get: {
       parameters: {
