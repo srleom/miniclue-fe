@@ -112,17 +112,7 @@ export default function LecturePage() {
                 <TabsTrigger value="quiz" className="hover:cursor-pointer">
                   Quiz
                 </TabsTrigger>
-                <TabsTrigger
-                  value="explanation"
-                  className="hover:cursor-pointer"
-                >
-                  Explanation
-                </TabsTrigger>
-                <TabsTrigger value="summary" className="hover:cursor-pointer">
-                  Summary
-                </TabsTrigger>
               </TabsList>
-
               <TabsContent
                 value="chat"
                 className="mt-3 flex min-h-0 flex-1 flex-col"
