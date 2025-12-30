@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useScrollToBottom } from "./use-scroll-to-bottom";
+import type { LectureStatus } from "@/hooks/use-lecture-status";
 
 export function useMessages({
   status,
+  lectureStatus,
 }: {
-  status: "idle" | "ready" | "submitted" | "streaming" | "error";
+  status: "ready" | "submitted" | "streaming" | "error";
+  lectureStatus?: LectureStatus;
 }) {
   const {
     containerRef,
@@ -23,13 +26,36 @@ export function useMessages({
       requestAnimationFrame(() => {
         setHasSentMessage(true);
       });
-    } else if (status === "idle" || status === "ready") {
-      // Reset when chat becomes idle/ready (e.g., new chat or reset)
+    } else if (status === "ready") {
+      // Reset when chat becomes ready (e.g., new chat or reset)
       requestAnimationFrame(() => {
         setHasSentMessage(false);
       });
     }
   }, [status]);
+
+  useEffect(() => {
+    if (status === "submitted") {
+      requestAnimationFrame(() => {
+        const container = containerRef.current;
+        if (container) {
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      });
+    }
+  }, [status, containerRef]);
+
+  const statusLabel = useMemo(() => {
+    if (!lectureStatus) return "Preparing...";
+    if (lectureStatus === "failed") return "Processing Failed";
+    return lectureStatus
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }, [lectureStatus]);
 
   return {
     containerRef,
@@ -39,5 +65,6 @@ export function useMessages({
     onViewportEnter,
     onViewportLeave,
     hasSentMessage,
+    statusLabel,
   };
 }

@@ -14,7 +14,7 @@
     "openapi:all": "pnpm openapi:convert && pnpm openapi:types"
   },
   "dependencies": {
-    "@ai-sdk/react": "^2.0.103",
+    "@ai-sdk/react": "^3.0.3",
     "@aws-sdk/client-s3": "^3.859.0",
     "@aws-sdk/lib-storage": "^3.859.0",
     "@hookform/resolvers": "^5.1.1",
@@ -47,6 +47,11 @@
     "@supabase/supabase-js": "^2.49.8",
     "@tanstack/react-query": "^5.81.2",
     "@tanstack/react-table": "^8.21.3",
+    "@tiptap/extension-mention": "^3.14.0",
+    "@tiptap/extension-placeholder": "^3.14.0",
+    "@tiptap/pm": "^3.14.0",
+    "@tiptap/react": "^3.14.0",
+    "@tiptap/starter-kit": "^3.14.0",
     "@xyflow/react": "^12.9.3",
     "ai": "^5.0.103",
     "class-variance-authority": "^0.7.1",

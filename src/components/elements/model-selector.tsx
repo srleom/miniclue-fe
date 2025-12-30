@@ -18,10 +18,12 @@ function PureModelSelectorCompact({
   selectedModelId,
   onModelChange,
   models,
+  disabled,
 }: {
   selectedModelId: string;
   onModelChange?: (modelId: string) => void;
   models?: { id: string; name: string }[];
+  disabled?: boolean;
 }) {
   // Use provided models if available, otherwise fall back to the default list
   const availableModels = useMemo(() => models ?? chatModels, [models]);
@@ -71,7 +73,8 @@ function PureModelSelectorCompact({
           });
         }
       }}
-      value={displayModel?.id}
+      value={displayModel?.id ?? ""}
+      disabled={disabled || availableModels.length === 0}
     >
       <SelectTrigger
         className={cn(

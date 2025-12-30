@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { FileText, Wrench } from "lucide-react";
+import { FileText, MessageSquare } from "lucide-react";
 
 type MobileToggleProps = {
-  mobileView: "pdf" | "tools";
-  onViewChange: (view: "pdf" | "tools") => void;
+  mobileView: "pdf" | "chat";
+  onViewChange: (view: "pdf" | "chat") => void;
 };
 
 export function MobileToggle({ mobileView, onViewChange }: MobileToggleProps) {
@@ -20,14 +20,14 @@ export function MobileToggle({ mobileView, onViewChange }: MobileToggleProps) {
         PDF
       </Button>
       <Button
-        variant={mobileView === "tools" ? "default" : "outline"}
+        variant={mobileView === "chat" ? "default" : "outline"}
         size="sm"
-        onClick={() => onViewChange("tools")}
+        onClick={() => onViewChange("chat")}
         className="flex items-center gap-2"
         type="button"
       >
-        <Wrench className="h-4 w-4" />
-        Tools
+        <MessageSquare className="h-4 w-4" />
+        Chat
       </Button>
     </div>
   );

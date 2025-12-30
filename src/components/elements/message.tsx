@@ -77,39 +77,115 @@ const PurePreviewMessage = ({
               message.role === "user",
           })}
         >
-          {message.parts?.map((part, index) => {
-            if (!part || typeof part !== "object") {
-              return null;
-            }
+          {message.role === "user" ? (
+            <MessageContent
+              className="flex w-fit flex-row flex-wrap items-center rounded-2xl px-3 py-2 text-right break-words text-white"
+              data-testid="message-content"
+              style={{ backgroundColor: "#006cff" }}
+            >
+              {message.parts?.map((part, index) => {
+                if (part.type === "text") {
+                  const text = part.text || "";
+                  // Regex to find all REF_X patterns
+                  const refRegex = /REF_\d+/g;
+                  const tokens = [];
+                  let lastIndex = 0;
+                  let match;
 
-            const { type } = part;
-            const key = `message-${message.id}-part-${index}`;
-
-            if (type === "text") {
-              return (
-                <div key={key}>
-                  <MessageContent
-                    className={cn({
-                      "w-fit rounded-2xl px-3 py-2 text-right break-words text-white":
-                        message.role === "user",
-                      "bg-transparent px-0 py-0 text-left":
-                        message.role === "assistant",
-                    })}
-                    data-testid="message-content"
-                    style={
-                      message.role === "user"
-                        ? { backgroundColor: "#006cff" }
-                        : undefined
+                  while ((match = refRegex.exec(text)) !== null) {
+                    // Push text before the match
+                    if (match.index > lastIndex) {
+                      tokens.push(text.substring(lastIndex, match.index));
                     }
-                  >
-                    <Response>{sanitizeText(part?.text || "")}</Response>
-                  </MessageContent>
-                </div>
-              );
-            }
 
-            return null;
-          })}
+                    const refMarker = match[0];
+                    // Find the metadata for this marker
+                    const refPart = message.parts?.find(
+                      (p) =>
+                        p.type === "data-reference" &&
+                        p.data?.text === refMarker,
+                    );
+
+                    if (refPart && refPart.type === "data-reference") {
+                      const slideId = refPart.data.reference?.id;
+                      tokens.push(
+                        <span
+                          key={`ref-${match.index}`}
+                          className="inline-flex items-center rounded-md bg-white/20 px-1.5 py-0.5 text-[10px] font-medium text-white sm:text-xs"
+                        >
+                          Slide {String(slideId ?? "?")}
+                        </span>,
+                      );
+                    } else {
+                      // Fallback: if no metadata found, keep the text
+                      tokens.push(refMarker);
+                    }
+                    lastIndex = refRegex.lastIndex;
+                  }
+
+                  // Push remaining text
+                  if (lastIndex < text.length) {
+                    tokens.push(text.substring(lastIndex));
+                  }
+
+                  return (
+                    <span key={index} className="whitespace-pre-line">
+                      {tokens.map((token, i) =>
+                        typeof token === "string" ? (
+                          <span key={i}>{sanitizeText(token)}</span>
+                        ) : (
+                          token
+                        ),
+                      )}
+                    </span>
+                  );
+                }
+                // data-reference parts are skipped here (metadata only)
+                return null;
+              })}
+            </MessageContent>
+          ) : (
+            message.parts?.map((part, index) => {
+              if (!part || typeof part !== "object") {
+                return null;
+              }
+
+              const { type } = part;
+              const key = `message-${message.id}-part-${index}`;
+
+              if (type === "text") {
+                return (
+                  <div key={key}>
+                    <MessageContent
+                      className={cn({
+                        "bg-transparent px-0 py-0 text-left":
+                          message.role === "assistant",
+                      })}
+                      data-testid="message-content"
+                    >
+                      <Response>{sanitizeText(part?.text || "")}</Response>
+                    </MessageContent>
+                  </div>
+                );
+              }
+
+              if (
+                type === "data-reference" &&
+                part.data?.type === "reference"
+              ) {
+                const slideId = part.data.reference?.id;
+                return (
+                  <div key={key} className="flex justify-start">
+                    <span className="bg-primary/10 text-primary inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-medium sm:text-xs">
+                      Slide {String(slideId ?? "?")}
+                    </span>
+                  </div>
+                );
+              }
+
+              return null;
+            })
+          )}
         </div>
       </div>
     </motion.div>

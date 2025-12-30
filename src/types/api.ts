@@ -2222,6 +2222,8 @@ export interface components {
       upload_url?: string;
     };
     "dto.MessagePartDTO": {
+      data?: components["schemas"]["dto.ReferencePartDTO"];
+      reference?: components["schemas"]["dto.ReferenceDTO"];
       text?: string;
       type?: string;
     };
@@ -2261,6 +2263,18 @@ export interface components {
     "dto.PubSubPushRequest": {
       message?: components["schemas"]["dto.PubSubMessage"];
       subscription?: string;
+    };
+    "dto.ReferenceDTO": {
+      id?: string;
+      metadata?: {
+        [key: string]: unknown;
+      };
+      type?: string;
+    };
+    "dto.ReferencePartDTO": {
+      reference?: components["schemas"]["dto.ReferenceDTO"];
+      text?: string;
+      type?: string;
     };
     "dto.SignedURLResponseDTO": {
       url?: string;

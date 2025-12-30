@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentProps, memo } from "react";
+import { type ComponentProps, memo, type ReactNode } from "react";
 import { Streamdown } from "streamdown";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,19 @@ export const Response = memo(
         "size-full [&_code]:break-words [&_code]:whitespace-pre-wrap [&_pre]:max-w-full [&_pre]:overflow-x-auto [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
         className,
       )}
+      components={
+        {
+          t: ({ children }: { children: ReactNode }) => (
+            <span className="text-muted-foreground italic">{children}</span>
+          ),
+          thought: ({ children }: { children: ReactNode }) => (
+            <span className="text-muted-foreground italic">{children}</span>
+          ),
+          thinking: ({ children }: { children: ReactNode }) => (
+            <span className="text-muted-foreground italic">{children}</span>
+          ),
+        } as unknown as NonNullable<ResponseProps["components"]>
+      }
       {...props}
     />
   ),

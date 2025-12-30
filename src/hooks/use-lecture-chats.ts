@@ -184,11 +184,45 @@ export function useLectureChats(lectureId: string) {
           const messagesList: ChatMessage[] = data.map((msg) => ({
             id: msg.id || "",
             role: (msg.role as "user" | "assistant") || "user",
+            content: "",
             parts:
-              msg.parts?.map((p) => ({
-                type: "text",
-                text: p.text || "",
-              })) || [],
+              msg.parts?.map((p) => {
+                if (p.data) {
+                  return {
+                    type: "data-reference" as const,
+                    data: {
+                      type: "reference" as const,
+                      text: p.data.text || "",
+                      reference: {
+                        type: p.data.reference?.type || "",
+                        id: p.data.reference?.id || "",
+                        metadata: p.data.reference?.metadata as Record<
+                          string,
+                          unknown
+                        >,
+                      },
+                    },
+                  };
+                }
+                if (p.reference) {
+                  return {
+                    type: "data-reference" as const,
+                    data: {
+                      type: "reference" as const,
+                      text: p.text || "",
+                      reference: {
+                        type: p.reference.type || "",
+                        id: p.reference.id || "",
+                        metadata: p.reference.metadata,
+                      },
+                    },
+                  };
+                }
+                return {
+                  type: "text" as const,
+                  text: p.text || "",
+                };
+              }) || [],
             createdAt: msg.created_at,
           }));
           setChatMessages((prev) => ({

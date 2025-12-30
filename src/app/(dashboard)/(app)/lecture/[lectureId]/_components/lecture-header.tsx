@@ -1,8 +1,5 @@
 "use client";
 
-// react
-import * as React from "react";
-
 // components
 import { BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { RenameDialog } from "@/app/(dashboard)/(app)/_components/rename-dialog";

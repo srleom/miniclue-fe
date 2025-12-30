@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDownIcon, Ban } from "lucide-react";
-import { memo, useEffect, useMemo } from "react";
+import { memo } from "react";
 import type { ChatMessage } from "@/types/chat";
 import { useMessages } from "@/hooks/use-chat-messages";
 import { Conversation, ConversationContent } from "./conversation";
@@ -10,7 +10,7 @@ import type { LectureStatus } from "@/hooks/use-lecture-status";
 
 type MessagesProps = {
   chatId: string;
-  status: "idle" | "ready" | "submitted" | "streaming" | "error";
+  status: "ready" | "submitted" | "streaming" | "error";
   messages: ChatMessage[];
   setMessages: (
     messages: ChatMessage[] | ((prev: ChatMessage[]) => ChatMessage[]),
@@ -38,32 +38,11 @@ function PureMessages({
     isAtBottom,
     scrollToBottom,
     hasSentMessage,
+    statusLabel,
   } = useMessages({
     status,
+    lectureStatus,
   });
-
-  useEffect(() => {
-    if (status === "submitted") {
-      requestAnimationFrame(() => {
-        const container = messagesContainerRef.current;
-        if (container) {
-          container.scrollTo({
-            top: container.scrollHeight,
-            behavior: "smooth",
-          });
-        }
-      });
-    }
-  }, [status, messagesContainerRef]);
-
-  const statusLabel = useMemo(() => {
-    if (!lectureStatus) return "Preparing...";
-    if (lectureStatus === "failed") return "Processing Failed";
-    return lectureStatus
-      .split("_")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  }, [lectureStatus]);
 
   return (
     <div

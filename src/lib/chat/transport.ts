@@ -15,13 +15,6 @@ export function createChatTransport(
         throw new Error("Last message must be from user");
       }
 
-      const parts = lastMessage.parts
-        .filter((part) => part.type === "text")
-        .map((part) => ({
-          type: "text",
-          text: part.text || "",
-        }));
-
       // Get current model at call time, not creation time
       const currentModel = getModel();
 
@@ -34,7 +27,7 @@ export function createChatTransport(
           },
           body: JSON.stringify({
             model: currentModel,
-            parts,
+            parts: lastMessage.parts,
           }),
         },
       );
