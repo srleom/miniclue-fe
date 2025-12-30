@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -121,172 +122,36 @@
   }
 }
 
-/* Markdown Styles */
-.markdown-content {
-  @apply text-foreground;
-}
-
-.markdown-content h1 {
-  @apply mt-6 mb-4 text-2xl font-bold first:mt-0;
-}
-
-.markdown-content h2 {
-  @apply mt-5 mb-3 text-xl font-semibold;
-}
-
-.markdown-content h3 {
-  @apply mt-4 mb-2 text-lg font-medium;
-}
-
-.markdown-content h4 {
-  @apply mt-3 mb-2 text-base font-medium;
-}
-
-.markdown-content p {
-  @apply mb-4 leading-relaxed;
-}
-
-.markdown-content ul {
-  /* Use outside markers so block children (e.g., <p>) don't force content to a new line */
-  @apply mb-4 list-outside list-disc space-y-1 pl-5;
-}
-
-.markdown-content ol {
-  /* Use outside markers so block children (e.g., <p>) don't force content to a new line */
-  @apply mb-4 list-outside list-decimal space-y-1 pl-5;
-}
-
-.markdown-content li {
-  @apply mb-1;
-}
-
-.markdown-content blockquote {
-  @apply border-muted-foreground/30 my-4 border-l-4 pl-4 italic;
-}
-
-.markdown-content code {
-  @apply bg-muted rounded px-1.5 py-0.5 font-mono text-sm;
-}
-
-.markdown-content pre {
-  @apply bg-muted mb-4 overflow-x-auto rounded-lg p-4;
-}
-
-.markdown-content pre code {
-  @apply bg-transparent p-0;
-}
-
-.markdown-content strong {
-  @apply font-semibold;
-}
-
-.markdown-content em {
-  @apply italic;
-}
-
-.markdown-content a {
-  @apply text-primary hover:underline;
-}
-
-.markdown-content hr {
-  @apply border-border my-6;
-}
-
-/* Table Styles */
-.markdown-content table {
-  @apply my-4 mb-6 w-full border-collapse overflow-hidden rounded-lg;
-}
-
-.markdown-content thead {
-  @apply bg-transparent;
-}
-
-.markdown-content th {
-  @apply border-border text-foreground border-b px-4 py-3 text-left text-sm font-semibold;
-}
-
-.markdown-content th:first-child {
-  @apply rounded-tl-lg pl-0;
-}
-
-.markdown-content th:last-child {
-  @apply rounded-tr-lg;
-}
-
-.markdown-content td {
-  @apply border-border text-foreground border-b px-4 py-3 text-sm;
-}
-
-.markdown-content td:first-child {
-  @apply pl-0;
-}
-
-.markdown-content tbody tr:last-child td:first-child {
-  @apply rounded-bl-lg;
-}
-
-.markdown-content tbody tr:last-child td:last-child {
-  @apply rounded-br-lg;
-}
-
-.markdown-content tbody tr:last-child {
-  @apply border-b-0;
-}
-
 /* KaTeX Styles */
-.markdown-content .katex {
+.prose .katex {
   @apply text-foreground;
 }
 
-.markdown-content .katex-display {
+.prose .katex-display {
   @apply my-4 overflow-x-auto;
 }
 
 /* Footnote Styles */
-.markdown-content .footnotes {
+.prose .footnotes {
   @apply border-border mt-8 border-t pt-4;
 }
 
-.markdown-content .footnotes ol {
+.prose .footnotes ol {
   @apply list-inside list-decimal space-y-2;
 }
 
-.markdown-content .footnotes li {
+.prose .footnotes li {
   @apply text-muted-foreground text-sm;
 }
 
-.markdown-content .footnotes p {
+.prose .footnotes p {
   @apply mb-2;
 }
 
-.markdown-content .footnote-ref {
+.prose .footnote-ref {
   @apply text-primary hover:underline;
 }
 
-.markdown-content .footnote-backref {
+.prose .footnote-backref {
   @apply text-primary ml-2 hover:underline;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .markdown-content h1 {
-    @apply text-xl;
-  }
-
-  .markdown-content h2 {
-    @apply text-lg;
-  }
-
-  .markdown-content h3 {
-    @apply text-base;
-  }
-
-  .markdown-content table {
-    @apply text-xs;
-  }
-
-  .markdown-content th,
-  .markdown-content td {
-    @apply px-2 py-1;
-  }
 }

@@ -105,14 +105,16 @@ export function ExplainerCarousel({
                 key={index}
                 className="h-full basis-full overflow-y-auto pt-0"
               >
-                <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-6 shadow-none sm:py-8">
+                <Card className="prose prose-sm prose-neutral dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 flex h-full w-full max-w-none flex-col overflow-y-auto rounded-lg py-6 shadow-none sm:py-8">
                   <CardContent className="flex-1 px-6 sm:px-8">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkMath, remarkGfm]}
-                      rehypePlugins={[rehypeKatex]}
-                    >
-                      {markdown}
-                    </ReactMarkdown>
+                    <div className="prose-headings:mt-3 prose-headings:mb-1 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0 prose-pre:my-2 prose-code:before:content-none prose-code:after:content-none prose-code:bg-muted prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-sm prose-code:font-normal [&_pre]:bg-muted [&_pre_code]:text-foreground [&_pre]:mb-4 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-4 [&_pre_code]:rounded-none [&_pre_code]:bg-transparent [&_pre_code]:p-0">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkMath, remarkGfm]}
+                        rehypePlugins={[rehypeKatex]}
+                      >
+                        {markdown}
+                      </ReactMarkdown>
+                    </div>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -120,7 +122,7 @@ export function ExplainerCarousel({
           } else {
             return (
               <CarouselItem key={index} className="h-full basis-full pt-0">
-                <Card className="markdown-content flex h-full w-full flex-col overflow-y-auto rounded-lg py-6 shadow-none sm:py-8">
+                <Card className="prose prose-sm prose-neutral dark:prose-invert flex h-full w-full max-w-none flex-col overflow-y-auto rounded-lg py-6 shadow-none sm:py-8">
                   <CardContent className="flex flex-1 items-center justify-center px-6 sm:px-8">
                     <LottieAnimation />
                   </CardContent>

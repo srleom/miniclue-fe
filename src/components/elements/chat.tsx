@@ -147,7 +147,7 @@ export function ChatComponent({
               <Button
                 size="icon"
                 variant="ghost"
-                className="gap-2"
+                className="gap-2 focus-visible:ring-0"
                 disabled={isEffectivelyDisabled}
               >
                 <History className="size-4" />

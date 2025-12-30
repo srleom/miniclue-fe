@@ -58,171 +58,173 @@ export default function PdfViewer({
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToPage } = pageNavigationPluginInstance;
 
+  // Track the last page number set by the viewer internally to avoid snapping
+  const internalPageChangeRef = React.useRef(pageNumber);
+
   React.useEffect(() => {
-    jumpToPage(pageNumber - 1);
+    if (pageNumber !== internalPageChangeRef.current) {
+      jumpToPage(pageNumber - 1);
+    }
   }, [pageNumber, jumpToPage]);
 
-  const renderToolbar = (
-    Toolbar: (props: ToolbarProps) => React.ReactElement,
-  ) => (
-    <Toolbar>
-      {(slots: ToolbarSlot) => {
-        const {
-          CurrentPageInput,
-          Download,
-          EnterFullScreen,
-          NumberOfPages,
-          Zoom,
-          ZoomIn,
-          ZoomOut,
-        } = slots;
-        return (
-          <div className="flex w-full items-center justify-between border-none text-sm">
-            <div>
+  const renderToolbar = React.useCallback(
+    (Toolbar: (props: ToolbarProps) => React.ReactElement) => (
+      <Toolbar>
+        {(slots: ToolbarSlot) => {
+          const {
+            CurrentPageInput,
+            Download,
+            EnterFullScreen,
+            NumberOfPages,
+            Zoom,
+            ZoomIn,
+            ZoomOut,
+          } = slots;
+          return (
+            <div className="flex w-full items-center justify-between border-none text-sm">
+              <div>
+                <div className="flex items-center gap-1">
+                  <CurrentPageInput /> / <NumberOfPages />
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-1">
+                <ZoomOut>
+                  {(props) => (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={props.onClick}
+                      className="hover:bg-border hover:cursor-pointer"
+                    >
+                      <ZoomOutIcon strokeWidth={1.3} size={20} />
+                    </Button>
+                  )}
+                </ZoomOut>
+                <Zoom>
+                  {(props) => (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:bg-border hover:cursor-pointer"
+                        >
+                          {Math.round(props.scale * 100)}%
+                          <ChevronDownIcon
+                            strokeWidth={1.3}
+                            size={16}
+                            className="ml-1"
+                          />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="center">
+                        <DropdownMenuItem
+                          onClick={() =>
+                            props.onZoom(SpecialZoomLevel.ActualSize)
+                          }
+                        >
+                          Actual size
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => props.onZoom(SpecialZoomLevel.PageFit)}
+                        >
+                          Page fit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            props.onZoom(SpecialZoomLevel.PageWidth)
+                          }
+                        >
+                          Page width
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => props.onZoom(0.5)}>
+                          50%
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => props.onZoom(0.75)}>
+                          75%
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => props.onZoom(1)}>
+                          100%
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => props.onZoom(1.25)}>
+                          125%
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => props.onZoom(1.5)}>
+                          150%
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => props.onZoom(2)}>
+                          200%
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => props.onZoom(3)}>
+                          300%
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => props.onZoom(4)}>
+                          400%
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </Zoom>
+                <ZoomIn>
+                  {(props) => (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={props.onClick}
+                      className="hover:bg-border hover:cursor-pointer"
+                    >
+                      <ZoomInIcon strokeWidth={1.3} size={20} />
+                    </Button>
+                  )}
+                </ZoomIn>
+              </div>
               <div className="flex items-center gap-1">
-                <CurrentPageInput /> / <NumberOfPages />
+                <Download>
+                  {(props) => (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={props.onClick}
+                      className="hover:bg-border hover:cursor-pointer"
+                    >
+                      <DownloadIcon strokeWidth={1.3} size={20} />
+                    </Button>
+                  )}
+                </Download>
+                <EnterFullScreen>
+                  {(props) => (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={props.onClick}
+                      className="hover:bg-border hover:cursor-pointer"
+                    >
+                      <MaximizeIcon strokeWidth={1.3} size={20} />
+                    </Button>
+                  )}
+                </EnterFullScreen>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-1">
-              <ZoomOut>
-                {(props) => (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={props.onClick}
-                    className="hover:bg-border hover:cursor-pointer"
-                  >
-                    <ZoomOutIcon strokeWidth={1.3} size={20} />
-                  </Button>
-                )}
-              </ZoomOut>
-              <Zoom>
-                {(props) => (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="hover:bg-border hover:cursor-pointer"
-                      >
-                        {Math.round(props.scale * 100)}%
-                        <ChevronDownIcon
-                          strokeWidth={1.3}
-                          size={16}
-                          className="ml-1"
-                        />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center">
-                      <DropdownMenuItem
-                        onClick={() =>
-                          props.onZoom(SpecialZoomLevel.ActualSize)
-                        }
-                      >
-                        Actual size
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => props.onZoom(SpecialZoomLevel.PageFit)}
-                      >
-                        Page fit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => props.onZoom(SpecialZoomLevel.PageWidth)}
-                      >
-                        Page width
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => props.onZoom(0.5)}>
-                        50%
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => props.onZoom(0.75)}>
-                        75%
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => props.onZoom(1)}>
-                        100%
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => props.onZoom(1.25)}>
-                        125%
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => props.onZoom(1.5)}>
-                        150%
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => props.onZoom(2)}>
-                        200%
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => props.onZoom(3)}>
-                        300%
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => props.onZoom(4)}>
-                        400%
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </Zoom>
-              <ZoomIn>
-                {(props) => (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={props.onClick}
-                    className="hover:bg-border hover:cursor-pointer"
-                  >
-                    <ZoomInIcon strokeWidth={1.3} size={20} />
-                  </Button>
-                )}
-              </ZoomIn>
-            </div>
-            <div className="flex items-center gap-1">
-              <Download>
-                {(props) => (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={props.onClick}
-                    className="hover:bg-border hover:cursor-pointer"
-                  >
-                    <DownloadIcon strokeWidth={1.3} size={20} />
-                  </Button>
-                )}
-              </Download>
-              <EnterFullScreen>
-                {(props) => (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={props.onClick}
-                    className="hover:bg-border hover:cursor-pointer"
-                  >
-                    <MaximizeIcon strokeWidth={1.3} size={20} />
-                  </Button>
-                )}
-              </EnterFullScreen>
-            </div>
-          </div>
-        );
-      }}
-    </Toolbar>
+          );
+        }}
+      </Toolbar>
+    ),
+    [],
   );
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     renderToolbar,
-    sidebarTabs: () => [
-      // defaultTabs[0]!,
-      // {
-      //   content: (
-      //     <SearchSidebar
-      //       searchPluginInstance={
-      //         defaultLayoutPluginInstance.toolbarPluginInstance
-      //           .searchPluginInstance
-      //       }
-      //     />
-      //   ),
-      //   icon: <SearchIcon size={16} strokeWidth={1.2} />,
-      //   title: "Search",
-      // },
-    ],
+    sidebarTabs: () => [],
   });
+
+  const plugins = [
+    defaultLayoutPluginInstance,
+    zoomPluginInstance,
+    getFilePluginInstance,
+    searchPluginInstance,
+    pageNavigationPluginInstance,
+  ];
 
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
@@ -232,17 +234,12 @@ export default function PdfViewer({
           onPageChange={(e) => {
             const newPage = e.currentPage + 1;
             if (newPage !== pageNumber) {
+              internalPageChangeRef.current = newPage;
               onPageChange(newPage);
             }
           }}
           onDocumentLoad={(e) => onDocumentLoad(e.doc.numPages)}
-          plugins={[
-            defaultLayoutPluginInstance,
-            zoomPluginInstance,
-            getFilePluginInstance,
-            searchPluginInstance,
-            pageNavigationPluginInstance,
-          ]}
+          plugins={plugins}
           defaultScale={SpecialZoomLevel.PageWidth}
           scrollMode={ScrollMode.Vertical}
         />

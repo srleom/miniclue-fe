@@ -24,7 +24,7 @@ export function ChatHeader({
           onClick={onNewChat}
           size="icon"
           variant="ghost"
-          className="gap-2"
+          className="gap-2 focus-visible:ring-0"
           disabled={disabled}
         >
           <Plus className="size-4" />
