@@ -8,6 +8,7 @@ import { CourseWithLectures, NavRecentsItem } from "./_types/types";
 import { AppSidebar } from "@/app/(dashboard)/(app)/_components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { GeminiKeyPromptDialog } from "@/components/elements/gemini-key-prompt-dialog";
+import { PostHogIdentifier } from "@/components/elements/posthog-identifier";
 
 // code
 import {
@@ -21,6 +22,7 @@ import {
   handleUpdateLectureAccessedAt,
 } from "@/app/(dashboard)/(app)/_actions/lecture-actions";
 import {
+  getUser,
   getUserCourses,
   getUserRecents,
 } from "@/app/(dashboard)/_actions/user-actions";
@@ -37,6 +39,12 @@ export default async function DashboardLayout({
 
   let navRecents: NavRecentsItem[] = [];
   let navCourses: CourseWithLectures[] = [];
+
+  // Get user data for PostHog identification
+  const userRes = await getUser();
+  const userId = userRes.data?.user_id ?? "";
+  const userEmail = userRes.data?.email ?? "";
+  const userName = userRes.data?.name ?? "";
 
   const recentsRes = await getUserRecents(10000, 0);
   if (recentsRes.data) {
@@ -70,6 +78,10 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex h-[100dvh] w-screen overflow-hidden">
+      {/* Identify user in PostHog */}
+      {userId && userEmail && (
+        <PostHogIdentifier userId={userId} email={userEmail} name={userName} />
+      )}
       <SidebarProvider defaultOpen={sidebarOpen}>
         <AppSidebar
           navCourses={navCourses}

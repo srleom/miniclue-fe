@@ -25,6 +25,7 @@ import {
 
 // lib
 import { getInitials } from "@/lib/utils";
+import posthog from "posthog-js";
 
 export function NavUser({
   user,
@@ -37,6 +38,15 @@ export function NavUser({
   };
   handleLogout: () => Promise<void>;
 }) {
+  const handleLogoutWithPostHog = async () => {
+    // Reset PostHog first (if initialized)
+    if (typeof window !== "undefined" && posthog.__loaded) {
+      posthog.reset();
+    }
+
+    // Then perform server-side logout
+    await handleLogout();
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -105,7 +115,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={handleLogout}
+              onClick={handleLogoutWithPostHog}
               className="hover:cursor-pointer"
             >
               <LogOut />
