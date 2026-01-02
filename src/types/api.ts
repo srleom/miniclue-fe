@@ -140,7 +140,7 @@ export interface paths {
     post?: never;
     /**
      * Delete a course
-     * @description Deletes a course and all its lectures, removes associated PDFs from storage, clears any pending jobs in ingestion, embedding, explanation, and summary queues, and deletes related database records.
+     * @description Deletes a course and all its lectures, removes associated PDFs from storage, clears any pending jobs in ingestion and embedding queues, and deletes related database records.
      */
     delete: {
       parameters: {
@@ -553,7 +553,7 @@ export interface paths {
     post?: never;
     /**
      * Delete a lecture
-     * @description Deletes a lecture and all its derived database records, removes its PDF from storage, and clears related pending jobs from ingestion, embedding, explanation, and summary queues.
+     * @description Deletes a lecture and all its derived database records, removes its PDF from storage, and clears related pending jobs from ingestion and embedding queues.
      */
     delete: {
       parameters: {
@@ -1172,81 +1172,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/lectures/{lectureId}/explanations": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List lecture explanations (DEPRECATED)
-     * @deprecated
-     * @description DEPRECATED: This endpoint is no longer actively generating new explanations. Explanation generation (Step 5 in data flow) has been removed. This endpoint may still return legacy data from existing lectures but will return empty arrays for newly uploaded lectures.
-     */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Limit number of results (if omitted, returns all explanations) */
-          limit?: number;
-          /** @description Pagination offset (default 0) */
-          offset?: number;
-        };
-        header?: never;
-        path: {
-          /** @description Lecture ID */
-          lectureId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["dto.LectureExplanationResponseDTO"][];
-          };
-        };
-        /** @description Unauthorized: User ID not found in context */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-        /** @description Lecture not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-        /** @description Failed to retrieve explanations */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/lectures/{lectureId}/note": {
     parameters: {
       query?: never;
@@ -1395,76 +1320,6 @@ export interface paths {
         };
       };
     };
-    trace?: never;
-  };
-  "/lectures/{lectureId}/summary": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get lecture summary (DEPRECATED)
-     * @deprecated
-     * @description DEPRECATED: This endpoint is no longer actively generating new summaries. Summary generation (Step 6 in data flow) has been removed. This endpoint may still return legacy data from existing lectures but will return empty content for newly uploaded lectures.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          /** @description Lecture ID */
-          lectureId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["dto.LectureSummaryResponseDTO"];
-          };
-        };
-        /** @description Unauthorized: User ID not found in context */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-        /** @description Lecture not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-        /** @description Failed to retrieve summary */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
     trace?: never;
   };
   "/lectures/{lectureId}/upload-complete": {
@@ -2207,14 +2062,6 @@ export interface components {
     "dto.LectureBatchUploadURLResponseDTO": {
       uploads?: components["schemas"]["dto.LectureUploadURLResponseDTO"][];
     };
-    "dto.LectureExplanationResponseDTO": {
-      content?: string;
-      created_at?: string;
-      id?: string;
-      lecture_id?: string;
-      slide_number?: number;
-      updated_at?: string;
-    };
     "dto.LectureNoteCreateDTO": {
       content: string;
     };
@@ -2236,11 +2083,8 @@ export interface components {
       status?: string;
       storage_path?: string;
       title?: string;
+      total_slides?: number;
       updated_at?: string;
-    };
-    "dto.LectureSummaryResponseDTO": {
-      content?: string;
-      lecture_id?: string;
     };
     "dto.LectureUpdateDTO": {
       accessed_at?: string;

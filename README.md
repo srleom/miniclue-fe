@@ -22,8 +22,7 @@
   - `/lecture/[lectureId]`
 
     - Lecture detail page:
-
-      - Client-side tabs or sections for Summary, Slide Explainer, Chat, Notes
+      - Chat
 
 - **Fallback**
 

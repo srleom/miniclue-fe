@@ -20,9 +20,17 @@ export default async function Page() {
 
   return (
     <div className="mx-auto mt-16 flex w-full flex-col items-center lg:w-3xl">
-      <Badge variant="secondary" className="text-xs">
-        BETA
+      <Badge
+        variant="secondary"
+        className="flex items-center gap-2 font-mono text-xs font-medium"
+      >
+        <span className="relative flex size-2">
+          <span className="bg-chart-2 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+          <span className="bg-chart-2 relative inline-flex size-2 rounded-full"></span>
+        </span>
+        ONLINE
       </Badge>
+
       <h1 className="mt-4 text-center text-4xl font-semibold">
         Ready when you are.
       </h1>

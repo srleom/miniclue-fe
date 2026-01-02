@@ -1,7 +1,5 @@
 /**
- * DEPRECATED: Explanation fetching has been removed from this hook.
- * This hook now only fetches the PDF URL for viewing.
- * Explanations are no longer generated (Step 5 in data flow removed).
+ * This hook fetches the PDF URL for viewing.
  */
 import * as React from "react";
 import { logger } from "@/lib/logger";
