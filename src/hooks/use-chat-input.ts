@@ -21,6 +21,7 @@ interface UseChatInputProps {
   sendMessage: (message: { role: "user"; parts: MessagePart[] }) => void;
   pageNumber?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export function useChatInput({
@@ -29,6 +30,7 @@ export function useChatInput({
   sendMessage,
   pageNumber,
   className,
+  disabled,
 }: UseChatInputProps) {
   const [suggestionData, setSuggestionData] = useState<{
     items: Shortcut[];
@@ -41,11 +43,13 @@ export function useChatInput({
   // Refs for closure stability in Tiptap callbacks
   const sendMessageRef = useRef(sendMessage);
   const pageNumberRef = useRef(pageNumber);
+  const disabledRef = useRef(disabled);
 
   useEffect(() => {
     sendMessageRef.current = sendMessage;
     pageNumberRef.current = pageNumber;
-  }, [sendMessage, pageNumber]);
+    disabledRef.current = disabled;
+  }, [sendMessage, pageNumber, disabled]);
 
   const extractMessageParts = useCallback(
     (editorInstance: Editor | JSONContent): MessagePart[] => {
@@ -119,7 +123,10 @@ export function useChatInput({
     immediatelyRender: false,
     extensions: [
       StarterKit,
-      Placeholder.configure({ placeholder: "Send a message..." }),
+      Placeholder.configure({
+        placeholder: "Send a message...",
+        showOnlyWhenEditable: false,
+      }),
       Mention.configure({
         HTMLAttributes: {
           class:
@@ -201,6 +208,11 @@ export function useChatInput({
 
         if (event.key === "Enter" && !event.shiftKey) {
           event.preventDefault();
+
+          if (disabledRef.current) {
+            return true;
+          }
+
           const parts = extractMessageParts(
             view.state.doc.toJSON() as JSONContent,
           );
@@ -233,8 +245,14 @@ export function useChatInput({
     }
   }, [input, editor]);
 
+  useEffect(() => {
+    if (editor && !editor.isDestroyed) {
+      editor.setEditable(!disabled);
+    }
+  }, [editor, disabled]);
+
   const handleSendMessage = useCallback(() => {
-    if (!editor) return;
+    if (!editor || disabledRef.current) return;
     const parts = extractMessageParts(editor);
     if (parts.length > 0) {
       sendMessageRef.current({

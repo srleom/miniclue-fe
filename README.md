@@ -1,45 +1,71 @@
-## Frontend URL Structure
+# MiniClue Frontend (`miniclue-fe`)
 
-- **Dashboard Home**
+The main web application for the MiniClue platform, providing a modern dashboard for students to manage their courses and interact with their lecture materials through an AI-powered RAG interface.
 
-  - `/` → Main dashboard view (overview cards, recent activity)
+**Role in Stack:**
 
-- **Profile**
+- **UI/UX:** Dashboard, course management, and rich lecture interaction (Next.js 16).
+- **AI Chat:** Real-time, context-aware chat interface using Vercel AI SDK and TipTap.
+- **Integration:** Centralized API client interacting with the Go Backend and Supabase Auth.
 
-  - `/profile` → View & edit your user profile (name, avatar, preferences)
+## 🛠 Prerequisites
 
-- **Courses & Lectures**
+- **Node.js 20+**
+- **pnpm 10+**
+- **Supabase CLI** (For local database and auth management)
 
-  - **(Sidebar)** Your courses live in a persistent sidebar under the dashboard layout.
-  - `/course/[courseId]`
+## 🚀 Quick Start
 
-    - Course home:
+> See [CONTRIBUTING.md](https://github.com/miniclue/miniclue-info/blob/main/CONTRIBUTING.md) for full details on how to setup and contribute to the project.
 
-      - Lecture list
-      - "Upload PDF" form (creates new lecture in this course)
-      - Course settings (edit title/description, delete course)
+1. **Fork & Clone**
 
-  - `/lecture/[lectureId]`
+```bash
+# Fork the repository on GitHub first, then:
+git clone https://github.com/your-username/miniclue-fe.git
+cd miniclue-fe
+git remote add upstream https://github.com/srleom/miniclue-fe.git
+pnpm install
+```
 
-    - Lecture detail page:
-      - Chat
+2. **Environment Setup**
+   Copy the example config:
 
-- **Fallback**
+```bash
+cp .env.example .env
+```
 
-  - `/error` → Custom 404 page (with link back to `/`)
+_Ensure you populate all fields as stated in the `.env.example` file._
 
-## CI/CD Workflow
+3. **Sync API Types**
+   Ensure the Backend (`miniclue-be`) is running, then:
 
-### Staging Environment
+```bash
+pnpm openapi:all
+```
 
-1. A developer writes code on a feature branch and opens a Pull Request to `main`. CI is triggered.
-2. After code review and approval, the PR is merged.
-3. The merge to `main` automatically triggers a GitHub Actions workflow (`cd.yml`).
-4. This workflow deploys to Vercel staging project.
+4. **Run Locally**
 
-### Production Environment
+```bash
+pnpm dev
+# App will run at http://localhost:3000
+```
 
-1. After changes are verified in staging, a release can be deployed to production.
-2. Create a new release on the GitHub repository.
-3. This will trigger the release workflow (`release.yml`).
-4. This workflow deploys to Vercel production project.
+## 📍 URL Structure
+
+- **Dashboard:** `/` → Overview and recent activity.
+- **Profile:** `/profile` → User settings and preferences.
+- **Courses:** `/course/[courseId]` → Lecture list and course settings.
+- **Lectures:** `/lecture/[lectureId]` → Main RAG chat and document interaction.
+
+## 📝 Pull Request Process
+
+1. Create a new branch for your feature or bugfix: `git checkout -b feature/my-cool-improvement`.
+2. Ensure your code follows the coding standards and project architecture.
+3. Push to your fork: `git push origin feature/my-cool-improvement`.
+4. Submit a Pull Request from your fork to the original repository's `main` branch.
+5. Provide a clear description of the changes in your PR.
+6. Once your PR is approved and merged into `main`, the CI/CD pipeline will automatically deploy it to the [staging environment](https://stg.app.miniclue.com) for verification.
+7. Once a new release is created, the CI/CD pipeline will automatically deploy it to the [production environment](https://app.miniclue.com).
+
+> Note: Merging of PR and creation of release will be done by repo maintainers.

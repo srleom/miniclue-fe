@@ -32,6 +32,8 @@ import {
   FileListName,
   FileListSize,
 } from "@/components/ui/file-list";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 // lib
@@ -356,6 +358,17 @@ export function DropzoneComponent({
               </FileListItem>
             ))}
           </FileList>
+        )}
+        {files.length > 2 && (
+          <Alert variant="destructive">
+            <AlertCircle className="size-4" />
+            <AlertTitle>Rate Limit Warning</AlertTitle>
+            <AlertDescription>
+              If you&apos;re using the free tier of Gemini, uploading more than
+              2 files at once might hit your API rate limits, causing lecture
+              processing to fail. Proceed with caution.
+            </AlertDescription>
+          </Alert>
         )}
         {isCoursePage && files.length > 0 && (
           <div className="flex justify-end">
