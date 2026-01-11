@@ -41,6 +41,7 @@ export function ChatInput({
       setInput,
       sendMessage,
       pageNumber,
+      disabled,
       className: cn(
         "min-h-[44px] w-full max-h-60 overflow-y-auto outline-none p-2 text-sm",
         // --- Placeholder Styles ---
@@ -60,7 +61,12 @@ export function ChatInput({
 
   return (
     <div className="relative w-full">
-      <div className="border-border bg-background focus-within:border-border hover:border-muted-foreground/50 w-full rounded-xl border p-3 shadow-xs transition-all duration-200">
+      <div
+        className={cn(
+          "border-border bg-background focus-within:border-border hover:border-muted-foreground/50 w-full rounded-xl border p-3 shadow-xs transition-all duration-200",
+          disabled && "bg-muted/50 cursor-not-allowed opacity-70",
+        )}
+      >
         <div className="relative">
           <EditorContent editor={editor} />
           {editor.isEmpty && (
