@@ -27,6 +27,7 @@ type ChatComponentProps = {
   isLoadingChats?: boolean;
   disabled?: boolean;
   lectureStatus?: LectureStatus;
+  errorDetails?: Record<string, unknown>;
   pageNumber?: number;
 };
 
@@ -40,6 +41,7 @@ export function ChatComponent({
   isLoadingChats,
   disabled,
   lectureStatus,
+  errorDetails,
   pageNumber,
 }: ChatComponentProps) {
   // --- 1. Logic Hook ---
@@ -168,6 +170,7 @@ export function ChatComponent({
         status={status}
         isLoading={isEffectivelyDisabled}
         lectureStatus={lectureStatus}
+        errorDetails={errorDetails}
       />
 
       <div className="bg-background sticky bottom-0 z-10 flex w-full gap-2 pb-3 md:pb-4">

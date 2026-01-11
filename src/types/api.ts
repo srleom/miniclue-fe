@@ -2079,6 +2079,9 @@ export interface components {
       accessed_at?: string;
       course_id?: string;
       created_at?: string;
+      embedding_error_details?: {
+        [key: string]: unknown;
+      };
       lecture_id?: string;
       status?: string;
       storage_path?: string;

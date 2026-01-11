@@ -16,6 +16,10 @@ export type LectureStatus =
 export function useLectureStatus(lectureId: string) {
   const supabase = useSupabase();
   const [lectureStatus, setLectureStatus] = React.useState<LectureStatus>(null);
+  const [errorDetails, setErrorDetails] = React.useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const statusChannelRef = React.useRef<
     ReturnType<typeof supabase.channel> | undefined
   >(undefined);
@@ -33,6 +37,20 @@ export function useLectureStatus(lectureId: string) {
       }
 
       setLectureStatus(st);
+
+      if (st === "failed") {
+        logger.debug(
+          "Lecture failed, error details:",
+          data?.embedding_error_details,
+        );
+        if (data?.embedding_error_details) {
+          setErrorDetails(data.embedding_error_details);
+        } else {
+          logger.warn(
+            "Lecture status is failed but no embedding_error_details found",
+          );
+        }
+      }
 
       if (st === "complete" || st === "failed") {
         logger.subscription(
@@ -75,7 +93,10 @@ export function useLectureStatus(lectureId: string) {
               logger.debug(
                 "Status: terminal status 'failed' reached, unsubscribing",
               );
-              toast.error("Lecture processing failed");
+              if (row.embedding_error_details) {
+                setErrorDetails(row.embedding_error_details);
+              }
+              toast.error("Lecture processing failed. See details in chat.");
               if (statusChannelRef.current) {
                 supabase.removeChannel(statusChannelRef.current);
                 statusChannelRef.current = undefined;
@@ -99,5 +120,5 @@ export function useLectureStatus(lectureId: string) {
     };
   }, [lectureId, supabase]);
 
-  return { lectureStatus };
+  return { lectureStatus, errorDetails };
 }

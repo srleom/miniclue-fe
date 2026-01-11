@@ -38,7 +38,7 @@ export default function LecturePage() {
 
   // Custom hooks for lecture data
   const { pdfUrl, setTotalPageCount } = useLecturePdf(lectureId);
-  const { lectureStatus } = useLectureStatus(lectureId);
+  const { lectureStatus, errorDetails } = useLectureStatus(lectureId);
   const {
     currentChatId,
     chats,
@@ -107,6 +107,7 @@ export default function LecturePage() {
               onChatChange={handleChatChange}
               onChatsChange={handleChatsChange}
               lectureStatus={lectureStatus}
+              errorDetails={errorDetails}
               pageNumber={pageNumber}
               disabled={
                 isLoadingChats ||

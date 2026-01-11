@@ -20,6 +20,7 @@ type MessagesProps = {
   selectedModelId: string;
   isLoading?: boolean;
   lectureStatus?: LectureStatus;
+  errorDetails?: Record<string, unknown>;
 };
 
 function PureMessages({
@@ -31,6 +32,7 @@ function PureMessages({
   isReadonly,
   isLoading,
   lectureStatus,
+  errorDetails,
 }: MessagesProps) {
   const {
     containerRef: messagesContainerRef,
@@ -65,13 +67,25 @@ function PureMessages({
                       <div className="border-primary/30 border-t-primary h-12 w-12 animate-spin rounded-full border-4" />
                     )}
                   </div>
-                  <div className="space-y-1">
+                  <div className="flex max-w-sm flex-col items-center justify-center space-y-1">
                     <h3 className="font-medium">{statusLabel}</h3>
                     <p className="text-muted-foreground max-w-[240px] text-xs">
                       {lectureStatus === "failed"
                         ? "Something went wrong while processing your lecture."
                         : "This might take a while..."}
                     </p>
+                    {lectureStatus === "failed" && errorDetails && (
+                      <div className="bg-muted mt-4 w-full rounded-md border text-left">
+                        <div className="bg-muted-foreground/10 text-muted-foreground border-b px-2 py-1 text-[10px] font-medium tracking-wider uppercase">
+                          Error Details
+                        </div>
+                        <div className="max-h-[200px] overflow-y-auto p-3">
+                          <pre className="text-muted-foreground w-full text-[10px] leading-relaxed break-words whitespace-pre-wrap">
+                            {JSON.stringify(errorDetails, null, 2)}
+                          </pre>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </>
               ) : (
@@ -80,16 +94,41 @@ function PureMessages({
             </div>
           ) : (
             <>
-              {messages.length === 0 && status !== "submitted" && (
-                <div className="flex h-full flex-col items-center justify-center py-12">
-                  <div className="space-y-2 text-center">
-                    <h2 className="text-3xl font-semibold">Hello there!</h2>
-                    <p className="text-muted-foreground">
-                      Ask me anything about the lecture.
+              {lectureStatus === "failed" && errorDetails && (
+                <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
+                  <div className="bg-destructive/10 flex h-12 w-12 items-center justify-center rounded-full">
+                    <Ban className="text-destructive h-6 w-6 rotate-45" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-medium">Processing Failed</h3>
+                    <p className="text-muted-foreground max-w-[240px] text-xs">
+                      Something went wrong while processing your lecture.
                     </p>
+                    <div className="bg-muted mt-4 w-full max-w-[600px] rounded-md border text-left">
+                      <div className="bg-muted-foreground/10 text-muted-foreground border-b px-2 py-1 text-[10px] font-medium tracking-wider uppercase">
+                        Error Details
+                      </div>
+                      <div className="max-h-[200px] overflow-y-auto p-3">
+                        <pre className="text-muted-foreground w-full text-[10px] leading-relaxed break-words whitespace-pre-wrap">
+                          {JSON.stringify(errorDetails, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
+              {messages.length === 0 &&
+                status !== "submitted" &&
+                lectureStatus !== "failed" && (
+                  <div className="flex h-full flex-col items-center justify-center py-12">
+                    <div className="space-y-2 text-center">
+                      <h2 className="text-3xl font-semibold">Hello there!</h2>
+                      <p className="text-muted-foreground">
+                        Ask me anything about the lecture.
+                      </p>
+                    </div>
+                  </div>
+                )}
 
               {messages.map((message, index) => (
                 <PreviewMessage
