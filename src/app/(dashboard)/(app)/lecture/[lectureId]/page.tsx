@@ -107,7 +107,7 @@ export default function LecturePage() {
               onChatChange={handleChatChange}
               onChatsChange={handleChatsChange}
               lectureStatus={lectureStatus}
-              errorDetails={errorDetails}
+              errorDetails={errorDetails ?? undefined}
               pageNumber={pageNumber}
               disabled={
                 isLoadingChats ||
