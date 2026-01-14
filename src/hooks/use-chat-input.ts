@@ -64,6 +64,8 @@ export function useChatInput({
       const traverse = (node: JSONContent) => {
         if (node.type === "text") {
           textContent += node.text || "";
+        } else if (node.type === "hardBreak") {
+          textContent += "\n";
         } else if (node.type === "mention") {
           const shortcutId = node.attrs?.id;
           if (
@@ -96,14 +98,19 @@ export function useChatInput({
         if (node.content) {
           node.content.forEach(traverse);
         }
+
+        if (node.type === "paragraph") {
+          textContent += "\n";
+        }
       };
 
       traverse(json);
 
-      if (textContent) {
+      const finalContent = textContent.trim();
+      if (finalContent) {
         parts.push({
           type: "text",
-          text: textContent,
+          text: finalContent,
         });
       }
 
