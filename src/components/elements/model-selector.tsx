@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { CpuIcon, PlusIcon, Loader2Icon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 function PureModelSelectorCompact({
   selectedModelId,
@@ -24,6 +25,7 @@ function PureModelSelectorCompact({
   models?: { id: string; name: string }[];
   disabled?: boolean;
 }) {
+  const pathname = usePathname();
   // Use provided models if available, otherwise fall back to empty list
   const availableModels = useMemo(() => models ?? [], [models]);
   const isLoading = models === undefined;
@@ -105,7 +107,7 @@ function PureModelSelectorCompact({
         </div>
         <SelectSeparator />
         <Link
-          href="/settings/models"
+          href={`/settings/models?returnTo=${encodeURIComponent(pathname)}`}
           className="hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-xs font-medium transition-colors"
         >
           <PlusIcon size={14} />

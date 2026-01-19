@@ -31,21 +31,6 @@ export async function GET(request: Request) {
         },
       });
 
-      // ensure at least one course exists for this user
-      const { data: existingCourses, error: fetchCoursesError } =
-        await api.GET("/users/me/courses");
-      if (!fetchCoursesError) {
-        const courses = existingCourses ?? [];
-        if (courses.length === 0) {
-          await api.POST("/courses", {
-            body: {
-              title: "Drafts",
-              is_default: true,
-              description: "Default course",
-            },
-          });
-        }
-      }
       const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
       const vercelUrl = process.env.VERCEL_URL;
       const isLocalEnv = process.env.NODE_ENV === "development";

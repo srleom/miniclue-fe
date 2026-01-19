@@ -16,6 +16,7 @@ export type LectureStatus =
 export function useLectureStatus(lectureId: string) {
   const supabase = useSupabase();
   const [lectureStatus, setLectureStatus] = React.useState<LectureStatus>(null);
+  const [lectureTitle, setLectureTitle] = React.useState<string | null>(null);
   const [errorDetails, setErrorDetails] = React.useState<Record<
     string,
     unknown
@@ -31,6 +32,11 @@ export function useLectureStatus(lectureId: string) {
         logger.error("Failed fetching lecture:", error);
         return;
       }
+
+      if (data?.title) {
+        setLectureTitle(data.title);
+      }
+
       const st = data?.status as LectureStatus;
       if (!st) {
         return;
@@ -120,5 +126,5 @@ export function useLectureStatus(lectureId: string) {
     };
   }, [lectureId, supabase]);
 
-  return { lectureStatus, errorDetails };
+  return { lectureStatus, lectureTitle, errorDetails };
 }
