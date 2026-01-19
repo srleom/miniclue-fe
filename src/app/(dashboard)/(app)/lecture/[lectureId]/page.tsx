@@ -117,8 +117,8 @@ export default function LecturePage() {
               <div className="flex h-full flex-col items-center justify-center p-8 text-center">
                 <div className="relative mb-6">
                   <div className="absolute -inset-1 rounded-full bg-emerald-500/20 blur-sm" />
-                  <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50 shadow-sm ring-1 ring-black/5 dark:bg-emerald-950/20 dark:ring-white/10">
-                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                  <div className="relative flex items-center justify-center rounded-full bg-emerald-50 shadow-sm ring-1 ring-black/5 dark:bg-emerald-950/20 dark:ring-white/10">
+                    <CheckCircle2 className="h-12 w-12 text-emerald-500" />
                   </div>
                 </div>
 
@@ -126,7 +126,7 @@ export default function LecturePage() {
                   Gemini API Key successfully added!
                 </h2>
 
-                <p className="mb-8 max-w-[320px] text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+                <p className="mb-8 max-w-[480px] text-sm leading-relaxed text-slate-500 dark:text-slate-400">
                   You&apos;re now ready to start using MiniClue with your own
                   lectures. You may delete this guide from the sidebar and
                   upload your own PDFs to begin.
