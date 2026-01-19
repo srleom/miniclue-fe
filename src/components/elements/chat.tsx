@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { History, MessageSquare, Cpu, Key } from "lucide-react";
 
 // Types & Utils
@@ -44,6 +45,7 @@ export function ChatComponent({
   errorDetails,
   pageNumber,
 }: ChatComponentProps) {
+  const pathname = usePathname();
   // --- 1. Logic Hook ---
   const {
     currentModelId,
@@ -103,7 +105,9 @@ export function ChatComponent({
           settings.
         </p>
         <Button asChild size="lg">
-          <Link href="/settings/api-key">
+          <Link
+            href={`/settings/api-key?returnTo=${encodeURIComponent(pathname)}`}
+          >
             <Key className="size-4" />
             Add API key
           </Link>
@@ -123,7 +127,9 @@ export function ChatComponent({
           You need to enable at least one model to use chat features.
         </p>
         <Button asChild size="lg">
-          <Link href="/settings/models">
+          <Link
+            href={`/settings/models?returnTo=${encodeURIComponent(pathname)}`}
+          >
             <Cpu className="size-4" />
             Add models
           </Link>

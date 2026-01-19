@@ -204,7 +204,7 @@ export function ApiKeyDialog({
                   {/* Security Note */}
                   <FormDescription className="text-muted-foreground/80 mt-2 flex items-center gap-1.5 text-xs">
                     <ShieldCheck className="h-3.5 w-3.5 text-green-600/80" />
-                    Encrypted and stored locally. Never shared with third
+                    Encrypted and stored securely. Never shared with third
                     parties.
                   </FormDescription>
                   <FormMessage />
@@ -245,8 +245,8 @@ export function ApiKeyDialog({
                 {isSubmitting
                   ? "Saving..."
                   : hasKey
-                    ? "Update Key"
-                    : "Save Key"}
+                    ? "Update key"
+                    : "Save key"}
               </Button>
             </DialogFooter>
           </form>

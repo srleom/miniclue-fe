@@ -2,7 +2,7 @@
 
 // react
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 // third-party
 import { toast } from "sonner";
@@ -152,6 +152,7 @@ export function DropzoneComponent({
   const [hasGeminiKey, setHasGeminiKey] = React.useState<boolean | null>(null);
   const [isCheckingKey, setIsCheckingKey] = React.useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   React.useEffect(() => {
     const checkGeminiKey = async () => {
@@ -199,7 +200,7 @@ export function DropzoneComponent({
       toast.error(
         "Google Gemini API key is required to upload lectures. Please add your API key in settings.",
       );
-      router.push("/settings/api-key");
+      router.push(`/settings/api-key?returnTo=${encodeURIComponent(pathname)}`);
       return;
     }
 
@@ -328,7 +329,7 @@ export function DropzoneComponent({
                   <>
                     Please add your Google Gemini API key in{" "}
                     <Link
-                      href="/settings/api-key"
+                      href={`/settings/api-key?returnTo=${encodeURIComponent(pathname)}`}
                       className="text-primary underline"
                     >
                       settings

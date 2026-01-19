@@ -3,6 +3,7 @@
 // react
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // icons
 import {
@@ -48,6 +49,7 @@ const features = [
 export function GeminiKeyPromptDialog() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     const checkStatus = async () => {
@@ -143,7 +145,10 @@ export function GeminiKeyPromptDialog() {
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-2">
-            <Link href="/settings/api-key" className="w-full">
+            <Link
+              href={`/settings/api-key?returnTo=${encodeURIComponent(pathname)}`}
+              className="w-full"
+            >
               <Button size="lg" className="w-full gap-2 text-sm font-semibold">
                 Add Gemini API Key
                 <ChevronRight className="h-4 w-4 opacity-50" />
