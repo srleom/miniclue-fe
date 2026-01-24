@@ -1,5 +1,6 @@
 // next
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 // types
 import { CourseWithLectures, NavRecentsItem } from "./_types/types";
@@ -7,7 +8,6 @@ import { CourseWithLectures, NavRecentsItem } from "./_types/types";
 // components
 import { AppSidebar } from "@/app/(dashboard)/(app)/_components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { GeminiKeyPromptDialog } from "@/components/elements/gemini-key-prompt-dialog";
 import { PostHogIdentifier } from "@/components/elements/posthog-identifier";
 
 // code
@@ -42,6 +42,13 @@ export default async function DashboardLayout({
 
   // Get user data for PostHog identification
   const userRes = await getUser();
+
+  // Check if user has Gemini API key provided, if not redirect to onboarding
+  const hasGeminiKey = userRes.data?.api_keys_provided?.gemini ?? false;
+  if (!hasGeminiKey) {
+    redirect("/onboarding");
+  }
+
   const userId = userRes.data?.user_id ?? "";
   const userEmail = userRes.data?.email ?? "";
   const userName = userRes.data?.name ?? "";
@@ -96,7 +103,6 @@ export default async function DashboardLayout({
         <SidebarInset className="flex min-h-0 min-w-0 flex-1 flex-col">
           {children}
         </SidebarInset>
-        <GeminiKeyPromptDialog />
       </SidebarProvider>
     </div>
   );
