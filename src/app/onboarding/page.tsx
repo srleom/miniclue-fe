@@ -152,9 +152,9 @@ export default function OnboardingPage() {
               <div className="relative flex min-h-[60vh] w-full flex-col items-start gap-8 overflow-hidden text-left lg:h-[calc(100vh-14rem)]">
                 <div className="flex flex-col items-start gap-8">
                   <div className="bg-primary flex items-center gap-2 rounded-lg p-2">
-                    <Sparkle className="text-primary-foreground size-10" />
+                    <Sparkle className="text-primary-foreground size-7" />
                   </div>
-                  <h1 className="from-primary/100 to-primary/80 max-w-2xl bg-gradient-to-br bg-clip-text text-5xl tracking-tight text-transparent sm:text-9xl">
+                  <h1 className="from-primary/100 to-primary/80 max-w-2xl bg-gradient-to-br bg-clip-text text-5xl tracking-tight text-transparent sm:text-8xl">
                     Welcome to MiniClue
                   </h1>
 
@@ -164,7 +164,7 @@ export default function OnboardingPage() {
 
                   <div className="flex gap-4">
                     <Button size="lg" onClick={handleNext}>
-                      Get Started{" "}
+                      Get started
                       <ChevronRight className="size-4 transition-transform" />
                     </Button>
                   </div>
@@ -428,7 +428,7 @@ export default function OnboardingPage() {
             {step === 6 && (
               <div className="flex w-full flex-col items-start gap-10 text-left">
                 <div className="mb-6 space-y-3">
-                  <h2 className="text-4xl tracking-tight sm:text-9xl">
+                  <h2 className="text-4xl tracking-tight sm:text-8xl">
                     You&apos;re all set
                   </h2>
                 </div>
